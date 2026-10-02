@@ -1,0 +1,27 @@
+CARA MEMASANG APLIKASI KONSULTASI GIZI
+
+A. GOOGLE SITES (online, untuk dibuka di laptop)
+1. Buka index.html dengan Notepad, salin seluruh isinya.
+2. Di Google Sites: Sisipkan > Sematkan > Kode sematan > tempel > Berikutnya > Sisipkan.
+3. Perbesar kotak sematan setinggi mungkin (tarik sudut bawah).
+Catatan: tombol Cetak berfungsi di Google Sites. Mode offline TIDAK berfungsi di Google Sites.
+
+B. APLIKASI OFFLINE DI HP (PWA) - lewat GitHub Pages (gratis)
+1. Buat akun di github.com, lalu buat repository baru, misalnya "konsultasi-gizi" (Public).
+2. Klik "uploading an existing file", unggah SEMUA file di folder ini:
+   index.html, sw.js, manifest.webmanifest, icon-192.png, icon-512.png
+3. Settings > Pages > Source: "Deploy from a branch" > Branch: main / (root) > Save.
+4. Tunggu 1-2 menit. Alamat aplikasi: https://NAMAAKUN.github.io/konsultasi-gizi/
+5. Di HP (Chrome Android): buka alamat tsb > menu titik tiga > "Tambahkan ke layar utama" / "Instal aplikasi".
+   Di iPhone (Safari): tombol Bagikan > "Tambah ke Layar Utama".
+6. Buka sekali saat online. Setelah itu aplikasi bisa dibuka tanpa internet dari ikon di layar utama.
+
+Alternatif tanpa GitHub: app.netlify.com/drop > seret folder ini ke halaman tsb > dapat alamat https.
+
+C. MEMPERBARUI APLIKASI
+- Ganti index.html dengan versi baru, dan di sw.js naikkan angka VERSI (v2 -> v3).
+- HP akan mengambil versi baru saat dibuka dalam keadaan online.
+
+D. CATATAN DATA
+- Data klien tersimpan di browser/HP masing-masing (belum tersinkron antar perangkat).
+- Menghapus data browser/cache akan menghapus isian klien.
