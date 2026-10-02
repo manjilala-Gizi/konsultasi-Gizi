@@ -1,6 +1,6 @@
 // Service worker: simpan aplikasi di HP agar bisa dibuka tanpa internet.
 // Naikkan VERSI setiap kali index.html diperbarui agar HP mengambil versi baru.
-const VERSI = 'konsultasi-gizi-v3';
+const VERSI = 'konsultasi-gizi-v4';
 const FILE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSI).then(c => c.addAll(FILE)).then(() => self.skipWaiting()));
