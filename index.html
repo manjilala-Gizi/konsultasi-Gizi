@@ -293,6 +293,8 @@ body[data-mode="klinik"] #homeView,body[data-mode="posy"] #homeView,body[data-mo
 .xbtn{display:none!important}.can-print .xbtn{display:block!important}.can-print button.xbtn{display:inline-flex!important}
 .btn.sm{padding:4px 9px;font-size:12px}
 .seg button{white-space:nowrap}
+input.inv,select.inv{border-color:var(--bad)!important;background:var(--bad-soft)!important}
+.field small.inv-msg{color:var(--bad);font-weight:600}
 #pamView .grid2,#posyView .grid2{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
 .exp-row{display:flex;gap:8px;flex-wrap:wrap}
 .ev-row{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.3fr) auto;gap:10px 14px;align-items:end}
@@ -796,7 +798,7 @@ function umur(tgll,tglk){if(!tgll||!tglk)return null;const a=new Date(tgll),b=ne
 const AKT={sr:{l:'Sangat ringan',f:1.2,pk:10},r:{l:'Ringan',f:1.375,pk:20},s:{l:'Sedang',f:1.55,pk:30},b:{l:'Berat',f:1.725,pk:40}};
 function imtKat(i){if(i<17)return['Kurus berat','p-bad'];if(i<18.5)return['Kurus ringan','p-warn'];if(i<=25)return['Normal','p-ok'];if(i<=27)return['Gemuk (berat badan lebih)','p-warn'];return['Obesitas','p-bad']}
 function calc(){
-  const k=S.klien,u=umur(k.tgll,k.tglk),bb=num(k.bb),tbIn=num(k.tb),tl=num(k.tl),lp=num(k.lp);
+  const k=S.klien,u=umur(k.tgll,k.tglk);let bb=inR(num(k.bb),'bb');const tbIn=inR(num(k.tb),'tb'),tl=inR(num(k.tl),'tl'),lp=inR(num(k.lp),'lp');
   const R={u,bb,lp,notes:[]};
   let tb=tbIn,tbEst=false;
   if(!tb&&tl&&u){tb=k.jk==='L'?64.19-0.04*u.y+2.02*tl:84.88-0.24*u.y+1.83*tl;tbEst=true}
@@ -804,7 +806,9 @@ function calc(){
   const dewasa=u&&u.y>=18;R.dewasa=dewasa;
   if(bb&&tb){const m=tb/100;R.imt=bb/(m*m);R.kat=dewasa?imtKat(R.imt):null;
     R.bbi=(k.jk==='L'&&tb<160)||(k.jk==='P'&&tb<150)?tb-100:(tb-100)*0.9;
-    R.bbMin=18.5*m*m;R.bbMax=25*m*m}
+    R.bbMin=18.5*m*m;R.bbMax=25*m*m;
+    if(u&&u.y<18)R.bbi=R.bbMin=R.bbMax=null;
+    if(!IMT_OK(R.imt)){R.imtOdd=R.imt;R.imt=R.kat=R.bbi=R.bbMin=R.bbMax=null;bb=null}}
   if(lp)R.lpStat=lp>=(k.jk==='L'?90:80)?['Obesitas sentral','p-bad']:['Normal','p-ok'];
   R.akg=u?akgFor(k.jk,u.y):null;
   // tujuan
@@ -872,6 +876,8 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
     uo.textContent=t;uo.style.color=bad?'var(--bad)':''}
   const sum=(num(k.pp)||0)+(num(k.pl)||0)+(num(k.pk)||0);const dn=document.getElementById('distNote');dn.textContent=`Total ${fmt(sum)}%`+(sum!==100?' — sebaiknya 100%':'');dn.style.color=sum!==100?'var(--bad)':'';
   let h='';
+  const inv=markAll([['f-bb','bb'],['f-tb','tb'],['f-tl','tl'],['f-lp','lp']]);h+=invPanel(inv,R.imtOdd,num(k.bb),R.tb);
+  if(R.u&&R.u.y<5)h+=toPosyHTML('klinik',R.u.y);
   if(R.imt){
     h+=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${R.tbEst?'TB estimasi dari tinggi lutut':''}</span></div><div class="panel-b">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div><div class="eyebrow">IMT</div><div class="big">${fmt(R.imt,1)}</div></div>
@@ -879,8 +885,8 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
     ${R.dewasa?scaleHTML(R.imt):''}
     <dl class="kv">
       ${R.tbEst?`<dt>TB estimasi (Chumlea)</dt><dd>${fmt(R.tb,1)} cm</dd>`:''}
-      <dt>BB ideal (Broca modifikasi)</dt><dd>${fmt(R.bbi,1)} kg</dd>
-      <dt>Rentang BB normal (IMT 18,5–25)</dt><dd>${fmt(R.bbMin,1)}–${fmt(R.bbMax,1)} kg</dd>
+      ${R.bbi!=null?`<dt>BB ideal (Broca modifikasi)</dt><dd>${fmt(R.bbi,1)} kg</dd>
+      <dt>Rentang BB normal (IMT 18,5–25)</dt><dd>${fmt(R.bbMin,1)}–${fmt(R.bbMax,1)} kg</dd>`:''}
       ${R.dewasa?`<dt>${R.bb>R.bbMax?'Kelebihan dari batas atas':R.bb<R.bbMin?'Kekurangan dari batas bawah':'Posisi terhadap rentang'}</dt><dd>${R.bb>R.bbMax?fmt(R.bb-R.bbMax,1)+' kg':R.bb<R.bbMin?fmt(R.bbMin-R.bb,1)+' kg':'Dalam rentang'}</dd>`:''}
       ${R.dewasa&&R.bb>R.bbMax?`<dt>Perkiraan waktu (0,5 kg/minggu)</dt><dd>±${Math.ceil((R.bb-R.bbMax)/0.5)} minggu</dd>`:''}
       ${R.lpStat?`<dt>Lingkar perut ${fmt(R.lp,1)} cm</dt><dd><span class="pill ${R.lpStat[1]}">${R.lpStat[0]}</span></dd>`:''}
@@ -890,7 +896,7 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
     <li><b>Recall 24 Jam</b>: ketik nama makanan di tiap waktu makan, pilih URT/penukar.</li>
     <li><b>Hasil Kajian</b>: lihat tingkat konsumsi, tulis anjuran, lalu cetak lembar kajian.</li></ol>
     <p class="note" style="margin:10px 0 0">Data tersimpan otomatis di perangkat ini. Tekan <b>Klien baru</b> untuk mengosongkan formulir.</p></div></div>`;
-  else h+=`<div class="panel"><div class="panel-b"><div class="eyebrow">Status gizi</div><p class="note" style="margin:.4em 0 0">Isi berat badan dan tinggi badan (atau tinggi lutut) untuk menghitung IMT dan berat badan ideal.</p></div></div>`;
+  else if(!inv.length&&R.imtOdd==null)h+=`<div class="panel"><div class="panel-b"><div class="eyebrow">Status gizi</div><p class="note" style="margin:.4em 0 0">Isi berat badan dan tinggi badan (atau tinggi lutut) untuk menghitung IMT dan berat badan ideal.</p></div></div>`;
   const T=R.T;
   if(T.energi){
     h+=`<div class="panel"><div class="panel-h"><h2>Kebutuhan gizi per hari</h2><span class="hint">${R.src==='rumus'?'Dipersonalisasi':'AKG 2019'}</span></div><div class="panel-b">
@@ -1564,6 +1570,36 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!cardModal.hidden)c
 if(CAN_PRINT)document.documentElement.classList.add('can-print');
 if(PWA&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
 loadForm();show(['klien','recall','lab','hasil','diet'].includes(S.tab)?S.tab:'klien');
+/* ===== Validasi angka input (batas wajar) ===== */
+function lim(k){return {bb:[2,250,'Berat badan','kg'],tb:[45,220,'Tinggi badan','cm'],tl:[25,75,'Tinggi lutut','cm'],lp:[30,200,'Lingkar perut','cm'],
+  pbb:[1,40,'Berat badan','kg'],ptb:[40,130,'Panjang/tinggi badan','cm'],lila:[5,35,'LiLA','cm'],
+  sis:[60,260,'Sistolik','mmHg'],dia:[30,160,'Diastolik','mmHg'],gds:[20,700,'Gula darah','mg/dL'],kol:[50,600,'Kolesterol','mg/dL']}[k]}
+function inR(v,k){const L=lim(k);return v!=null&&v>=L[0]&&v<=L[1]?v:null}
+// tandai kolom yang tidak wajar; kembalikan teks pesan bila tidak wajar
+function markR(id,k){const el=document.getElementById(id);if(!el)return null;const L=lim(k);const v=num(el.value);
+  const bad=el.value!==''&&(v==null||v<L[0]||v>L[1]);el.classList.toggle('inv',bad);el.setAttribute('aria-invalid',bad?'true':'false');
+  const f=el.closest('.field');let m=f&&f.querySelector(`.inv-msg[data-for="${id}"]`);
+  const t=bad?`${L[2]} ${v==null?el.value:fmt(v,v<10?2:1)} ${L[3]} tidak wajar (batas ${fmt(L[0])}–${fmt(L[1])} ${L[3]}).`:null;
+  if(bad&&f){if(!m){m=document.createElement('small');m.className='inv-msg';m.dataset.for=id;f.appendChild(m)}m.textContent=t+' Periksa kembali.'}else if(m)m.remove();
+  return t}
+function markAll(list){return list.map(([id,k])=>markR(id,k)).filter(Boolean)}
+const IMT_OK=v=>v!=null&&v>=10&&v<=70;
+function invPanel(msgs,imtOdd,bb,tb){if(!msgs.length&&imtOdd==null)return '';
+  return `<div class="panel" style="border-color:var(--bad)"><div class="panel-b"><p class="eyebrow" style="color:var(--bad);margin:0 0 6px">Periksa kembali data</p><div class="msgs">`+
+    msgs.map(m=>`<p class="msg bad">${esc(m)}</p>`).join('')+
+    (imtOdd!=null?`<p class="msg bad">BB ${fmt(bb,1)} kg dan TB ${fmt(tb,1)} cm menghasilkan IMT ${fmt(imtOdd,1)}, di luar batas wajar (10–70). Kemungkinan salah ketik, mis. koma atau angka 0.</p>`:'')+
+    `</div><p class="note" style="margin:8px 0 0">Hasil yang memakai data ini ditahan sampai diperbaiki.</p></div></div>`}
+// anak <5 tahun di mode Klinik/Pameran -> tawarkan pindah ke Posyandu
+function toPosyHTML(src,u){return `<div class="panel" style="border-color:var(--kunyit)"><div class="panel-b"><p class="eyebrow" style="color:var(--kunyit);margin:0 0 6px">Anak balita</p>
+  <p style="margin:0 0 10px">Umur ${u} tahun. Status gizi balita dinilai dengan z-skor (Permenkes No. 2/2020) di mode Posyandu, bukan IMT dewasa.</p>
+  <button class="btn primary" type="button" data-toposy="${src}">Buka di mode Posyandu</button></div></div>`}
+function toPosy(src){const keep=PY;PY=pblank(keep);
+  if(src==='klinik'){const k=S.klien,d=k.dob||{};Object.assign(PY,{nama:k.nama||'',jk:k.jk,dob:{d:d.d??'',m:d.m??'',y:d.y??''},tglu:k.tglk||today(),bb:k.bb||'',tb:k.tb||''});
+    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k.tgll||'');if(m)PY.dob={d:String(+m[3]),m:String(+m[2]),y:m[1]}}
+  else{const c=PM.cur;Object.assign(PY,{nama:c.nama||'',jk:c.jk,tglu:PM.ev.tgl||today(),bb:c.bb||'',tb:c.tb||'',ptg:PM.ev.ptg||keep.ptg||''})}
+  savePosy();setMode('posy');const f=document.getElementById(PY.dob.d?'p-bb':'p-ld');if(f)f.focus()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-toposy]');if(b)toPosy(b.dataset.toposy)});
+
 /* ===== Mode & Beranda ===== */
 let MODE='home';
 const modeTag=document.getElementById('modeTag'),brandSub=document.getElementById('brandSub');
@@ -1631,7 +1667,7 @@ function calcPosy(){const o={msgs:[]};
   const d=PY.dob||{},dd=parseInt(d.d),mm=parseInt(d.m),yy=parseInt(d.y);
   o.lahir=(dd&&mm&&yy&&String(yy).length===4&&dd<=new Date(yy,mm,0).getDate())?`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`:'';
   o.u=bulanPenuh(o.lahir,PY.tglu);
-  const T=PMK[PY.jk==='P'?'P':'L'];const bb=num(PY.bb),tb=num(PY.tb),lila=num(PY.lila),bbl=num(PY.bbl);
+  const T=PMK[PY.jk==='P'?'P':'L'];const bb=inR(num(PY.bb),'pbb'),tb=inR(num(PY.tb),'ptb'),lila=inR(num(PY.lila),'lila'),bbl=inR(num(PY.bbl),'pbb');
   o.bb=bb;o.tbRaw=tb;
   if(!o.u)return o;const m=o.u.m;o.inRange=m>=0&&m<=60;if(!o.inRange)return o;
   o.pb=m<24;// <24 bln memakai panjang badan
@@ -1643,7 +1679,7 @@ function calcPosy(){const o={msgs:[]};
   if(L){const r=rowAge(o.pb?T.pbu:T.tbu,m);if(r){const z=zOf(r,L);o.idx.push({k:'pbu',n:o.pb?'PB/U':'TB/U',d:(o.pb?'Panjang':'Tinggi')+' badan menurut umur',z,r})}}
   if(bb&&L){const t=o.pb?T.bbpb:T.bbtb;const r=rowLen(t,L);const n=o.pb?'BB/PB':'BB/TB',dsc='Berat badan menurut '+(o.pb?'panjang':'tinggi')+' badan';
     if(r)o.idx.push({k:'bbpb',n,d:dsc,z:zOf(r,bb),r});else o.idx.push({k:'bbpb',n,d:dsc,z:null,note:`${o.pb?'Panjang':'Tinggi'} ${fmt(L,1)} cm di luar tabel (${t[0][0]}–${t[t.length-1][0]} cm)`});
-    o.imt=bb/((L/100)**2);const ri=rowAge(o.pb?T.imt1:T.imt2,m);if(ri)o.idx.push({k:'imt',n:'IMT/U',d:`Indeks massa tubuh menurut umur (IMT ${fmt(o.imt,1)})`,z:zOf(ri,o.imt),r:ri})}
+    o.imt=bb/((L/100)**2);if(!IMT_OK(o.imt)){o.imtOdd=o.imt;o.idx=[];return o}const ri=rowAge(o.pb?T.imt1:T.imt2,m);if(ri)o.idx.push({k:'imt',n:'IMT/U',d:`Indeks massa tubuh menurut umur (IMT ${fmt(o.imt,1)})`,z:zOf(ri,o.imt),r:ri})}
   o.idx.forEach(x=>{if(x.z!=null){x.c=KAT[x.k](x.z);x.flag=Math.abs(x.z)>5}});
   if(lila&&m>=6&&m<=59)o.lila=lila<11.5?['Gizi buruk','p-bad']:lila<12.5?['Gizi kurang','p-warn']:['Gizi baik','p-ok'];
   if(bb&&bbl){const g=Math.round((bb-bbl)*1000);const kbm=KBM(m);o.nt={g,kbm,s:kbm==null?null:g>=kbm?'N':'T'}}
@@ -1680,14 +1716,16 @@ function renderPosy(){const o=calcPosy();const el=document.getElementById('posyO
   const cn=document.getElementById('caraNote');const pb=o.u&&o.u.m<24;
   document.querySelectorAll('#p-cara button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===(PY.cara||(o.u?(pb?'baring':'diri'):''))));
   cn.textContent=o.koreksi>0?'Anak <24 bulan diukur berdiri: panjang badan = tinggi + 0,7 cm.':o.koreksi<0?'Anak ≥24 bulan diukur berbaring: tinggi badan = panjang − 0,7 cm.':'Umur <24 bulan diukur berbaring; ≥24 bulan berdiri.';
+  const inv=markAll([['p-bb','pbb'],['p-tb','ptb'],['p-lila','lila'],['p-bbl','pbb']]);const invH=invPanel(inv,o.imtOdd,o.bb,o.L);
   if(!o.lahir||!PY.tglu){el.innerHTML=`<div class="panel"><div class="empty-r">Isi tanggal lahir dan tanggal penimbangan untuk menghitung umur dan status gizi.</div></div>`;return}
   if(!o.u){el.innerHTML=`<div class="panel"><div class="empty-r" style="color:var(--bad)">Tanggal penimbangan lebih awal dari tanggal lahir.</div></div>`;return}
   const m=o.u.m;const th=Math.floor(m/12),bl=m%12;
   let h=`<div class="panel"><div class="panel-b"><p class="eyebrow" style="margin:0 0 6px">Umur (bulan penuh)</p><div class="age-big"><span class="big">${m}<span style="font-size:15px;font-weight:600;color:var(--muted)"> bulan</span></span><span style="color:var(--muted)">${th?th+' tahun ':''}${bl} bulan · ${fmt(o.u.hari)} hari</span></div>
     ${o.inRange?'':'<p class="msg bad" style="margin-top:10px">Standar Permenkes No. 2/2020 untuk balita hanya sampai umur 60 bulan.</p>'}</div></div>`;
   if(o.inRange){
-    if(!o.idx.length)h+=`<div class="panel"><div class="empty-r">Isi berat badan dan panjang/tinggi badan.</div></div>`;
-    else{h+=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${o.L?`${o.pb?'PB':'TB'} dipakai ${fmt(o.L,1)} cm${o.koreksi?` (koreksi ${o.koreksi>0?'+':''}${fmt(o.koreksi,1)})`:''}`:''}</span></div><div class="panel-b">`+
+    h+=invH;
+    if(!o.idx.length&&!invH)h+=`<div class="panel"><div class="empty-r">Isi berat badan dan panjang/tinggi badan.</div></div>`;
+    else if(o.idx.length){h+=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${o.L?`${o.pb?'PB':'TB'} dipakai ${fmt(o.L,1)} cm${o.koreksi?` (koreksi ${o.koreksi>0?'+':''}${fmt(o.koreksi,1)})`:''}`:''}</span></div><div class="panel-b">`+
       o.idx.map(x=>x.z==null?`<div class="zrow"><div class="zn">${x.n}<small>${x.d}</small></div><div class="zv">–</div><div class="zc"><span class="pill p-mute">${esc(x.note)}</span></div></div>`:
       `<div class="zrow"><div class="zn">${x.n}<small>${x.d}</small></div><div class="zv">${x.z>=0?'+':'−'}${fmt(Math.abs(x.z),2)} SD</div><div class="zc"><span class="pill ${x.c[1]}">${x.c[0]}</span>${x.flag?'<span class="pill p-bad">periksa ulang</span>':''}</div>${gaugeHTML(x.k,x.z)}</div>`).join('')+
       (o.pb===false||o.L==null?'':'')+`</div></div>`}
@@ -1723,20 +1761,22 @@ if(!PM||typeof PM!=='object'||!PM.cur)PM=mblank();PM.cur=Object.assign(cblank(),
 let pmT;function savePam(){clearTimeout(pmT);pmT=setTimeout(()=>{try{localStorage.setItem('kg-pam-v1',JSON.stringify(PM))}catch(e){}},250)}
 const hasPam=()=>!!(PM.list.length||PM.cur.nama||PM.cur.bb);
 
-function calcPam(c){const o={};const u=num(c.umur),bb=num(c.bb),tl=num(c.tl),lp=num(c.lp);let tb=num(c.tb);
+function calcPam(c){const o={};const u=num(c.umur),tl=inR(num(c.tl),'tl'),lp=inR(num(c.lp),'lp');let bb=inR(num(c.bb),'bb'),tb=inR(num(c.tb),'tb');o.bbRaw=bb;
   o.u=u!=null&&u>=0&&u<=120?Math.floor(u):null;o.bb=bb;o.tbEst=false;
   if(!tb&&tl&&o.u!=null){tb=c.jk==='L'?64.19-0.04*o.u+2.02*tl:84.88-0.24*o.u+1.83*tl;o.tbEst=true}
   o.tb=tb;o.dewasa=o.u!=null&&o.u>=18;
   if(bb&&tb){const m=tb/100;o.imt=bb/(m*m);o.kat=o.dewasa?imtKat(o.imt):null;
-    o.bbi=(c.jk==='L'&&tb<160)||(c.jk==='P'&&tb<150)?tb-100:(tb-100)*0.9;o.bbMin=18.5*m*m;o.bbMax=25*m*m}
+    o.bbi=(c.jk==='L'&&tb<160)||(c.jk==='P'&&tb<150)?tb-100:(tb-100)*0.9;o.bbMin=18.5*m*m;o.bbMax=25*m*m;
+    if(o.u!=null&&o.u<18)o.bbi=o.bbMin=o.bbMax=null;
+    if(!IMT_OK(o.imt)){o.imtOdd=o.imt;o.imt=o.kat=o.bbi=o.bbMin=o.bbMax=null;o.bb=bb=null}}
   if(lp&&o.dewasa){o.lpv=lp;o.lp=lp>=(c.jk==='L'?90:80)?['Obesitas sentral','p-bad']:['Normal','p-ok']}
   const a=AKT[c.akt]||AKT.r;
   if(o.dewasa&&bb&&tb){let E=(10*bb+6.25*tb-5*o.u+(c.jk==='L'?5:-161))*a.f;o.tuj='tetap';
     if(o.imt>25){o.tuj='turun';E=Math.max(E-500,c.jk==='L'?1500:1200)}else if(o.imt<18.5){o.tuj='naik';E+=500}
     o.E=E;o.Pr=E*.15/4;o.Lm=E*.25/9;o.KH=E*.6/4;o.src='Mifflin-St Jeor × aktivitas '+a.l.toLowerCase()}
-  else if(o.u!=null){const g=akgFor(c.jk,o.u);if(g){o.E=g.energi;o.Pr=g.protein;o.Lm=g.lemak;o.KH=g.kh;o.src='AKG 2019 '+g.label}}
-  const s=num(c.sis),d=num(c.dia);o.td=bpStat(s,d);o.tdv=s||d?`${s?fmt(s):'–'}/${d?fmt(d):'–'}`:'';
-  const gd=num(c.gds),ko=num(c.kol);if(gd!=null){o.gdsv=gd;o.gds=LABI.gds.st(gd)}if(ko!=null){o.kolv=ko;o.kol=LABI.kol.st(ko)}
+  else if(o.u!=null&&o.imtOdd==null){const g=akgFor(c.jk,o.u);if(g){o.E=g.energi;o.Pr=g.protein;o.Lm=g.lemak;o.KH=g.kh;o.src='AKG 2019 '+g.label}}
+  const s=inR(num(c.sis),'sis'),d=inR(num(c.dia),'dia');o.td=bpStat(s,d);o.tdv=s||d?`${s?fmt(s):'–'}/${d?fmt(d):'–'}`:'';
+  const gd=inR(num(c.gds),'gds'),ko=inR(num(c.kol),'kol');if(gd!=null){o.gdsv=gd;o.gds=LABI.gds.st(gd)}if(ko!=null){o.kolv=ko;o.kol=LABI.kol.st(ko)}
   return o}
 
 function saranPam(o){const out=[];const k=o.kat&&o.kat[0];
@@ -1753,17 +1793,23 @@ function saranPam(o){const out=[];const k=o.kat&&o.kat[0];
 const ISI_PIRINGKU=['Setiap makan: ½ piring sayur dan buah (sayur lebih banyak), ½ piring makanan pokok dan lauk-pauk (makanan pokok lebih banyak).','Batasi per hari: gula 4 sendok makan, garam 1 sendok teh, minyak 5 sendok makan.','Minum air putih ±8 gelas sehari.','Aktivitas fisik minimal 150 menit per minggu (±30 menit, 5 hari).','Cuci tangan pakai sabun sebelum makan.'];
 
 function pamResultHTML(o){const c=PM.cur;
-  if(o.u==null&&!o.imt)return `<div class="panel"><div class="empty-r">Isi umur, berat badan, dan tinggi badan pengunjung.</div></div>`;
+  const inv=markAll([['m-bb','bb'],['m-tb','tb'],['m-tl','tl'],['m-lp','lp'],['m-sis','sis'],['m-dia','dia'],['m-gds','gds'],['m-kol','kol']]);
+  const um=document.getElementById('m-umur');const ub=um.value!==''&&(o.u==null);um.classList.toggle('inv',ub);if(ub)inv.unshift('Umur harus 0–120 tahun.');
+  let pre=invPanel(inv,o.imtOdd,o.bbRaw,o.tb);
+  if(o.u!=null&&o.u<5)pre+=toPosyHTML('pam',o.u);
+  else if(o.u!=null&&o.u<18)pre+=`<div class="panel" style="border-color:var(--kunyit)"><div class="panel-b"><p class="eyebrow" style="color:var(--kunyit);margin:0 0 6px">Anak/remaja ${o.u} tahun</p><p style="margin:0">Kategori IMT dewasa tidak berlaku. Status gizi umur 5–18 tahun dinilai dengan IMT menurut umur (IMT/U, z-skor). Kebutuhan gizi di bawah memakai AKG 2019.</p></div></div>`;
+  if(o.u==null&&!o.imt)return pre+ `<div class="panel"><div class="empty-r">Isi umur, berat badan, dan tinggi badan pengunjung.</div></div>`;
   let h=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${o.tbEst?'TB estimasi dari tinggi lutut':''}</span></div><div class="panel-b">`;
+  h=pre+h;
   if(o.imt){h+=`<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="big">${fmt(o.imt,1)}</span><span style="color:var(--muted)">IMT kg/m²</span>${o.kat?`<span class="pill ${o.kat[1]}">${o.kat[0]}</span>`:'<span class="pill p-mute">&lt;18 th: gunakan IMT/U</span>'}</div>${o.dewasa?scaleHTML(o.imt):''}
-    <dl class="kv" style="margin:12px 0 0"><dt>BB ideal (Broca modifikasi)</dt><dd>${fmt(o.bbi,1)} kg</dd><dt>Rentang BB normal</dt><dd>${fmt(o.bbMin,1)}–${fmt(o.bbMax,1)} kg</dd>
+    <dl class="kv" style="margin:12px 0 0">${o.bbi!=null?`<dt>BB ideal (Broca modifikasi)</dt><dd>${fmt(o.bbi,1)} kg</dd><dt>Rentang BB normal</dt><dd>${fmt(o.bbMin,1)}–${fmt(o.bbMax,1)} kg</dd>`:''}
     ${o.dewasa&&o.bb>o.bbMax?`<dt>Kelebihan dari batas normal</dt><dd style="color:var(--bad)">${fmt(o.bb-o.bbMax,1)} kg</dd>`:o.dewasa&&o.bb<o.bbMin?`<dt>Kurang dari batas normal</dt><dd style="color:var(--warn)">${fmt(o.bbMin-o.bb,1)} kg</dd>`:''}
     ${o.tbEst?`<dt>Tinggi badan (estimasi)</dt><dd>${fmt(o.tb,1)} cm</dd>`:''}</dl>`}
-  else h+=`<p class="note" style="margin:0">Isi BB dan TB (atau tinggi lutut) untuk menghitung IMT.</p>`;
+  else h+=`<p class="note" style="margin:0">${o.imtOdd!=null||inv.length?'Hasil ditahan, periksa data di atas.':'Isi BB dan TB (atau tinggi lutut) untuk menghitung IMT.'}</p>`;
   h+=`</div></div>`;
   const ex=[o.lp?['Lingkar perut',fmt(o.lpv,1)+' cm',o.lp]:null,o.td?['Tekanan darah',o.tdv+' mmHg',o.td]:null,o.gds?['Gula darah sewaktu',fmt(o.gdsv)+' mg/dL',o.gds]:null,o.kol?['Kolesterol total',fmt(o.kolv)+' mg/dL',o.kol]:null].filter(Boolean);
   if(ex.length)h+=`<div class="panel"><div class="panel-h"><h2>Hasil cek tambahan</h2></div><div class="panel-b"><dl class="kv">${ex.map(([a,b,s])=>`<dt>${a} <b style="color:var(--fg)">${b}</b></dt><dd><span class="pill ${s[1]}">${s[0]}</span></dd>`).join('')}</dl></div></div>`;
-  if(o.E)h+=`<div class="panel"><div class="panel-h"><h2>Kebutuhan gizi per hari</h2><span class="hint">${esc(o.src)}${o.tuj==='turun'?' − 500 kkal':o.tuj==='naik'?' + 500 kkal':''}</span></div><div class="panel-b">
+  if(o.E&&!inv.length)h+=`<div class="panel"><div class="panel-h"><h2>Kebutuhan gizi per hari</h2><span class="hint">${esc(o.src)}${o.tuj==='turun'?' − 500 kkal':o.tuj==='naik'?' + 500 kkal':''}</span></div><div class="panel-b">
     <div style="display:flex;align-items:baseline;gap:8px"><span class="big">${fmt(o.E)}</span><span style="color:var(--muted)">kkal</span></div>
     <dl class="kv" style="margin-top:10px"><dt>Protein</dt><dd>${fmt(o.Pr)} g</dd><dt>Lemak</dt><dd>${fmt(o.Lm)} g</dd><dt>Karbohidrat</dt><dd>${fmt(o.KH)} g</dd></dl></div></div>`;
   const sr=saranPam(o);
@@ -1786,6 +1832,7 @@ for(const[k,id]of Object.entries(PAME))document.getElementById(id).addEventListe
 document.querySelectorAll('#m-jk button').forEach(b=>b.addEventListener('click',()=>{PM.cur.jk=b.dataset.v;loadPam();pamUpd()}));
 document.getElementById('pamSave').addEventListener('click',()=>{const c=PM.cur;
   if(!c.bb&&!c.tb&&!c.nama){document.getElementById('m-nama').focus();return}
+  const o0=calcPam(c);if(o0.imtOdd!=null||document.querySelector('#pamView input.inv')){const n=document.getElementById('pamToast');n.style.color='var(--bad)';n.textContent='Belum disimpan: ada data tidak wajar. Periksa kolom yang ditandai merah.';n.hidden=false;clearTimeout(n._t);n._t=setTimeout(()=>{n.hidden=true;n.style.color=''},3500);return}
   const rec=Object.assign({},c,{t:new Date().toISOString()});
   if(PM.edit!=null&&PM.list[PM.edit]){rec.t=PM.list[PM.edit].t;PM.list[PM.edit]=rec}else PM.list.push(rec);
   PM.edit=null;PM.cur=cblank();PM.cur.akt=c.akt;loadPam();pamUpd();document.getElementById('m-nama').focus();
