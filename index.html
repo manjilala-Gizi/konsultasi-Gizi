@@ -293,6 +293,7 @@ body[data-mode="klinik"] #homeView,body[data-mode="posy"] #homeView,body[data-mo
 .xbtn{display:none!important}.can-print .xbtn{display:block!important}.can-print button.xbtn{display:inline-flex!important}
 .btn.sm{padding:4px 9px;font-size:12px}
 .seg button{white-space:nowrap}
+.exp-big{display:grid;gap:2px;text-align:left;padding:11px 14px;font-size:14.5px}.exp-big small{font-weight:500;font-size:12px;opacity:.8}
 .page.noside{grid-template-columns:minmax(0,1fr)}.page.noside .side{display:none}
 .seg-wrap{display:flex;flex-wrap:wrap}.seg-wrap button{flex:1 1 auto}
 .porsi-row{display:flex;flex-wrap:wrap;gap:6px}
@@ -399,7 +400,7 @@ body[data-mode="home"] .modetag{display:none}
       </a>
       <div class="client-chip" id="clientChip"></div>
       <div style="display:flex;gap:8px">
-        <button class="btn primary print-btn" data-print type="button">Cetak</button>
+        <button class="btn primary print-btn" data-print type="button">Simpan / Cetak</button>
         <button class="btn" id="btnHome" type="button">Beranda</button>
       </div>
     </div>
@@ -471,6 +472,9 @@ body[data-mode="home"] .modetag{display:none}
         <h3>Pameran</h3>
         <ul><li>Klasifikasi IMT dewasa Kemenkes RI; BB ideal Broca modifikasi; lingkar perut ≥90 cm (L) / ≥80 cm (P).</li>
         <li>Pedoman Gizi Seimbang, Permenkes No. 41 Tahun 2014 (Isi Piringku, batas gula-garam-lemak).</li></ul>
+      </div></details>
+      <details><summary>Pengaturan</summary><div class="db">
+        <div class="field" style="max-width:280px"><label for="set-ctg">Berat 1 centong nasi</label><div class="unit"><input id="set-ctg" type="number" inputmode="numeric" min="20" max="300" step="5"><span>gram</span></div><small id="ctgNote">Dipakai di anjuran makan klien dan pilihan URT recall. Bawaan 50 g.</small></div>
       </div></details>
       <details><summary>Tentang &amp; cara pasang</summary><div class="db">
         <p><b>Konsultasi Gizi</b> versi 1.4 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
@@ -665,6 +669,15 @@ body[data-mode="home"] .modetag{display:none}
 <div class="mbar" id="mbar"></div>
 <div id="report" aria-hidden="true"></div>
 <div class="scrim" id="penScrim" hidden></div>
+<div class="modal" id="expModal" role="dialog" aria-modal="true" aria-label="Simpan atau cetak lembar kajian" hidden>
+  <div class="modal-c" style="max-width:380px"><div class="modal-h"><b>Simpan / cetak lembar kajian</b><button class="btn" type="button" data-expclose>Tutup</button></div>
+    <div style="padding:14px 16px 16px;display:grid;gap:8px">
+      <button class="btn primary exp-big" data-pdf type="button">Unduh PDF<small>Lembar kajian lengkap, langsung tersimpan di HP/laptop</small></button>
+      <button class="btn exp-big share-only" data-pdfshare type="button" hidden>Bagikan PDF<small>Kirim lewat WhatsApp, email, dll.</small></button>
+      <button class="btn exp-big" data-card type="button">Gambar ringkasan (JPG)<small>1 halaman untuk dikirim ke klien</small></button>
+      <button class="btn exp-big" data-printnow type="button">Cetak ke printer<small>Membuka menu cetak bawaan perangkat</small></button>
+      <p class="note" id="expMsg" hidden style="margin:4px 0 0"></p>
+    </div></div></div>
 <div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-label="Pratinjau gambar ringkasan" hidden>
   <div class="modal-c"><div class="modal-h"><b>Gambar ringkasan untuk klien</b><button class="btn" type="button" data-cardclose>Tutup</button></div>
     <div class="modal-img"><img id="cardImg" alt="Pratinjau ringkasan konseling gizi"></div>
@@ -771,6 +784,7 @@ const EXTRA_OK={AP001:['centong'],MP007:['sendok teh'],KR011:['sendok makan'],KR
 function urtOpts(f){const p=PEN.code[f.kode];const out=[];
   if(p){if(p.u&&p.ug)out.push({l:p.u,g:p.ug});out.push({l:'penukar',g:p.gr})}
   for(const [l,g] of (URT_KODE[f.kode]||(p?[]:URT_KEL[f.kelI]))){if(p&&!(EXTRA_OK[f.kode]||[]).includes(l))continue;if(!out.some(o=>o.l===l))out.push({l,g})}
+  if(/^nasi\b/i.test(f.nama)){const ci=out.findIndex(o=>o.l==='centong');if(ci>=0)out.splice(ci,1);out.unshift({l:'centong',g:CTG()})}
   return out.concat([{l:'gram',g:1}])}
 
 /* ===== Pencarian ===== */
@@ -1034,7 +1048,7 @@ function interpret(R,t,pe){const T=R.T;
   const sm=Object.entries(t.slot).sort((a,b)=>b[1]-a[1])[0];if(sm&&t.t.energi)ip.push(`Porsi energi terbesar ada di ${SLOTS.find(s=>s[0]===sm[0])[1].toLowerCase()} (${fmt(sm[1]/t.t.energi*100)}%).`);
   return ip}
 function renderHasil(R){const t=totals(),T=R.T,k=S.klien,el=document.getElementById('hasilOut');
-  if(!t.n){el.innerHTML=`<div class="panel"><div class="panel-b"><h2 style="font-size:16px">Belum ada data recall</h2><p class="note">Isi menu di langkah 2 (Recall 24 Jam) untuk melihat tingkat konsumsi.</p><button class="btn primary" type="button" data-goto="recall">Ke Recall 24 Jam</button></div></div>`;return}
+  if(!t.n){el.innerHTML=`<div class="panel"><div class="panel-b"><h2 style="font-size:16px">Belum ada data recall</h2><p class="note">Isi menu di langkah 2 (Recall 24 Jam) untuk melihat tingkat konsumsi. Lembar kajian tetap bisa disimpan tanpa recall: tekan <b>Simpan / Cetak</b> di atas.</p><button class="btn primary" type="button" data-goto="recall">Ke Recall 24 Jam</button></div></div>`;return}
   const rows=NUT.map(n=>{const v=t.t[n.k],tg=T[n.k];const p=tg?v/tg*100:null;const [kl,c]=klas(p,n.cls);const mi=t.miss[n.k];
     return `<tr><td>${n.l}${mi?` <span class="sup" title="${mi} bahan tidak punya data ${n.l.toLowerCase()} di TKPI">*${mi}</span>`:''}</td><td>${fmt(v,n.d)} <span class="note">${n.u}</span></td><td>${tg?fmt(tg,n.d):'–'}</td>
     <td>${p!=null?fmt(p)+'%':'–'}</td><td>${p!=null?`<span class="mini"><i style="width:${Math.min(p,150)/1.5}%;background:${barC[c]}"></i></span>`:''}</td><td>${n.cls?`<span class="pill ${c}">${kl}</span>`:'<span class="note">tanpa acuan</span>'}</td></tr>`}).join('');
@@ -1227,6 +1241,8 @@ document.getElementById('labOut').addEventListener('change',e=>{const k=e.target
    Ibu hamil: Buku KIA 2024 (porsi, TTD/MMS); leaflet Makanan Sehat Ibu Hamil (Kemenkes 2018).
    Ibu menyusui: Poster Isi Piringku Ibu Menyusui (Kemenkes 2023) + leaflet 2018 (minyak, gula).
    Purin rendah, lambung, lansia: leaflet Kemenkes 2018; porsi dari Pedoman Gizi Seimbang 2014 Lampiran 14. */
+function CTG(){try{const v=+(JSON.parse(localStorage.getItem('kg-set')||'{}').centong);return v>=20&&v<=300?v:50}catch(e){return 50}}
+const ctgTxt=g=>`${fr(g/CTG())} centong (±${Math.round(g)} g)`;
 const DLIST=['hamil','menyusui','dm','rg','purin','lambung','lansia'];
 const DNAME={hamil:'Makanan Sehat Ibu Hamil',menyusui:'Makanan Sehat Ibu Menyusui',dm:'Diet Diabetes Melitus',rg:'Diet Rendah Garam (DASH)',purin:'Diet Purin Rendah',lambung:'Diet Lambung',lansia:'Makanan Sehat Lansia'};
 function dietSuggest(){const L=S.lab,k=S.klien,o=Object.fromEntries(DLIST.map(x=>[x,[]]));const v=x=>num(L[x]);const dx=(L.dx||'').toLowerCase();const u=umur(k.tgll,k.tglk);const R=calc();
@@ -1251,12 +1267,12 @@ const MEALT={pagi:['Pagi','06.00–08.00'],sp:['Selingan','10.00'],siang:['Siang
 function fr(x){x=Math.round(x*4)/4;const w=Math.floor(x+1e-9),f=Math.round((x-w)*4)/4;const F={0:'',.25:'¼',.5:'½',.75:'¾'}[f]??'';return (w?w:'')+F||'0'}
 const NASI={.5:'⅓ gelas',1:'¾ gelas',1.5:'1 gelas',2:'1½ gelas',2.5:'2 gelas',3:'2¼ gelas'};
 function dmRows(m,i){const T=DMT[m],r=[];const v=k=>T[k]==null?0:(T[k]==='s'?'s':T[k][i]);
-  const kh=v('kh');if(kh)r.push({g:m==='sp'||m==='ss'?'Makanan pokok':'Nasi',u:m==='sp'||m==='ss'?`${fr(kh)} porsi (roti ${fr(kh*3)} iris, biskuit ${fr(kh*4)} buah, atau ubi ${fr(kh)} buah sedang)`:(NASI[kh]||fr(kh*.75)+' gelas'),p:`${fr(kh)} P karbohidrat`,b:kh*100});
+  const kh=v('kh');if(kh)r.push({g:m==='sp'||m==='ss'?'Makanan pokok':'Nasi',u:m==='sp'||m==='ss'?`${fr(kh)} porsi (roti ${fr(kh*3)} iris, biskuit ${fr(kh*4)} buah, atau ubi ${fr(kh)} buah sedang)`:ctgTxt(kh*100),p:`${fr(kh)} P karbohidrat${m==='sp'||m==='ss'?'':' = '+(NASI[kh]||fr(kh*.75)+' gelas')+' nasi'}`,b:kh*100});
   const hs=v('hs');if(hs)r.push({g:'Lauk hewani',u:`${fr(hs)} potong sedang (daging, ayam, atau 1 butir telur)`,p:`${fr(hs)} P hewani lemak sedang`,b:hs*35});
   const hr=v('hr');if(hr)r.push({g:'Lauk hewani',u:`${fr(hr)} potong sedang (ikan atau ayam tanpa kulit)`,p:`${fr(hr)} P hewani rendah lemak`,b:hr*40});
   const nb=v('nb');if(nb)r.push({g:'Lauk nabati',u:nb===.5?'1 potong tempe atau ½ biji tahu':`${fr(nb*2)} potong tempe atau ${fr(nb)} biji tahu`,p:`${fr(nb)} P nabati`,b:nb*50});
   const sa=v('sa');if(sa)r.push({g:'Sayur',u:'boleh sepuasnya (sayur bening, lalapan)',p:'sayuran A, sekehendak',b:null});
-  const sb=v('sb');if(sb==='s')r.push({g:'Sayur',u:'boleh sepuasnya',p:'sayuran B, sekehendak',b:null});else if(sb)r.push({g:'Sayur',u:`${fr(sb)} gelas (sudah dimasak)`,p:`${fr(sb)} P sayuran B`,b:sb*100});
+  const sb=v('sb');if(sb==='s')r.push({g:'Sayur',u:'boleh sepuasnya',p:'sayuran B, sekehendak',b:null});else if(sb)r.push({g:'Sayur',u:`${fr(sb)} mangkuk sayur matang`,p:`${fr(sb)} P sayuran B = ${fr(sb)} gelas`,b:sb*100});
   const bu=v('bu');if(bu)r.push({g:'Buah',u:`${fr(bu)} porsi (mis. ${bu>1?bu+' porsi pisang/pepaya':'1 pisang, 1 potong pepaya, atau 2 jeruk'})`,p:`${fr(bu)} P buah`,b:null});
   const su=v('su');if(su)r.push({g:'Susu tanpa lemak',u:`${fr(su)} gelas`,p:`${fr(su)} P susu tanpa lemak`,b:su*200});
   const mk=v('mk');if(mk)r.push({g:'Minyak',u:`${fr(mk)} sendok teh`,p:`${fr(mk)} P minyak`,b:mk*5});
@@ -1268,7 +1284,7 @@ const RGP=[['pagi','Oat/sereal gandum utuh',3,'sendok makan',50,1],['pagi','Susu
  ['malam','Nasi',1.25,'gelas',null,1],['malam','Sayur',1.5,'gelas',150,0],['malam','Daging tanpa lemak',1,'potong sedang',50,0],['malam','Tahu',1,'potong sedang',50,0],['malam','Susu rendah lemak',1,'gelas',200,0],['malam','Minyak',1,'sendok teh',5,1]];
 const rH=x=>Math.max(.5,Math.round(x*2)/2);
 function rgMeals(E){const fs=Math.min(1.5,Math.max(.4,(E-880)/1133));const out={};
-  for(const [m,f,q,u,g,sc] of RGP){const qq=sc?rH(q*fs):q;const gr=f==='Nasi'?Math.round(qq*133):(g==null?null:Math.round(g*qq/q));(out[m]||(out[m]=[])).push({g:f,u:`${fr(qq)} ${u}`,p:'',b:gr})}
+  for(const [m,f,q,u,g,sc] of RGP){const qq=sc?rH(q*fs):q;const gr=f==='Nasi'?Math.round(qq*133):(g==null?null:Math.round(g*qq/q));(out[m]||(out[m]=[])).push({g:f,u:f==='Nasi'?ctgTxt(gr):f==='Sayur'?`${fr(qq)} mangkuk sayur matang`:`${fr(qq)} ${u}`,p:f==='Nasi'?`${fr(qq)} gelas nasi`:f==='Sayur'?`${fr(qq)} gelas`:'',b:gr})}
   return out}
 
 // Porsi sehari (kunci: n pokok, d hewani, t nabati, s sayur, b buah, su susu, m minyak, g gula)
@@ -1290,7 +1306,7 @@ function porsiMeals(p,opt={}){const sel=opt.sel||{};const lam=!!sel.lambung;cons
   const B=lam?dist(p.b||0,{sp:.3,siang:.2,ss:.3,sm:.2},.5):dist(p.b||0,{sp:.35,siang:.15,ss:.35,malam:.15},.5);
   const M=dist(p.m||0,{pagi:.3,siang:.4,malam:.3},1),G=dist(p.g||0,{sp:.5,ss:.5},1);
   for(const m of ['pagi','sp','siang','ss','malam','sm']){
-    const n=N[m]||0;if(n){if(m==='pagi'||m==='siang'||m==='malam')add(m,{g:lam?'Nasi tim / bubur':'Nasi',u:`${fr(n*.75)} gelas`+(lam?' (takaran nasi; bubur/nasi tim setara)':''),p:`${fr(n)} P makanan pokok`,b:Math.round(n*100)});
+    const n=N[m]||0;if(n){if(m==='pagi'||m==='siang'||m==='malam')add(m,{g:lam?'Nasi tim / bubur':'Nasi',u:ctgTxt(n*100)+(lam?'; bubur/nasi tim setara':''),p:`${fr(n)} P makanan pokok = ${fr(n*.75)} gelas nasi`,b:Math.round(n*100)});
       else add(m,{g:'Selingan makanan pokok',u:`roti ${fr(n*3)} iris atau biskuit ${fr(n*4)} buah`,p:`${fr(n)} P makanan pokok`,b:Math.round(n*40)})}
     if(D[m])add(m,{g:'Lauk hewani',u:`${fr(D[m])} potong sedang ikan/ayam/daging atau ${fr(D[m])} butir telur`,p:`${fr(D[m])} P hewani`,b:Math.round(D[m]*50)});
     if(T[m])add(m,{g:'Lauk nabati',u:`${fr(T[m])} potong sedang tempe atau ${fr(T[m]*2)} potong sedang tahu`,p:`${fr(T[m])} P nabati`,b:Math.round(T[m]*50)});
@@ -1334,7 +1350,7 @@ const DIET_BOTH={
  ok:[...DIET.dm.ok,'Bumbu segar dan rempah (bawang, jahe, kunyit, salam, jeruk nipis) sebagai pengganti garam'],
  no:['Gula, madu, sirup, selai, dodol, kue manis, manisan buah','Susu kental manis, minuman botol/kemasan manis, es krim','Jeroan, otak, daging berlemak, gorengan, makanan siap saji','Penyedap rasa (vetsin), kecap, saus, bumbu instan','Ikan asin, telur asin, kornet, sosis, makanan kaleng dan awetan'],
  ingat:['Makan teratur: 3 kali makan dan 2 kali selingan, pada jam yang sama setiap hari','Jangan melewatkan makan bila minum obat diabetes atau suntik insulin','Aktif bergerak setiap hari sesuai anjuran dokter']};
-const SUBST=[['Nasi ¾ gelas','roti 3 iris · kentang 2 buah sedang · mi basah 2 gelas · singkong ½ potong · jagung 3 buah sedang'],
+const SUBST_=()=>[[`Nasi ${fr(100/CTG())} centong (100 g)`,'roti 3 iris · kentang 2 buah sedang · mi basah 2 gelas · singkong ½ potong · jagung 3 buah sedang'],
  ['Lauk hewani 1 potong','ikan 1 potong sedang · ayam tanpa kulit 1 potong sedang · daging 1 potong sedang · telur 1 butir'],
  ['Lauk nabati 1 porsi','tempe 1 potong sedang (50 g) · tahu 2 potong sedang (100 g) · kacang hijau 2½ sendok makan'],
  ['Buah 1 porsi','pisang 1 potong sedang · pepaya 1 potong besar · jeruk 2 buah sedang · apel 1 buah kecil · mangga ¾ buah besar']];
@@ -1347,7 +1363,7 @@ function dietAlerts(R){const a=[];const L=S.lab;
   else if(R.kek)a.push(`LiLA ${fmt(R.lila,1)} cm (< 23,5 cm): risiko kurang energi kronis. Perbaiki asupan makan dan pantau berat badan.`);
   return a}
 function dietPlan(){const sel=dietSel();const keys=DLIST.filter(k=>sel[k]);if(!keys.length)return null;const R=calc();const need=R.T.energi||null;const k=S.klien;
-  let E,i=null,note='',meals=[],nilai=null,base,subst=SUBST;const u=R.u?R.u.y:30;const alerts=dietAlerts(R);
+  let E,i=null,note='',meals=[],nilai=null,base,subst=SUBST_();const u=R.u?R.u.y:30;const alerts=dietAlerts(R);
   if(sel.dm){base='dm';const want=num(S.diet.E)||need||1700;i=DM_LV.reduce((b,x,j)=>Math.abs(x-want)<Math.abs(DM_LV[b]-want)?j:b,0);E=DM_LV[i];
     note=need?`Kebutuhan klien ${fmt(need)} kkal; dipakai standar diet DM terdekat ${fmt(E)} kkal.`:'Kebutuhan energi belum dihitung; dipakai 1.700 kkal.';if(num(S.diet.E))note=`Energi diet dipilih konselor: ${fmt(E)} kkal.`;
     if(sel.hamil)note+=' Diabetes pada kehamilan perlu pemantauan dokter dan dietisien.';
@@ -1491,7 +1507,12 @@ function closePen(){penDrawer.hidden=true;penScrim.hidden=true;if(penBack&&penBa
 document.getElementById('btnPen').addEventListener('click',openPen);document.getElementById('penClose').addEventListener('click',closePen);penScrim.addEventListener('click',closePen);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!penDrawer.hidden)closePen()});
 document.getElementById('hasilOut').addEventListener('input',e=>{if(e.target.id==='f-cat'){S.catatan=e.target.value;save()}});
-document.addEventListener('click',e=>{if(e.target.closest('[data-print]'))doPrint()});
+const expModal=document.getElementById('expModal');
+document.addEventListener('click',e=>{if(e.target.closest('[data-print]')){msg('');expModal.hidden=false;return}
+  if(e.target.closest('[data-expclose]')||e.target===expModal){expModal.hidden=true;return}
+  if(e.target.closest('#expModal [data-card]')){setTimeout(()=>{if(!cardModal.hidden)expModal.hidden=true},50);return}
+  if(e.target.closest('[data-printnow]')){expModal.hidden=true;doPrint()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!expModal.hidden)expModal.hidden=true});
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 function reportDoc(){buildReport();const k=S.klien;
   return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(docTitle())}</title>
@@ -1520,7 +1541,7 @@ async function needPdf(){if(!(window.jspdf&&window.jspdf.jsPDF)){await loadScrip
 const P=x=>String(x??'').replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/β/g,'beta').replace(/[−]/g,'-').replace(/→/g,'->').replace(/[^\x00-\xFF–—‘’“”•…]/g,'');
 const slug=x=>(norm(x||'klien').replace(/ /g,'-')||'klien').slice(0,40);
 const fileBase=pre=>`${pre}_${slug(S.klien.nama)}_${S.klien.tglk||today()}`;
-function msg(html){const b=document.getElementById(MODE==='posy'?'pfPosy':MODE==='pam'?'pfPam':'printFallback');if(b){b.innerHTML=html;b.hidden=!html}}
+function msg(html){const b=document.getElementById(MODE==='posy'?'pfPosy':MODE==='pam'?'pfPam':(document.getElementById('expModal')&&!document.getElementById('expModal').hidden?'expMsg':'printFallback'));if(b){b.innerHTML=html;b.hidden=!html}}
 function deliverDownload(blob,name){const url=URL.createObjectURL(blob);
   if(inFrame){let w=null;try{w=window.open(url,'_blank')}catch(e){}
     msg(w?`File dibuka di tab baru; simpan dari sana.`:`Unduhan diblokir oleh halaman ini. <a class="lnk-open" href="${url}" target="_blank" rel="noopener">Buka ${esc(name)}</a>`);return}
@@ -1732,6 +1753,8 @@ function toPosy(src){const keep=PY;PY=pblank(keep);
 document.addEventListener('click',e=>{const b=e.target.closest('[data-toposy]');if(b)toPosy(b.dataset.toposy)});
 
 
+/* ===== Pengaturan: berat 1 centong nasi ===== */
+(()=>{const el=document.getElementById('set-ctg');if(!el)return;el.value=CTG();el.addEventListener('change',()=>{const v=+el.value;if(!(v>=20&&v<=300)){el.value=CTG();return}try{const o=JSON.parse(localStorage.getItem('kg-set')||'{}');o.centong=v;localStorage.setItem('kg-set',JSON.stringify(o))}catch(e){}document.getElementById('ctgNote').textContent='Tersimpan: 1 centong = '+v+' g nasi.'})})();
 /* ===== Kondisi khusus (Klinik) ===== */
 document.getElementById('f-hbk').addEventListener('input',e=>{S.lab.hb=e.target.value;refresh()});
 function kondVis(R){const k=S.klien;const u=R.u;const wus=k.jk==='P'&&(!u||(u.y>=10&&u.y<=55));
@@ -2113,7 +2136,7 @@ function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const 
   const Bu=dist(p.b,{sp:.3,siang:.2,ss:.3,malam:.2},.5);
   const Mi=dist(p.m,{pagi:.3,siang:.35,malam:.35},1);
   const Gu=dist(p.g,{pagi:.5,ss:.5},1);
-  const nasi=k=>add(k,'Nasi putih',N[k]*0.75,`${fq(N[k]*0.75)} gelas · ${Math.round(N[k]*100)} g`);
+  const nasi=k=>add(k,'Nasi putih',N[k],`${fq(N[k]*100/CTG())} centong · ${Math.round(N[k]*100)} g`);
   // pagi
   nasi('pagi');
   if(Hw.pagi)add('pagi',c.lauk==='telur'?'Telur rebus':'Telur dadar',Hw.pagi,`${fq(Hw.pagi)} butir`);
@@ -2142,7 +2165,7 @@ function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const 
   buah('malam',Bu.malam);
   const pd=nab?{...p,t:p.t+p.d,d:0}:p;
   return {...P,pd,M,Mi,lk,tukar:[
-    'Nasi ¾ gelas (100 g) = 3 buah jagung sedang = 1 buah ubi jalar sedang = 2 buah kentang sedang = 1½ potong singkong = 3 iris roti = 1 gelas mi kering.',
+    `Nasi ${fq(100/CTG())} centong (100 g) = 3 buah jagung sedang = 1 buah ubi jalar sedang = 2 buah kentang sedang = 1½ potong singkong = 3 iris roti = 1 gelas mi kering.`,
     'Ikan 1 potong sedang = 1 potong ayam = 1 potong daging = 1 butir telur = 5 ekor udang sedang.',
     'Tempe 2 potong sedang = tahu 2 potong sedang = kacang hijau/merah 2½ sendok makan.',
     'Sayur 1 mangkuk (100 g) boleh diganti sayuran lain; buah boleh diganti buah musim setempat.',
