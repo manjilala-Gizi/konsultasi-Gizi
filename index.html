@@ -540,6 +540,16 @@ body[data-mode="home"] .modetag{display:none}
             <div class="field"><label for="p-bbl">BB bulan lalu <span style="font-weight:400">(opsional)</span></label><div class="unit"><input id="p-bbl" type="number" inputmode="decimal" step="0.1" min="0"><span>kg</span></div><small>Untuk menilai naik (N) / tidak naik (T)</small></div>
           </div>
         </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Kondisi anak</h2><span class="hint">Buku KIA 2024</span></div>
+          <div class="panel-b">
+            <label class="kchk" style="font-weight:700"><input type="checkbox" id="p-sakit"> <span>Anak sedang sakit</span></label>
+            <div id="p-sakitBox" hidden>
+              <fieldset class="komp"><legend>Keluhan</legend><div id="p-kel"></div></fieldset>
+              <fieldset class="komp"><legend>Tanda bahaya (Buku KIA, balita 29 hari–5 tahun)</legend><div id="p-bhy"></div><small>Bila ada satu saja, anak segera diperiksa dokter/perawat.</small></fieldset>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="stack"><div class="stack" id="posyOut"></div>
       <div class="panel xbtn"><div class="panel-h"><h2>Cetak &amp; bagikan</h2></div><div class="panel-b">
@@ -1996,9 +2006,9 @@ function renderHome(){
 }
 
 /* ===== Posyandu: status gizi balita (Permenkes No. 2/2020) ===== */
-const pblank=(keep)=>({nama:'',ibu:'',jk:'L',dob:{d:'',m:'',y:''},tglu:today(),bb:'',tb:'',cara:'',lila:'',bbl:'',pos:keep?keep.pos||'':'',ptg:keep?keep.ptg||'':''});
+const pblank=(keep)=>({nama:'',ibu:'',jk:'L',dob:{d:'',m:'',y:''},tglu:today(),bb:'',tb:'',cara:'',lila:'',bbl:'',sakit:false,kel:[],bhy:[],pos:keep?keep.pos||'':'',ptg:keep?keep.ptg||'':''});
 let PY;try{PY=JSON.parse(localStorage.getItem('kg-posy-v1'))}catch(e){PY=null}
-if(!PY||typeof PY!=='object')PY=pblank();PY=Object.assign(pblank(),PY);
+if(!PY||typeof PY!=='object')PY=pblank();PY=Object.assign(pblank(),PY);if(!Array.isArray(PY.kel))PY.kel=[];if(!Array.isArray(PY.bhy))PY.bhy=[];
 let psT;function savePosy(){clearTimeout(psT);psT=setTimeout(()=>{try{localStorage.setItem('kg-posy-v1',JSON.stringify(PY))}catch(e){}},250)}
 
 // umur dalam bulan penuh
@@ -2093,12 +2103,15 @@ function renderPosy(){const o=calcPosy();const el=document.getElementById('posyO
       h+=`</div></div>`}
     if(o.idx.some(x=>x.z!=null)||o.lila||o.nt){const wz=zget(o,'bbpb');const toTl=(wz!=null&&wz<-2)||(o.lila&&o.lila[0]!=='Gizi baik');
       h+=`<div class="panel"><div class="panel-h"><h2>Tindak lanjut</h2></div><div class="panel-b msgs">${tindakLanjut(o).map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}${toTl&&m>=6?`<div><button class="btn primary" type="button" data-totl>Lanjut ke Tata Laksana (konfirmasi &amp; triase nakes)</button></div>`:''}</div></div>`}
+    if(PY.sakit)h+=sakitHTML(o);
     const k=pesanKIA(m);h+=`<div class="panel"><div class="panel-h"><h2>Pesan konseling</h2><span class="hint">Buku KIA · umur ${k.t}</span></div><div class="panel-b"><ul class="lst dot">${k.l.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`;
     h+=`<p class="note">Z-skor dihitung dari tabel SD Permenkes No. 2 Tahun 2020 (median dan ±1 SD; panjang/tinggi diinterpolasi). Hasil dapat berbeda di desimal kedua dibanding WHO Anthro.</p>`}
   el.innerHTML=h}
 
 const PF={pos:'p-pos',ptg:'p-ptg',nama:'p-nama',ibu:'p-ibu',tglu:'p-tglu',bb:'p-bb',tb:'p-tb',lila:'p-lila',bbl:'p-bbl'};
-function loadPosy(){for(const[k,id]of Object.entries(PF))document.getElementById(id).value=PY[k]??'';
+function loadPosy(){document.getElementById('p-sakit').checked=!!PY.sakit;document.getElementById('p-sakitBox').hidden=!PY.sakit;
+  document.querySelectorAll('#p-kel [data-kel]').forEach(c=>c.checked=PY.kel.includes(c.dataset.kel));document.querySelectorAll('#p-bhy [data-bhy]').forEach(c=>c.checked=PY.bhy.includes(c.dataset.bhy));
+for(const[k,id]of Object.entries(PF))document.getElementById(id).value=PY[k]??'';
   const d=PY.dob||{};document.getElementById('p-ld').value=d.d??'';document.getElementById('p-lm').value=d.m??'';document.getElementById('p-ly').value=d.y??'';
   document.querySelectorAll('#p-jk button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===PY.jk))}
 const posyUpd=()=>{renderPosy();savePosy()};
@@ -2111,6 +2124,42 @@ document.querySelectorAll('#p-jk button').forEach(b=>b.addEventListener('click',
 document.querySelectorAll('#p-cara button').forEach(b=>b.addEventListener('click',()=>{PY.cara=b.dataset.v;posyUpd()}));
 armBtn(document.getElementById('btnPosyNew'),'Balita baru','Hapus? Klik lagi',()=>{PY=pblank(PY);savePosy();loadPosy();renderPosy();document.getElementById('p-nama').focus()});
 
+
+/* ===== Balita sakit (Buku KIA 2024 hal. 51, 87–88); tanpa dosis obat ===== */
+const SKEL=[['demam','Demam'],['batuk','Batuk / pilek'],['diare','Diare / mencret'],['muntah','Muntah'],['tdkmakan','Tidak mau makan / minum']];
+const BHY=[['demamt','Demam / panas tinggi'],['diare','Diare'],['kejang','Kejang'],['muntah','Muntah-muntah'],['telinga','Pembengkakan yang nyeri di belakang telinga'],['darah','Perdarahan di hidung / kulit / BAB'],['sesak','Sesak napas'],['biru','Tampak biru (sianosis)'],['minum','Tidak bisa minum']];
+const SKELN=Object.fromEntries(SKEL),BHYN=Object.fromEntries(BHY);
+document.getElementById('p-kel').innerHTML=SKEL.map(([k,l])=>`<label class="kchk"><input type="checkbox" data-kel="${k}"> <span>${l}</span></label>`).join('');
+document.getElementById('p-bhy').innerHTML=BHY.map(([k,l])=>`<label class="kchk"><input type="checkbox" data-bhy="${k}"> <span>${l}</span></label>`).join('');
+document.getElementById('p-sakit').addEventListener('change',e=>{PY.sakit=e.target.checked;document.getElementById('p-sakitBox').hidden=!PY.sakit;posyUpd()});
+document.getElementById('p-sakitBox').addEventListener('change',e=>{const c=e.target;if(c.dataset.kel){const s=new Set(PY.kel);c.checked?s.add(c.dataset.kel):s.delete(c.dataset.kel);PY.kel=[...s]}
+  if(c.dataset.bhy){const s=new Set(PY.bhy);c.checked?s.add(c.dataset.bhy):s.delete(c.dataset.bhy);PY.bhy=[...s]}posyUpd()});
+const SAKIT_P={
+ demam:{t:'Demam',l:['Jika masih menyusu, berikan ASI lebih sering.','Beri minum lebih sering dan lebih banyak.','Jangan diselimuti atau diberi baju tebal.','Kompres dengan air biasa atau air hangat; jangan kompres air dingin karena anak bisa menggigil.','Obat penurun panas sesuai anjuran petugas kesehatan.','Di daerah endemis malaria, balita harus tidur di dalam kelambu anti nyamuk.'],
+  s:['Demam disertai kejang.','Demam tidak turun dalam 2 hari.','Demam disertai bintik-bintik merah, perdarahan di hidung, atau buang air besar berwarna hitam.']},
+ batuk:{t:'Batuk / pilek',l:['Berikan ASI lebih sering.','Beri minum air matang lebih banyak.','Bila umur di atas 1 tahun, beri kecap manis atau madu dicampur air jeruk nipis sebagai pelega tenggorokan.','Jauhkan dari asap rokok, asap dapur, asap sampah, polusi kendaraan bermotor, dan debu.'],
+  s:['Batuk tidak sembuh dalam 2 hari.','Anak sesak napas.','Timbul demam.']},
+ diare:{t:'Diare / mencret',l:['Jika masih menyusu, terus berikan ASI sesering mungkin.','Berikan cairan setiap anak buang air besar; bila tidak ada oralit, berikan air matang, kuah sayur bening, atau air tajin.','Oralit dan zinc sesuai anjuran petugas kesehatan.','Tetap beri MP-ASI atau makan seperti biasa.','Jangan beri obat apa pun kecuali dari petugas kesehatan.'],
+  s:['Timbul demam.','Ada darah dalam tinja.','Diare makin parah atau berulang-ulang.','Muntah terus-menerus.','Anak terlihat sangat haus.','Anak tidak mau makan dan minum.']},
+ muntah:{t:'Muntah',l:['Tetap berikan ASI dan minum sedikit-sedikit tetapi sering.','Muntah-muntah termasuk tanda bahaya dalam Buku KIA: periksakan ke dokter/perawat.'],s:['Muntah terus-menerus.','Anak tidak bisa minum.']},
+ tdkmakan:{t:'Tidak mau makan / minum',l:['Tawarkan ASI dan makanan kesukaan anak sedikit-sedikit tetapi sering.','Anak yang tidak bisa minum termasuk tanda bahaya: segera periksakan.'],s:['Anak tidak bisa minum.','Anak makin lemah.']}};
+function sakitData(o){const m=o.u?o.u.m:null;const wz=zget(o,'bbpb');const gb=(wz!=null&&wz<-3)||(o.lila&&o.lila[0]==='Gizi buruk');const gk=!gb&&((wz!=null&&wz<-2)||(o.lila&&o.lila[0]==='Gizi kurang'));
+  const msgs=[];
+  if(PY.bhy.length)msgs.push(['bad',`<b>Ada tanda bahaya</b> (${PY.bhy.map(k=>BHYN[k].toLowerCase()).join(', ')}): anak <b>segera diperiksa dokter/perawat</b> sesuai MTBS.`]);
+  else msgs.push(['','Anak sakit diperiksa dokter/perawat sesuai MTBS. Pesan di bawah adalah pendamping dari sisi gizi dan perawatan di rumah.']);
+  if(gb)msgs.push(['bad','Anak sakit dengan <b>gizi buruk</b>: lanjutkan ke <b>Tata Laksana Balita</b> untuk triase (komplikasi medis → rawat inap).']);
+  else if(gk)msgs.push(['warn','Anak sakit dengan <b>gizi kurang</b>: perhatikan asupan selama sakit; setelah sembuh, konfirmasi ke Puskesmas untuk PMT lokal.']);
+  const umum=m!=null&&m<6?['Susui lebih sering, siang dan malam; bayi di bawah 6 bulan cukup ASI saja.']:['Beri asupan gizi lebih banyak: tambah porsi ASI atau makanan/minuman, atau tambah variasi makanan.','Beri makan lebih sering: bila biasa makan 3–4 kali sehari, tambah 1–2 kali lagi dengan porsi yang tidak membuat anak terlalu kenyang.'];
+  const kel=PY.kel.map(k=>SAKIT_P[k]).filter(Boolean);let segera=[...new Set(kel.flatMap(x=>x.s))];if(PY.kel.includes('demam'))segera=segera.filter(x=>x!=='Timbul demam.');
+  return {msgs,umum,kel,segera,gb}}
+function sakitHTML(o){const d=sakitData(o);
+  return `<div class="panel" style="border-color:var(--warn)"><div class="panel-h"><h2>Balita sakit</h2><span class="hint">Buku KIA 2024</span></div><div class="panel-b">
+    <div class="msgs">${d.msgs.map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}</div>
+    ${PY.kel.length?`<p style="margin:10px 0 0"><b>Keluhan:</b> ${PY.kel.map(k=>SKELN[k].toLowerCase()).join(', ')}</p>`:''}
+    <p class="eyebrow" style="margin:12px 0 4px">Makan saat anak sakit</p><ul class="lst dot">${d.umum.map(x=>`<li>${x}</li>`).join('')}</ul>
+    ${d.kel.map(x=>`<p class="eyebrow" style="margin:12px 0 4px">${x.t}</p><ul class="lst dot">${x.l.map(y=>`<li>${y}</li>`).join('')}</ul>`).join('')}
+    ${d.segera.length?`<p class="eyebrow" style="margin:12px 0 4px;color:var(--bad)">Segera ke fasilitas kesehatan bila</p><ul class="lst dot">${d.segera.map(y=>`<li><span>${y}</span></li>`).join('')}</ul>`:''}
+    </div></div>`}
 
 /* ===== Mode Pameran: cek status gizi kilat pengunjung ===== */
 const cblank=()=>({nama:'',jk:'L',umur:'',fis:'',tm:'2',mp:'1',lila:'',hb:'',lauk:'ikan',akt:'r',bb:'',tb:'',tl:'',lp:'',sis:'',dia:'',gds:'',kol:''});
@@ -2468,7 +2517,9 @@ function posySpec(){const o=calcPosy();const u=o.u;const jk=PY.jk==='P'?'Perempu
   const ix=(o.idx||[]).filter(x=>x.z!=null);
   if(ix.length)sec.push({h:'C. Status gizi (Permenkes No. 2 Tahun 2020)',table:{head:['Indeks','Z-skor','Kategori'],rows:ix.map(x=>[`${x.n} · ${x.d}`,pmI(x.z)+' SD',x.c[0]]),toneCol:2,tone:ix.map(x=>x.c[1])},
     note:'Z-skor dari tabel SD Permenkes No. 2/2020; panjang/tinggi diinterpolasi. '+(o.pb?'Umur <24 bulan memakai panjang badan (PB).':'Umur ≥24 bulan memakai tinggi badan (TB).')});
-  if(u&&o.inRange){sec.push({h:'D. Tindak lanjut',list:tindakLanjut(o).map(([,t])=>t)});const k=pesanKIA(u.m);sec.push({h:`E. Pesan konseling untuk ibu (umur ${k.t})`,list:k.l})}
+  if(u&&o.inRange){sec.push({h:'D. Tindak lanjut',list:tindakLanjut(o).map(([,t])=>t)});
+    if(PY.sakit){const d=sakitData(o);sec.push({h:'E. Balita sakit',kv:[['Keluhan',PY.kel.map(k=>SKELN[k]).join(', ')||'–'],['Tanda bahaya',PY.bhy.map(k=>BHYN[k]).join(', ')||'tidak ada']],list:[...d.msgs.map(([,t])=>t),...d.umum,...d.kel.flatMap(x=>x.l.map(y=>x.t+': '+y)),...(d.segera.length?['Segera ke fasilitas kesehatan bila: '+d.segera.join(' ')]:[])]})}
+    const k=pesanKIA(u.m);sec.push({h:`${PY.sakit?'F':'E'}. Pesan konseling untuk ibu (umur ${k.t})`,list:k.l})}
   return {title:'HASIL PENIMBANGAN BALITA',sub:'Posyandu · Pemantauan pertumbuhan dan status gizi',dateL:'Tanggal penimbangan: '+tglID(PY.tglu),sections:sec,
     sign:[['Orang tua / pengasuh',PY.ibu],['Petugas / kader',PY.ptg]],
     foot:'Standar: Permenkes No. 2 Tahun 2020 tentang Standar Antropometri Anak; Buku KIA Kemenkes RI 2024 (KBM, LiLA, pesan pemberian makan).<br>Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.'}}
@@ -2478,7 +2529,7 @@ function posyCard(){const o=calcPosy();const u=o.u;const ix=(o.idx||[]).filter(x
     hero:{h:'BERAT BADAN',big:o.bb?fmt(o.bb,1):'–',label:'kg',pill:o.nt&&o.nt.s?[o.nt.s==='N'?'Naik':'Tidak naik',o.nt.s==='N'?'p-ok':'p-warn']:null,
       kv:[[o.pb===false?'Tinggi badan':'Panjang badan',o.L?fmt(o.L,1)+' cm':'–'],['LiLA',num(PY.lila)?fmt(num(PY.lila),1)+' cm':'–'],['Perubahan BB',o.nt?`${o.nt.g>=0?'+':''}${fmt(o.nt.g)} g`:'–']]},
     rows:{h:'STATUS GIZI',items:[...ix.map(x=>({l:x.n,v:pmI(x.z)+' SD',pill:x.c})),...(o.lila?[{l:'LiLA',v:fmt(num(PY.lila),1)+' cm',pill:o.lila}]:[])]},
-    lists:[{h:'TINDAK LANJUT',items:tl,tone:tl.some(t=>/Rujuk segera|sangat/i.test(t))?'bad':'warn'},{h:'PESAN UNTUK IBU',items:u&&o.inRange?pesanKIA(u.m).l:[]}],
+    lists:[{h:'TINDAK LANJUT',items:tl,tone:tl.some(t=>/Rujuk segera|sangat/i.test(t))?'bad':'warn'},...(PY.sakit&&u&&o.inRange?(()=>{const d=sakitData(o);return [{h:'SAAT ANAK SAKIT',items:[...(PY.bhy.length?['Ada tanda bahaya: segera periksakan ke dokter/perawat.']:[]),...d.umum,...d.kel.flatMap(x=>x.l.slice(0,3))].filter((x,i,a)=>!/ASI (lebih )?sering|ASI lebih sering|ASI sesering/.test(x)||a.findIndex(y=>/ASI (lebih )?sering|ASI sesering/.test(y))===i),tone:PY.bhy.length?'bad':'warn'},...(d.segera.length?[{h:'SEGERA KE FASKES BILA',items:d.segera,tone:'bad'}]:[])]})():[]),{h:'PESAN UNTUK IBU',items:u&&o.inRange?pesanKIA(u.m).l:[]}],
     foot:[`Petugas: ${PY.ptg||'–'}`,'Permenkes No. 2/2020 · Buku KIA · Poltekkes Kemenkes Makassar']}}
 
 /* --- Pameran --- */
