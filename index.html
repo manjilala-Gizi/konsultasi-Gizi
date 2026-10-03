@@ -293,6 +293,7 @@ body[data-mode="klinik"] #homeView,body[data-mode="posy"] #homeView,body[data-mo
 .xbtn{display:none!important}.can-print .xbtn{display:block!important}.can-print button.xbtn{display:inline-flex!important}
 .btn.sm{padding:4px 9px;font-size:12px}
 .seg button{white-space:nowrap}
+.page.noside{grid-template-columns:minmax(0,1fr)}.page.noside .side{display:none}
 .seg-wrap{display:flex;flex-wrap:wrap}.seg-wrap button{flex:1 1 auto}
 .porsi-row{display:flex;flex-wrap:wrap;gap:6px}
 .porsi-row span{background:var(--surface-2);border-radius:8px;padding:5px 9px;font-size:12.5px;color:var(--muted)}
@@ -935,7 +936,7 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
     <ol class="interp" style="margin-top:8px"><li><b>Data Klien</b>: isi identitas, BB, TB, dan aktivitas. IMT dan kebutuhan gizi muncul otomatis di sini.</li>
     <li><b>Recall 24 Jam</b>: ketik nama makanan di tiap waktu makan, pilih URT/penukar.</li>
     <li><b>Hasil Kajian</b>: lihat tingkat konsumsi, tulis anjuran, lalu cetak lembar kajian.</li></ol>
-    <p class="note" style="margin:10px 0 0">Data tersimpan otomatis di perangkat ini. Tekan <b>Klien baru</b> untuk mengosongkan formulir.</p></div></div>`;
+    <p class="note" style="margin:10px 0 0">Data tersimpan otomatis di perangkat ini. Untuk klien berikutnya, buka <b>Beranda</b> lalu pilih <b>Konseling baru</b>.</p></div></div>`;
   else if(!inv.length&&R.imtOdd==null)h+=`<div class="panel"><div class="panel-b"><div class="eyebrow">Status gizi</div><p class="note" style="margin:.4em 0 0">Isi berat badan dan tinggi badan (atau tinggi lutut) untuk menghitung IMT dan berat badan ideal.</p></div></div>`;
   h+=maternalHTML(R);
   const T=R.T;
@@ -1403,7 +1404,7 @@ document.getElementById('dietOut').addEventListener('change',e=>{const t=e.targe
 let TAB='klien';
 function show(tab){TAB=tab;S.tab=tab;document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
   ['klien','recall','lab','hasil','diet'].forEach(x=>document.getElementById('tab-'+x).hidden=x!==tab);
-  document.getElementById('mbar').style.visibility=(tab==='klien'||tab==='recall')?'':'hidden';
+  document.getElementById('mbar').style.visibility=tab==='recall'?'':'hidden';document.querySelector('#klinikView .page').classList.toggle('noside',tab!=='recall');
   if(tab==='recall')renderRecall();if(tab==='lab')renderLab();refresh();window.scrollTo({top:0})}
 function refresh(){const R=calc();renderChip(R);renderSide(R);if(TAB==='klien')renderKlien(R);if(TAB==='hasil')renderHasil(R);if(TAB==='lab')renderLabStatus();if(TAB==='diet')renderDiet(R);if(TAB==='recall')updateSubs();save()}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>show(b.dataset.tab)));
@@ -1794,7 +1795,7 @@ function renderHome(){
   if(hasPosy()){p.innerHTML=`<button class="btn primary" type="button" id="pLanjut">Lanjutkan: ${esc(PY.nama||'balita tanpa nama')}</button><button class="btn" type="button" id="pBaru">Balita baru</button>`;
     document.getElementById('pLanjut').onclick=()=>setMode('posy');
     armBtn(document.getElementById('pBaru'),'Balita baru','Hapus data balita? Klik lagi',()=>{PY=pblank(PY);savePosy();setMode('posy')});
-  }else{p.innerHTML=`<button class="btn primary" type="button" id="pMulai">Mulai penimbangan</button>`;document.getElementById('pMulai').onclick=()=>setMode('posy')}
+  }else{p.innerHTML=`<button class="btn primary" type="button" id="pMulai">Mulai pemantauan balita</button>`;document.getElementById('pMulai').onclick=()=>setMode('posy')}
   const q=document.getElementById('actPam');
   q.innerHTML=PM.list.length||PM.cur.nama||PM.cur.bb?`<button class="btn primary" type="button" id="mLanjut">Lanjutkan${PM.ev.nama?': '+esc(PM.ev.nama):''}</button><small>${PM.list.length} pengunjung tersimpan</small>`:`<button class="btn primary" type="button" id="mMulai">Mulai layanan pameran</button>`;
   q.querySelector('button').onclick=()=>setMode('pam');
