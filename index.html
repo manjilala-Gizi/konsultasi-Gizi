@@ -289,10 +289,19 @@ textarea.cat{width:100%;min-height:96px;padding:10px 12px;border:1px solid var(-
 body:not([data-mode="klinik"]) .navrow,body:not([data-mode="klinik"]) #clientChip,body:not([data-mode="klinik"]) .print-btn,body:not([data-mode="klinik"]) #klinikView,body:not([data-mode="klinik"]) #mbar{display:none!important}
 body:not([data-mode="posy"]) #posyView{display:none!important}
 body:not([data-mode="pam"]) #pamView{display:none!important}
-body[data-mode="klinik"] #homeView,body[data-mode="posy"] #homeView,body[data-mode="pam"] #homeView{display:none!important}
+body:not([data-mode="tl"]) #tlView{display:none!important}
+body[data-mode="klinik"] #homeView,body[data-mode="posy"] #homeView,body[data-mode="pam"] #homeView,body[data-mode="tl"] #homeView{display:none!important}
+#tlView .grid2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+fieldset.komp{border:1px solid var(--line);border-radius:10px;padding:8px 12px 10px;margin:14px 0 0;display:grid;gap:4px}
+fieldset.komp legend{font-weight:700;font-size:13px;padding:0 4px}
+fieldset.komp small{color:var(--muted);font-size:12px}
+.kchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;padding:3px 0;cursor:pointer}
+.kchk input{width:18px;height:18px;margin-top:1px;accent-color:var(--bad);flex:none}
+#tlWork[hidden]{display:none!important}
 .xbtn{display:none!important}.can-print .xbtn{display:block!important}.can-print button.xbtn{display:inline-flex!important}
 .btn.sm{padding:4px 9px;font-size:12px}
 .seg button{white-space:nowrap}
+details.mitos{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}details.mitos summary{cursor:pointer;font-weight:700;font-size:14px}details.mitos ul{margin:8px 0 2px}
 .exp-big{display:grid;gap:2px;text-align:left;padding:11px 14px;font-size:14.5px}.exp-big small{font-weight:500;font-size:12px;opacity:.8}
 .page.noside{grid-template-columns:minmax(0,1fr)}.page.noside .side{display:none}
 .seg-wrap{display:flex;flex-wrap:wrap}.seg-wrap button{flex:1 1 auto}
@@ -419,7 +428,7 @@ body[data-mode="home"] .modetag{display:none}
   <div class="home">
     <section class="hero"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar">
       <div><p class="eyebrow">Aplikasi asuhan gizi</p><h1>Konsultasi Gizi</h1>
-      <p>Alat bantu tenaga gizi untuk konseling di klinik, pemantauan pertumbuhan balita di posyandu, dan layanan gizi di pameran. Pilih mode kerja di bawah.</p>
+      <p>Alat bantu tenaga gizi untuk konseling di klinik, pemantauan pertumbuhan balita di posyandu, layanan gizi di pameran, dan tata laksana balita gizi buruk rawat jalan. Pilih mode kerja di bawah.</p>
       <p class="who">Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar</p></div>
     </section>
     <div class="modes">
@@ -435,6 +444,10 @@ body[data-mode="home"] .modetag{display:none}
         <p>Cek gizi kilat untuk pengunjung stan pada kegiatan pameran atau bakti sosial.</p>
         <ul><li>IMT, BB ideal, lingkar perut, kebutuhan energi</li><li>Tekanan darah, gula darah, kolesterol (opsional)</li><li>Kartu hasil untuk pengunjung (JPG/PDF)</li><li>Rekap pengunjung ke Excel</li></ul>
         <div class="act" id="actPam"></div></article>
+      <article class="mode"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/><path d="M9 12h6M12 9v6"/></svg></div><h2>Tata Laksana Balita</h2>
+        <p>Gizi buruk 6–59 bulan di Puskesmas: konfirmasi, triase rawat inap/rawat jalan, dan pemantauan Makanan Terapi Gizi (MTG).</p>
+        <ul><li>Kriteria gizi buruk (z-skor, LiLA, edema)</li><li>Tanda bahaya, tes nafsu makan, rujuk rawat inap</li><li>Dosis MTG per BB, kunjungan mingguan, kriteria sembuh</li><li>Kartu status (PDF), kartu MTG (JPG), rekap Excel</li></ul>
+        <div class="act" id="actTl"></div></article>
     </div>
     <div class="home-tools"><button class="ref-btn" id="btnPenHome" type="button" aria-haspopup="dialog" aria-controls="penDrawer" style="margin:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7M8 11h5"/></svg>Daftar Bahan Makanan Penukar</button></div>
     <div class="home-more">
@@ -454,6 +467,11 @@ body[data-mode="home"] .modetag{display:none}
         <li>Untuk tiap pengunjung: nama, JK, umur, BB, TB (atau tinggi lutut), lingkar perut, dan hasil cek tambahan bila ada.</li>
         <li>Buat <b>Gambar (JPG)</b> untuk dikirim ke HP pengunjung, lalu tekan <b>Simpan &amp; pengunjung berikutnya</b>.</li>
         <li>Di akhir kegiatan, unduh <b>Rekap Excel</b> untuk laporan.</li></ol>
+        <h3>Mode Tata Laksana Balita</h3>
+        <ol><li>Tekan <b>Pasien baru</b> (atau tombol <b>Lanjut ke Tata Laksana</b> dari Posyandu), isi identitas dan kunjungan ke-1: BB, PB/TB, LiLA, edema, Hb bila ada, dan tanda bahaya.</li>
+        <li>Bila gizi buruk tanpa tanda bahaya, lakukan tes nafsu makan; aplikasi menampilkan jumlah minimal MTG. Lulus → rawat jalan, dosis MTG muncul; tidak lulus atau ada komplikasi → rujuk rawat inap (SOP rawat inap).</li>
+        <li>Setiap minggu tekan <b>Kunjungan berikutnya</b>: isi BB, LiLA, edema, kondisi klinis, dan sisa bungkus MTG. Kenaikan BB, persentase MTG dimakan, tindak lanjut, dosis baru, dan kriteria sembuh dihitung otomatis.</li>
+        <li>Cetak kartu status (PDF) atau kartu MTG untuk orang tua (JPG); unduh rekap Excel untuk laporan.</li></ol>
         <p>Data tersimpan di perangkat ini saja. Gunakan <b>Konseling baru</b> atau <b>Balita baru</b> untuk mengosongkan isian.</p>
       </div></details>
       <details><summary>Referensi</summary><div class="db">
@@ -461,14 +479,20 @@ body[data-mode="home"] .modetag{display:none}
         <ul><li>Tabel Komposisi Pangan Indonesia (TKPI) 2017, Kementerian Kesehatan RI.</li>
         <li>Angka Kecukupan Gizi (AKG) 2019, Permenkes No. 28 Tahun 2019.</li>
         <li>Daftar Bahan Makanan Penukar, Depkes RI 2006.</li>
-        <li>Rumus energi Mifflin-St Jeor, Harris-Benedict, PERKENI; estimasi tinggi badan dari tinggi lutut (Chumlea).</li></ul>
+        <li>Rumus energi Harris-Benedict (bawaan Klinik dan Pameran), Mifflin-St Jeor, cara praktis Penuntun Diet Ed. 5; estimasi tinggi badan dari tinggi lutut (Chumlea).</li></ul>
         <h3>Data laboratorium &amp; diet</h3>
         <ul><li>PERKENI 2021 (gula darah); NCEP-ATP III / PERKI (profil lipid); WHO (hemoglobin); JNC 7 (tekanan darah).</li>
         <li>Penuntun Diet dan Terapi Gizi Ed. 5 (PERSAGI &amp; AsDI, EGC 2025): Diet Diabetes Melitus, Diet Rendah Natrium (DASH), cara praktis perhitungan kebutuhan energi (Lampiran 6.2).</li>
-        <li>Leaflet Kemenkes 2018: Makanan Sehat Ibu Hamil, Ibu Menyusui, Lanjut Usia; Diet Purin Rendah; Diet Lambung. Poster Isi Piringku Ibu Hamil dan Ibu Menyusui (Kemenkes 2023).</li></ul>
+        <li>Leaflet Kemenkes 2018: Makanan Sehat Ibu Hamil, Ibu Menyusui, Lanjut Usia; Diet Purin Rendah; Diet Lambung. Poster Isi Piringku Ibu Hamil dan Ibu Menyusui (Kemenkes 2023).</li>
+        <li>Buku Saku Pencegahan Anemia pada Ibu Hamil dan Remaja Putri (Kemenkes 2023): TTD remaja putri dan WUS, cara minum, efek samping, mitos dan fakta, pangan sumber zat besi.</li>
+        <li>Batas dan derajat anemia: WHO (2011) menurut umur, jenis kelamin, dan kehamilan, termasuk anak 6–59 bulan (dipakai sampai ada acuan nasional).</li></ul>
         <h3>Pertumbuhan balita</h3>
         <ul><li>Permenkes No. 2 Tahun 2020 tentang Standar Antropometri Anak (tabel z-skor dan kategori status gizi).</li>
         <li>Buku Kesehatan Ibu dan Anak (KIA), Kemenkes RI, cetakan 2024: KBM, LiLA, pesan pemberian makan, porsi makan ibu hamil, TTD/MMS, anjuran kenaikan BB ibu hamil. Bila berbeda dengan sumber lain, aplikasi mengikuti Buku KIA 2024.</li></ul>
+        <h3>Tata laksana balita gizi buruk</h3>
+        <ul><li>Petunjuk Teknis Penggunaan Makanan Terapi Gizi dalam Penanganan Rawat Jalan Balita Gizi Buruk Usia 6–59 Bulan, Kemenkes RI 2026 (draf): kriteria gizi buruk, kriteria rawat inap/rawat jalan, tes nafsu makan (Tabel 3), dosis MTG (Tabel 6), pemantauan mingguan (Tabel 7–10), kriteria sembuh dan keluar.</li>
+        <li>Paparan Kebijakan Tata Laksana Balita Gizi Buruk di Layanan Rawat Jalan, Dit. Pelayanan Kesehatan Keluarga Kemenkes, Mei 2026 (komplikasi medis, PMT lokal gizi kurang 56 hari).</li>
+        <li>Aplikasi tidak memuat dosis obat; tata laksana medis mengikuti dokter dan protokol.</li></ul>
         <h3>Pameran</h3>
         <ul><li>Klasifikasi IMT dewasa Kemenkes RI; BB ideal Broca modifikasi; lingkar perut ≥90 cm (L) / ≥80 cm (P).</li>
         <li>Pedoman Gizi Seimbang, Permenkes No. 41 Tahun 2014 (Isi Piringku, batas gula-garam-lemak).</li></ul>
@@ -477,7 +501,7 @@ body[data-mode="home"] .modetag{display:none}
         <div class="field" style="max-width:280px"><label for="set-ctg">Berat 1 centong nasi</label><div class="unit"><input id="set-ctg" type="number" inputmode="numeric" min="20" max="300" step="5"><span>gram</span></div><small id="ctgNote">Dipakai di anjuran makan klien dan pilihan URT recall. Bawaan 50 g.</small></div>
       </div></details>
       <details><summary>Tentang &amp; cara pasang</summary><div class="db">
-        <p><b>Konsultasi Gizi</b> versi 1.4 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
+        <p><b>Konsultasi Gizi</b> versi 1.6 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
         <p>Aplikasi ini alat bantu; keputusan klinis tetap pada tenaga gizi/tenaga kesehatan.</p>
         <h3>Cara pasang</h3>
         <ul><li><b>Google Sites</b>: Sisipkan → Sematkan → Kode sematan → tempel isi index.html.</li>
@@ -485,7 +509,7 @@ body[data-mode="home"] .modetag{display:none}
         <li>Data tersimpan di perangkat masing-masing; menghapus data browser akan menghapus isian.</li></ul>
       </div></details>
     </div>
-    <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Data: TKPI 2017 · AKG 2019 · Daftar Bahan Makanan Penukar 2006 · Permenkes No. 2/2020 · Buku KIA 2024 · PGS 2014</div></footer>
+    <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Data: TKPI 2017 · AKG 2019 · Daftar Bahan Makanan Penukar 2006 · Permenkes No. 2/2020 · Buku KIA 2024 · PGS 2014 · Juknis MTG 2026</div></footer>
   </div>
 </div>
 <div class="wrap" id="posyView">
@@ -581,6 +605,66 @@ body[data-mode="home"] .modetag{display:none}
     <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Rujukan: IMT Kemenkes RI · Pedoman Gizi Seimbang (Permenkes No. 41/2014) · AKG 2019 · JNC 7 · PERKENI 2021 · NCEP-ATP III</div></footer>
   </div>
 </div>
+<div class="wrap" id="tlView">
+  <div class="posy-page">
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-h"><h2>Balita dalam perawatan</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="tlXls" type="button">Rekap Excel</button><button class="btn primary" id="tlNew" type="button">Pasien baru</button></div></div>
+      <div class="panel-b">
+        <div class="grid2" style="margin-bottom:12px">
+          <div class="field"><label for="t-pkm">Puskesmas</label><input id="t-pkm" autocomplete="off" placeholder="mis. Puskesmas Moncongloe"></div>
+          <div class="field"><label for="t-ptg">Petugas (tim asuhan gizi)</label><input id="t-ptg" autocomplete="off" placeholder="Tercetak di kartu"></div>
+        </div>
+        <div id="tlList"></div>
+      </div>
+    </div>
+    <section class="klien-grid" id="tlWork">
+      <div class="stack">
+        <div class="panel">
+          <div class="panel-h"><h2>Identitas balita</h2><span class="hint" id="tlIdHint"></span></div>
+          <div class="panel-b grid2">
+            <div class="field" style="grid-column:1/-1"><label for="t-nama">Nama anak</label><input id="t-nama" autocomplete="off" placeholder="Nama anak"></div>
+            <div class="field"><label for="t-ibu">Nama ibu/pengasuh</label><input id="t-ibu" autocomplete="off"></div>
+            <div class="field" style="grid-column:1/-1"><label>Jenis kelamin</label><div class="seg" id="t-jk"><button type="button" data-v="L" aria-pressed="true">Laki-laki</button><button type="button" data-v="P" aria-pressed="false">Perempuan</button></div></div>
+            <div class="field" style="grid-column:1/-1"><label for="t-ld">Tanggal lahir</label><div class="dob"><input id="t-ld" type="number" inputmode="numeric" min="1" max="31" placeholder="Tgl" aria-label="Tanggal lahir (1–31)">
+                <select id="t-lm" aria-label="Bulan lahir"><option value="">Bulan</option><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select>
+                <input id="t-ly" type="number" inputmode="numeric" min="2000" max="2100" placeholder="Tahun" aria-label="Tahun lahir"></div></div>
+            <div class="field" style="grid-column:1/-1"><label for="t-alamat">Alamat / desa <span style="font-weight:400">(opsional)</span></label><input id="t-alamat" autocomplete="off"></div>
+            <div class="field" style="grid-column:1/-1"><label for="t-status">Status perawatan</label><select id="t-status"><option value="aktif">Sedang dirawat (rawat jalan)</option><option value="sembuh">Selesai: sembuh (gizi baik)</option><option value="rujuk">Dirujuk ke rawat inap</option><option value="tidakrespons">Tidak ada respons (tidak sembuh)</option><option value="dropout">Drop out (putus perawatan)</option><option value="pindah">Pindah ke fasyankes rawat jalan lain</option><option value="meninggal">Meninggal</option></select><small id="tlStatusNote"></small></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2 id="tlVisH">Kunjungan</h2><button class="btn" id="tlAddVis" type="button">Kunjungan berikutnya</button></div>
+          <div class="panel-b">
+            <div class="seg seg-wrap" id="tlVisTabs" style="margin-bottom:12px"></div>
+            <div class="grid2">
+              <div class="field"><label for="t-tgl">Tanggal kunjungan</label><input id="t-tgl" type="date"></div>
+              <div class="field"><label for="t-bb">Berat badan</label><div class="unit"><input id="t-bb" type="number" inputmode="decimal" step="0.1" min="0"><span>kg</span></div></div>
+              <div class="field"><label for="t-tb">Panjang / tinggi badan</label><div class="unit"><input id="t-tb" type="number" inputmode="decimal" step="0.1" min="0"><span>cm</span></div><small id="tlTbNote">Wajib pada kunjungan ke-1, 5, 9, 13</small></div>
+              <div class="field"><label>Cara ukur</label><div class="seg" id="t-cara"><button type="button" data-v="baring" aria-pressed="false">Berbaring</button><button type="button" data-v="diri" aria-pressed="false">Berdiri</button></div></div>
+              <div class="field"><label for="t-lila">LiLA</label><div class="unit"><input id="t-lila" type="number" inputmode="decimal" step="0.1" min="0"><span>cm</span></div></div>
+              <div class="field"><label for="t-hb">Hb <span style="font-weight:400">(bila ada)</span></label><div class="unit"><input id="t-hb" type="number" inputmode="decimal" step="0.1" min="0"><span>g/dL</span></div><small id="tlHbNote">Batas WHO anak 6–59 bulan: 11 g/dL</small></div>
+              <div class="field" style="grid-column:1/-1"><label>Edema pitting bilateral</label><div class="seg seg-wrap" id="t-edema"><button type="button" data-v="0" aria-pressed="true">Tidak ada</button><button type="button" data-v="1" aria-pressed="false">+1 punggung kaki</button><button type="button" data-v="2" aria-pressed="false">+2 kaki &amp; tungkai/lengan</button><button type="button" data-v="3" aria-pressed="false">+3 seluruh tubuh</button></div></div>
+            </div>
+            <fieldset class="komp"><legend>Tanda bahaya / komplikasi medis</legend><div id="t-komp"></div><small>Penilaian oleh dokter/tenaga kesehatan sesuai MTBS.</small></fieldset>
+            <div class="grid2" style="margin-top:12px">
+              <div class="field" style="grid-column:1/-1"><label>Tes nafsu makan (MTG)</label><div class="seg" id="t-nafsu"><button type="button" data-v="" aria-pressed="true">Belum</button><button type="button" data-v="lulus" aria-pressed="false">Lulus (nafsu makan baik)</button><button type="button" data-v="gagal" aria-pressed="false">Tidak lulus</button></div><small id="tlApNote"></small></div>
+              <div class="field" data-fu><label>Kondisi klinis</label><div class="seg" id="t-klinis"><button type="button" data-v="baik" aria-pressed="true">Baik</button><button type="button" data-v="buruk" aria-pressed="false">Memburuk</button></div></div>
+              <div class="field" data-fu><label for="t-sisa">MTG belum dimakan (dikembalikan)</label><div class="unit"><input id="t-sisa" type="number" inputmode="decimal" step="0.5" min="0"><span>bungkus</span></div><small id="tlSisaNote"></small></div>
+              <div class="field" style="grid-column:1/-1"><label>Dosis MTG dihitung dengan</label><div class="seg" id="t-kkal"><button type="button" data-v="150" aria-pressed="true">150 kkal/kg</button><button type="button" data-v="165" aria-pressed="false">165 kkal/kg</button><button type="button" data-v="185" aria-pressed="false">185 kkal/kg</button></div><small>Awal minimal 150 kkal/kgBB/hari, dinaikkan sesuai pertambahan BB.</small></div>
+              <div class="field" style="grid-column:1/-1"><label for="t-cat">Catatan</label><textarea id="t-cat" rows="2" placeholder="mis. hasil kunjungan rumah, kendala pemberian MTG"></textarea></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn sm" id="tlDelVis" type="button">Hapus kunjungan ini</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="stack"><div class="stack" id="tlOut"></div>
+      <div class="panel xbtn"><div class="panel-h"><h2>Cetak &amp; bagikan</h2></div><div class="panel-b">
+        <div class="exp-row"><button class="btn primary" data-xprint type="button">Cetak</button><button class="btn" data-xpdf type="button">Unduh PDF</button><button class="btn share-only" data-xpdfshare type="button" hidden>Bagikan PDF</button><button class="btn" data-xcard type="button">Gambar (JPG)</button></div>
+        <p class="note" id="pfTl" hidden></p></div></div></div>
+    </section>
+    <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Rujukan: Juknis Penggunaan Makanan Terapi Gizi Rawat Jalan Balita Gizi Buruk 6–59 Bulan (Kemenkes 2026, draf) · Permenkes No. 2/2020</div></footer>
+  </div>
+</div>
 <div class="wrap" id="klinikView">
   <div class="page">
     <main>
@@ -617,8 +701,8 @@ body[data-mode="home"] .modetag{display:none}
               <div class="field" data-fis="hamil"><label for="f-uk">Usia kehamilan</label><div class="unit"><input id="f-uk" type="number" inputmode="numeric" min="1" max="42"><span>minggu</span></div><small id="ukNote">Trimester dihitung otomatis</small></div>
               <div class="field" data-fis="menyusui"><label for="f-mp">Usia bayi</label><select id="f-mp"><option value="1">0–6 bulan</option><option value="2">7–12 bulan</option></select></div>
               <div class="field" data-fis="hamil"><label for="f-bbph">BB sebelum hamil</label><div class="unit"><input id="f-bbph" type="number" inputmode="decimal" step="0.1" min="0"><span>kg</span></div></div>
-              <div class="field" data-fis="hamil"><label for="f-ttd">Minum TTD/MMS</label><select id="f-ttd"><option value="">–</option><option value="rutin">Rutin setiap hari</option><option value="kadang">Tidak rutin</option><option value="tidak">Tidak minum</option></select></div>
-              <div class="field" data-fis="hamil"><label for="f-hbk">Hemoglobin (Hb)</label><div class="unit"><input id="f-hbk" type="number" inputmode="decimal" step="0.1" min="0"><span>g/dL</span></div><small id="hbNote">Anemia bila &lt; 11 g/dL · sama dengan isian di Data Lab</small></div>
+              <div class="field" data-ttd><label for="f-ttd" id="ttdLab">Minum TTD/MMS</label><select id="f-ttd"><option value="">–</option><option value="rutin">Rutin sesuai anjuran</option><option value="kadang">Tidak rutin</option><option value="tidak">Tidak minum</option></select></div>
+              <div class="field"><label for="f-hbk">Hemoglobin (Hb)</label><div class="unit"><input id="f-hbk" type="number" inputmode="decimal" step="0.1" min="0"><span>g/dL</span></div><small id="hbNote">Batas anemia menurut umur/kondisi (WHO) · sama dengan isian di Data Lab</small></div>
               <div class="field" data-wus><label for="f-lila">LiLA</label><div class="unit"><input id="f-lila" type="number" inputmode="decimal" step="0.1" min="0"><span>cm</span></div><small>Risiko KEK bila &lt; 23,5 cm</small></div>
               <div class="field"><label for="f-suhu">Suhu tubuh</label><div class="unit"><input id="f-suhu" type="number" inputmode="decimal" step="0.1" min="0"><span>°C</span></div><small>Demam: energi +13% per 1 °C di atas 37 °C</small></div>
             </div>
@@ -629,7 +713,7 @@ body[data-mode="home"] .modetag{display:none}
               <div class="field"><label for="f-akt">Aktivitas fisik</label><select id="f-akt">
                 <option value="sr">Sangat ringan / istirahat</option><option value="r">Ringan</option><option value="s">Sedang</option><option value="b">Berat</option><option value="sb">Sangat berat</option></select></div>
               <div class="field"><label for="f-met">Rumus energi</label><select id="f-met">
-                <option value="mifflin">Mifflin-St Jeor</option><option value="hb">Harris-Benedict</option><option value="perkeni">Cara praktis (Penuntun Diet Ed. 5)</option><option value="akg">AKG 2019 saja</option></select></div>
+                <option value="hb">Harris-Benedict</option><option value="mifflin">Mifflin-St Jeor</option><option value="perkeni">Cara praktis (Penuntun Diet Ed. 5)</option><option value="akg">AKG 2019 saja</option></select></div>
               <div class="field"><label for="f-tuj">Tujuan berat badan</label><select id="f-tuj">
                 <option value="auto">Otomatis dari IMT</option><option value="tetap">Pertahankan</option><option value="turun">Turunkan (−500 kkal)</option><option value="naik">Naikkan (+500 kkal)</option></select></div>
               <div class="field"><label>Distribusi P / L / KH (% energi)</label>
@@ -822,7 +906,7 @@ function search(q){
 /* ===== State ===== */
 const SLOTS=[['pagi','Makan pagi','06–09'],['sp','Selingan pagi','09–11'],['siang','Makan siang','12–14'],['ss','Selingan sore','15–17'],['malam','Makan malam','18–20'],['sm','Selingan malam','20–22']];
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-function blank(){return {sample:false,catatan:'',lab:{},diet:{sel:{},touched:false,E:'',pen:false,na:'2300'},klien:{nama:'',kons:'',jk:'L',tglk:today(),tgll:'',bb:'',tb:'',tl:'',lp:'',akt:'r',met:'mifflin',tuj:'auto',pp:15,pl:25,pk:60},
+function blank(){return {sample:false,catatan:'',lab:{},diet:{sel:{},touched:false,E:'',pen:false,na:'2300'},klien:{nama:'',kons:'',jk:'L',tglk:today(),tgll:'',bb:'',tb:'',tl:'',lp:'',akt:'r',met:'hb',tuj:'auto',pp:15,pl:25,pk:60},
   recall:Object.fromEntries(SLOTS.map(s=>[s[0],{menus:[]}]))}}
 function it(kode,qty,lab){const f=FOOD.get(kode);const o=urtOpts(f);const u=o.find(x=>x.l===lab)||o[0];return {kode,qty,urt:u.l,gram:+(qty*u.g).toFixed(1)}}
 
@@ -856,6 +940,7 @@ function calc(){
     R.bbi=(k.jk==='L'&&tb<160)||(k.jk==='P'&&tb<150)?tb-100:(tb-100)*0.9;
     R.bbMin=18.5*m*m;R.bbMax=25*m*m;
     if(u&&u.y<18)R.bbi=R.bbMin=R.bbMax=null;
+    if(u&&u.y>=5&&tb<110&&bb<25){R.kidLike=true;R.bbi=R.bbMin=R.bbMax=null;R.kat=null}
     if(!IMT_OK(R.imt)){R.imtOdd=R.imt;R.imt=R.kat=R.bbi=R.bbMin=R.bbMax=null;bb=null}}
   if(R.bbph&&tb){R.imtPra=R.bbph/((tb/100)**2);const ip=R.imtPra;R.katPra=ip<18.5?['Kurus','<18,5','12,5–18']:ip<25?['Normal','18,5–24,9','11,5–16']:ip<30?['Gemuk','25–29,9','7–11,5']:['Obesitas','≥30','5–9'];if(num(k.bb))R.gain=num(k.bb)-R.bbph}
   if(lp)R.lpStat=lp>=(k.jk==='L'?90:80)?['Obesitas sentral','p-bad']:['Normal','p-ok'];
@@ -932,8 +1017,10 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
   const sum=(num(k.pp)||0)+(num(k.pl)||0)+(num(k.pk)||0);const dn=document.getElementById('distNote');dn.textContent=`Total ${fmt(sum)}%`+(sum!==100?' — sebaiknya 100%':'');dn.style.color=sum!==100?'var(--bad)':'';
   let h='';
   kondVis(R);const inv=markAll([['f-bb','bb'],['f-tb','tb'],['f-tl','tl'],['f-lp','lp'],['f-lila','lilaD'],['f-bbph','bbph'],['f-uk','uk'],['f-suhu','suhu'],['f-hbk','hb']]);h+=invPanel(inv,R.imtOdd,num(k.bb),R.tb);
-  if(R.u&&R.u.y<5)h+=toPosyHTML('klinik',R.u.y);
-  if(R.imt){
+  if(R.u&&R.u.y<5)h+=toPosyHTML('klinik',R.u.y?`${R.u.y} tahun ${R.u.m} bulan`:`${R.u.m} bulan`);
+  if(R.kidLike)h+=kidLikeHTML(R.u.y,num(k.bb),R.tb);
+  const balita=!!(R.u&&R.u.y<5);
+  if(R.imt&&!R.kidLike&&!balita){
     h+=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${R.tbEst?'TB estimasi dari tinggi lutut':''}</span></div><div class="panel-b">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div><div class="eyebrow">IMT</div><div class="big">${fmt(R.imt,1)}</div></div>
     ${R.kat?`<span class="pill ${R.kat[1]}">${R.kat[0]}</span>`:R.fis==='hamil'?'<span class="pill p-mute">Hamil: IMT tidak dinilai</span>':R.u?'<span class="pill p-mute">Gunakan IMT/U untuk &lt;18 th</span>':'<span class="pill p-mute">Isi tanggal lahir untuk kategori</span>'}</div>
@@ -951,8 +1038,8 @@ function renderKlien(R){const k=S.klien,el=document.getElementById('klienResult'
     <li><b>Recall 24 Jam</b>: ketik nama makanan di tiap waktu makan, pilih URT/penukar.</li>
     <li><b>Hasil Kajian</b>: lihat tingkat konsumsi, tulis anjuran, lalu cetak lembar kajian.</li></ol>
     <p class="note" style="margin:10px 0 0">Data tersimpan otomatis di perangkat ini. Untuk klien berikutnya, buka <b>Beranda</b> lalu pilih <b>Konseling baru</b>.</p></div></div>`;
-  else if(!inv.length&&R.imtOdd==null)h+=`<div class="panel"><div class="panel-b"><div class="eyebrow">Status gizi</div><p class="note" style="margin:.4em 0 0">Isi berat badan dan tinggi badan (atau tinggi lutut) untuk menghitung IMT dan berat badan ideal.</p></div></div>`;
-  h+=maternalHTML(R);
+  else if(!inv.length&&R.imtOdd==null&&!R.kidLike&&!balita)h+=`<div class="panel"><div class="panel-b"><div class="eyebrow">Status gizi</div><p class="note" style="margin:.4em 0 0">Isi berat badan dan tinggi badan (atau tinggi lutut) untuk menghitung IMT dan berat badan ideal.</p></div></div>`;
+  h+=maternalHTML(R)+anemiaHTML(R);
   const T=R.T;
   if(T.energi){
     h+=`<div class="panel"><div class="panel-h"><h2>Kebutuhan gizi per hari</h2><span class="hint">${R.src==='rumus'?'Dipersonalisasi':'AKG 2019'}</span></div><div class="panel-b">
@@ -1133,12 +1220,12 @@ function buildReportKlinik(){const R=calc(),t=totals(),T=R.T,k=S.klien;
   for(const [sk,lab] of SLOTS){const ms=S.recall[sk].menus;if(!ms.length)continue;let sub={e:0,p:0,l:0,c:0};
     const nRows=ms.reduce((a,m)=>a+Math.max(1,m.items.length),0)+1;let first=true;
     ms.forEach(m=>{const nm=Math.max(1,m.items.length);
-      const cells=(i)=>{if(!i)return '<td class="l" colspan="3">–</td><td></td><td></td><td></td><td></td><td></td><td></td>';const f=FOOD.get(i.kode);if(!f)return '<td colspan="9"></td>';const g=i.gram||0,v=x=>f[x]==null?null:f[x]*g/100;
+      const cells=(i)=>{if(!i)return '<td class="l" colspan="3">–</td><td></td><td></td><td></td><td></td><td></td>';const f=FOOD.get(i.kode);if(!f)return '<td colspan="8"></td>';const g=i.gram||0,v=x=>f[x]==null?null:f[x]*g/100;
         const e=v('energi'),p=v('protein'),l=v('lemak'),c=v('kh');sub.e+=e||0;sub.p+=p||0;sub.l+=l||0;sub.c+=c||0;
-        return `<td class="l">${esc(f.nama)}</td><td class="l">${i.urt==='gram'?'–':fmt(i.qty,1)+' '+esc(i.urt)}</td><td>${fmt(g)}</td><td>${(pp=>pp?(pp.exact?'':'±')+fmt(pp.n,1)+' '+pp.gol:'–')(penOf(f,g))}</td><td>${fmt(e)}</td><td>${fmt(p,1)}</td><td>${fmt(l,1)}</td><td>${fmt(c,1)}</td>`};
+        return `<td class="l">${esc(f.nama)}</td><td class="l">${i.urt==='gram'?'–':fmt(i.qty,1)+' '+esc(i.urt)}</td><td>${fmt(g)}</td><td>${fmt(e)}</td><td>${fmt(p,1)}</td><td>${fmt(l,1)}</td><td>${fmt(c,1)}</td>`};
       const list=m.items.length?m.items:[null];
       list.forEach((i,j)=>{rec+=`<tr>${first?`<td class="l" rowspan="${nRows}"><b>${lab}</b></td>`:''}${j===0?`<td class="l" rowspan="${nm}">${esc(m.name)}</td>`:''}${cells(i)}</tr>`;first=false})});
-    rec+=`<tr class="sub"><td class="l" colspan="5">Subtotal ${lab.toLowerCase()}</td><td>${fmt(sub.e)}</td><td>${fmt(sub.p,1)}</td><td>${fmt(sub.l,1)}</td><td>${fmt(sub.c,1)}</td></tr>`;
+    rec+=`<tr class="sub"><td class="l" colspan="4">Subtotal ${lab.toLowerCase()}</td><td>${fmt(sub.e)}</td><td>${fmt(sub.p,1)}</td><td>${fmt(sub.l,1)}</td><td>${fmt(sub.c,1)}</td></tr>`;
     tot.e+=sub.e;tot.p+=sub.p;tot.l+=sub.l;tot.c+=sub.c}
   const E=t.t.energi||1,pe=[t.t.protein*4/E*100,t.t.lemak*9/E*100,t.t.kh*4/E*100];
   const tk=NUT.filter(n=>n.cls).map(n=>{const v=t.t[n.k],tg=T[n.k],p=tg?v/tg*100:null;return `<tr><td class="l">${n.l}${t.miss[n.k]?' *':''}</td><td>${fmt(v,n.d)} ${n.u}</td><td>${tg?fmt(tg,n.d)+' '+n.u:'–'}</td><td>${p!=null?fmt(p)+'%':'–'}</td><td class="l">${klas(p,n.cls)[0]}</td></tr>`}).join('');
@@ -1168,12 +1255,11 @@ function buildReportKlinik(){const R=calc(),t=totals(),T=R.T,k=S.klien;
    <span>Energi</span><div><b>${fmt(T.energi)} kkal</b> · Protein ${fmt(T.protein)} g · Lemak ${fmt(T.lemak)} g · Karbohidrat ${fmt(T.kh)} g${R.src==='rumus'?` (P ${R.dist[0]}% / L ${R.dist[1]}% / KH ${R.dist[2]}%)`:''}</div></div>
    ${R.formulaLines.length?`<div class="fl">${R.formulaLines.map(esc).join('\n')}</div>`:''}</div>
   <h2>E. Recall konsumsi 24 jam</h2>
-  ${t.n?`<table><thead><tr><th class="l" style="width:11%">Waktu</th><th class="l" style="width:14%">Menu</th><th class="l">Bahan makanan</th><th class="l" style="width:13%">URT</th><th style="width:7%">Berat (g)</th><th style="width:8%">Penukar (gol.)</th><th style="width:8%">Energi (kkal)</th><th style="width:8%">Protein (g)</th><th style="width:8%">Lemak (g)</th><th style="width:8%">KH (g)</th></tr></thead>
-   <tbody>${rec}<tr class="tot"><td class="l" colspan="6">TOTAL ASUPAN</td><td>${fmt(tot.e)}</td><td>${fmt(tot.p,1)}</td><td>${fmt(tot.l,1)}</td><td>${fmt(tot.c,1)}</td></tr></tbody></table>`:'<p>Belum ada data recall.</p>'}
+  ${t.n?`<table><thead><tr><th class="l" style="width:11%">Waktu</th><th class="l" style="width:14%">Menu</th><th class="l">Bahan makanan</th><th class="l" style="width:13%">URT</th><th style="width:8%">Berat (g)</th><th style="width:8%">Energi (kkal)</th><th style="width:8%">Protein (g)</th><th style="width:8%">Lemak (g)</th><th style="width:8%">KH (g)</th></tr></thead>
+   <tbody>${rec}<tr class="tot"><td class="l" colspan="5">TOTAL ASUPAN</td><td>${fmt(tot.e)}</td><td>${fmt(tot.p,1)}</td><td>${fmt(tot.l,1)}</td><td>${fmt(tot.c,1)}</td></tr></tbody></table>`:'<p>Belum ada data recall.</p>'}
   ${t.n?`<div class="avoid"><h2>F. Tingkat konsumsi</h2>
   <table><thead><tr><th class="l">Zat gizi</th><th>Asupan</th><th>Kebutuhan</th><th>%</th><th class="l">Kategori</th></tr></thead><tbody>${tk}</tbody></table>
   <p style="font-size:8pt;margin:3px 0 0">Komposisi energi asupan: protein ${fmt(pe[0])}%, lemak ${fmt(pe[1])}%, karbohidrat ${fmt(pe[2])}%. Kategori makro: Depkes (1996); mikro: cukup bila ≥77% AKG. * sebagian bahan tidak memiliki data di TKPI.</p></div>
-  <p style="font-size:8.4pt;margin:3px 0 0">Asupan dalam satuan penukar: ${(()=>{const ps=penSum();return Object.keys(MAINL).filter(k=>ps.s[k]).map(k=>`gol. ${k} ${fmt(ps.s[k],1)} P`).join(' · ')})()}. Tanda ± = perkiraan untuk bahan yang tidak tercantum di Daftar Bahan Makanan Penukar.</p>
   <div class="avoid"><h2>G. Interpretasi</h2><ul>${ip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
   ${dietReportHTML()}
   <div class="avoid"><h2>I. Catatan &amp; anjuran konselor</h2>
@@ -1199,7 +1285,7 @@ const LABS=[
   {k:'au',l:'Asam urat',u:'mg/dL',ref:jk=>jk==='P'?'2,4–6,0':'3,4–7,0',st:(v,jk)=>v>(jk==='P'?6:7)?BD('Tinggi'):OK()},
   {k:'ur',l:'Ureum',u:'mg/dL',ref:'10–50',st:v=>v>50?BD('Tinggi'):v<10?WR('Rendah'):OK()},
   {k:'cr',l:'Kreatinin',u:'mg/dL',ref:jk=>jk==='P'?'0,6–1,1':'0,7–1,3',st:(v,jk)=>{const[a,b]=jk==='P'?[0.6,1.1]:[0.7,1.3];return v>b?BD('Tinggi'):v<a?WR('Rendah'):OK()}},
-  {k:'hb',l:'Hemoglobin',u:'g/dL',ref:jk=>S.klien.fis==='hamil'&&jk==='P'?'≥11 (hamil)':jk==='P'?'≥12':'≥13',st:(v,jk)=>{if(S.klien.fis==='hamil'&&jk==='P')return v<7?BD('Anemia berat'):v<10?BD('Anemia sedang'):v<11?WR('Anemia ringan'):OK();return v<(jk==='P'?12:13)?BD('Rendah (anemia)'):OK()}},
+  {k:'hb',l:'Hemoglobin',u:'g/dL',ref:jk=>hbRefTxt(hbCut(jk,hbAge(),hbHamil())),st:(v,jk)=>{const g=hbGrade(v,jk,hbAge(),hbHamil());return g.lvl===0?OK():g.lvl===1?WR(g.lab):BD(g.lab)}},
   {k:'alb',l:'Albumin',u:'g/dL',ref:'3,5–5,0',st:v=>v<3.5?BD('Rendah'):v>5?WR('Tinggi'):OK()}]}];
 const LABI=Object.fromEntries(LABS.flatMap(g=>g.items).map(x=>[x.k,x]));
 function bpStat(s,d){if(!s&&!d)return null;if(s>=160||d>=100)return BD('Hipertensi derajat 2');if(s>=140||d>=90)return BD('Hipertensi derajat 1');if(s>=120||d>=80)return WR('Normal-tinggi');return OK()}
@@ -1236,6 +1322,55 @@ document.getElementById('labOut').addEventListener('input',e=>{const k=e.target.
 document.getElementById('labOut').addEventListener('change',e=>{const k=e.target.dataset.lab;if(!k)return;S.lab[k]=e.target.value;save()});
 
 /* ===== Saran Diet ===== */
+/* ===== Anemia & TTD =====
+   Batas Hb: WHO (2011) Haemoglobin concentrations for the diagnosis of anaemia — termasuk anak 6–59 bulan (dipakai sementara sampai ada acuan nasional).
+   Edukasi TTD: Buku Saku Pencegahan Anemia pada Ibu Hamil dan Remaja Putri (Kemenkes 2023); TTD/MMS ibu hamil: Buku KIA 2024. */
+function hbCut(jk,uY,hamil){
+  if(hamil)return {thr:11,mod:10,sev:7,grp:'ibu hamil'};
+  if(uY!=null&&uY<5)return {thr:11,mod:10,sev:7,grp:'anak 6–59 bulan'};
+  if(uY!=null&&uY<12)return {thr:11.5,mod:11,sev:8,grp:'anak 5–11 tahun'};
+  if(uY!=null&&uY<15)return {thr:12,mod:11,sev:8,grp:'anak 12–14 tahun'};
+  return jk==='P'?{thr:12,mod:11,sev:8,grp:'perempuan ≥15 tahun'}:{thr:13,mod:11,sev:8,grp:'laki-laki ≥15 tahun'}}
+// lvl 0 tidak anemia, 1 ringan, 2 sedang, 3 berat
+function hbGrade(hb,jk,uY,hamil){if(hb==null||isNaN(hb))return null;const c=hbCut(jk,uY,hamil);const lvl=hb>=c.thr?0:hb>=c.mod?1:hb>=c.sev?2:3;
+  return {...c,hb,lvl,lab:['Tidak anemia','Anemia ringan','Anemia sedang','Anemia berat'][lvl],pill:['p-ok','p-warn','p-bad','p-bad'][lvl]}}
+const hbRefTxt=c=>`≥${String(c.thr).replace('.',',')} (${c.grp})`;
+const GEJALA_AN=['','Anemia ringan sering tanpa gejala nyata: mudah lesu, letih, lemah, lelah, dan lalai (5L), sulit konsentrasi.',
+  'Anemia sedang: jantung sering berdebar, cepat lelah walau aktivitas biasa, sesak napas, dan tampak lebih pucat.',
+  'Anemia berat: kelelahan berkepanjangan, menggigil, jantung berdebar cepat, sangat pucat, sesak napas, dan nyeri dada.'];
+const TTD_CARA_=['Minum TTD 1 jam sesudah makan malam, sebelum tidur, agar tidak mual.',
+  'Minum dengan air putih, air jeruk, atau jus buah (vitamin C membantu penyerapan dan mengurangi bau).',
+  'Beri jarak 2 jam sebelum/sesudah minum teh, kopi, susu, tablet kalsium, atau obat maag.'];
+const ttdCara=h=>h?TTD_CARA_.map(x=>x.replace(/\bTTD\b/g,'TTD/MMS')):TTD_CARA_;
+const TTD_CARA=TTD_CARA_;
+const TTD_EFEK='Efek yang mungkin muncul: mual, nyeri ulu hati, diare atau sulit BAB, tinja berwarna hitam. Semuanya tidak berbahaya dan makin ringan; jangan berhenti minum.';
+const TTD_MITOS=[['TTD hanya untuk orang yang sudah anemia.','TTD diminum untuk mencegah anemia; tetap diminum walau badan terasa sehat.'],
+  ['TTD berbahaya bila diminum terus-menerus.','Aman. Bila zat besi tubuh sudah cukup, yang diserap sedikit dan sisanya dibuang lewat tinja.'],
+  ['Harus periksa Hb dulu sebelum minum TTD.','Tidak harus. Walau Hb normal, TTD tetap diminum sesuai anjuran.'],
+  ['TTD menaikkan tekanan darah.','Tidak. Tekanan darah dipengaruhi garam (natrium), bukan zat besi dan asam folat.'],
+  ['TTD membuat haid sakit dan darah haid lebih banyak.','Tidak. Justru anemia bisa membuat haid lebih banyak atau lebih lama.'],
+  ['TTD membuat bayi terlalu besar dan sulit lahir.','Tidak. Bayi besar lebih sering karena ibu diabetes. TTD memberi cadangan zat besi untuk bayi.']];
+const FE_HEWANI='ikan teri/rebon, hati ayam, kerang, belut, daging sapi, abon, hati sapi, telur, ikan';
+const FE_NABATI='oncom, tempe, kacang-kacangan (kacang merah, kedelai, kacang hijau), bayam merah, daun singkong, brokoli';
+const FE_TIP='Zat besi dari sayur dan kacang sedikit diserap: makan bersama lauk hewani (mis. sayur bening dengan ikan/ayam) dan buah sumber vitamin C (jeruk, jambu, pepaya, tomat).';
+// anjuran TTD menurut kelompok (null bila bukan sasaran)
+function ttdRule(jk,uY,fis){if(jk!=='P')return null;
+  if(fis==='hamil')return 'Minum TTD/MMS 1 tablet setiap hari selama kehamilan.';
+  if(uY==null)return null;
+  if(uY>=12&&uY<=18)return 'Remaja putri 12–18 tahun: minum TTD 1 tablet setiap minggu sepanjang tahun (program sekolah/madrasah atau Posyandu remaja).';
+  if(uY>=19&&uY<=49)return 'Wanita usia subur yang tidak hamil: dianjurkan minum TTD 1 tablet setiap minggu sepanjang tahun.';
+  return null}
+const AN_SRC='Buku Saku Pencegahan Anemia pada Ibu Hamil dan Remaja Putri (Kemenkes 2023); Buku KIA 2024; batas Hb WHO';
+// saran ringkas (array teks) untuk Klinik & Pameran
+function anemiaSaran(g,jk,uY,fis){const o=[];
+  if(g&&g.lvl>0){o.push(`Hb ${String(g.hb).replace('.',',')} g/dL: ${g.lab.toLowerCase()} (batas ${g.grp} ${String(g.thr).replace('.',',')} g/dL). ${g.lvl>=2?'Segera rujuk ke dokter/Puskesmas untuk pemeriksaan dan pengobatan.':'Periksakan ke bidan/dokter dan periksa ulang Hb sesuai anjuran.'}`);
+    o.push(GEJALA_AN[g.lvl]);
+    o.push(`Perbanyak sumber zat besi. Hewani: ${FE_HEWANI}. Nabati: ${FE_NABATI}. ${FE_TIP}`);
+    o.push('Cegah cacingan: cuci tangan pakai sabun, pakai alas kaki, dan masak makanan sampai matang.')}
+  const t=ttdRule(jk,uY,fis);if(t)o.push(t+' '+ttdCara(fis==='hamil').join(' ')+' '+TTD_EFEK);
+  return o}
+function mitosHTML(){return `<details class="mitos"><summary>Mitos dan fakta tentang TTD</summary><ul class="lst dot">${TTD_MITOS.map(([m,f])=>`<li><span><b>Mitos:</b> ${m}<br><b>Fakta:</b> ${f}</span></li>`).join('')}</ul></details>`}
+
 /* ===== Saran diet (Klinik) =====
    DM & Rendah Natrium: Penuntun Diet dan Terapi Gizi Ed. 5 (PERSAGI & AsDI, 2025).
    Ibu hamil: Buku KIA 2024 (porsi, TTD/MMS); leaflet Makanan Sehat Ibu Hamil (Kemenkes 2018).
@@ -1243,8 +1378,8 @@ document.getElementById('labOut').addEventListener('change',e=>{const k=e.target
    Purin rendah, lambung, lansia: leaflet Kemenkes 2018; porsi dari Pedoman Gizi Seimbang 2014 Lampiran 14. */
 function CTG(){try{const v=+(JSON.parse(localStorage.getItem('kg-set')||'{}').centong);return v>=20&&v<=300?v:50}catch(e){return 50}}
 const ctgTxt=g=>`${fr(g/CTG())} centong (±${Math.round(g)} g)`;
-const DLIST=['hamil','menyusui','dm','rg','purin','lambung','lansia'];
-const DNAME={hamil:'Makanan Sehat Ibu Hamil',menyusui:'Makanan Sehat Ibu Menyusui',dm:'Diet Diabetes Melitus',rg:'Diet Rendah Garam (DASH)',purin:'Diet Purin Rendah',lambung:'Diet Lambung',lansia:'Makanan Sehat Lansia'};
+const DLIST=['hamil','menyusui','anemia','dm','rg','purin','lambung','lansia'];
+const DNAME={hamil:'Makanan Sehat Ibu Hamil',menyusui:'Makanan Sehat Ibu Menyusui',anemia:'Pencegahan Anemia (Kaya Zat Besi)',dm:'Diet Diabetes Melitus',rg:'Diet Rendah Garam (DASH)',purin:'Diet Purin Rendah',lambung:'Diet Lambung',lansia:'Makanan Sehat Lansia'};
 function dietSuggest(){const L=S.lab,k=S.klien,o=Object.fromEntries(DLIST.map(x=>[x,[]]));const v=x=>num(L[x]);const dx=(L.dx||'').toLowerCase();const u=umur(k.tgll,k.tglk);const R=calc();
   if(v('gdp')>=126)o.dm.push(`GD puasa ${L.gdp} mg/dL`);if(v('gd2')>=200)o.dm.push(`GD 2 jam PP ${L.gd2} mg/dL`);if(v('gds')>=200)o.dm.push(`GD sewaktu ${L.gds} mg/dL`);if(v('a1c')>=6.5)o.dm.push(`HbA1c ${L.a1c}%`);
   if(/\bdm\b|diabet|kencing manis/.test(dx))o.dm.push('diagnosis dokter');
@@ -1253,6 +1388,7 @@ function dietSuggest(){const L=S.lab,k=S.klien,o=Object.fromEntries(DLIST.map(x=
   if(v('au')>(k.jk==='P'?6:7))o.purin.push(`asam urat ${L.au} mg/dL`);if(/gout|asam urat|hiperurisemia/.test(dx))o.purin.push('diagnosis dokter');
   if(/gastritis|maag|lambung|gerd|dispepsia|tukak|ulkus/.test(dx))o.lambung.push('diagnosis dokter');
   if(u&&u.y>=60)o.lansia.push(`umur ${u.y} tahun`);
+  const g=hbGrade(inR(v('hb'),'hb'),k.jk,u?u.y:null,R.fis==='hamil');if(g&&g.lvl>0)o.anemia.push(`Hb ${L.hb} g/dL (${g.lab.toLowerCase()})`);
   return o}
 function dietSel(){const d=S.diet;const base=Object.fromEntries(DLIST.map(x=>[x,false]));if(d.touched)return {...base,...d.sel};const sg=dietSuggest();return Object.fromEntries(DLIST.map(x=>[x,sg[x].length>0]))}
 const DM_LV=[1100,1300,1500,1700,1900,2100,2300];
@@ -1329,11 +1465,15 @@ const DIET={
  hamil:{tujuan:'Memenuhi kebutuhan gizi ibu dan janin, mencapai status gizi baik, dan menunjang tumbuh kembang janin.',
   ok:['Makanan pokok: nasi, kentang, jagung, ubi, singkong, mi, bihun, roti','Lauk hewani setiap kali makan: ikan, telur, ayam, daging, hati','Tahu, tempe, kacang-kacangan','Semua sayur dan buah segar, terutama sayur hijau dan buah sumber vitamin C','Air putih 8–12 gelas sehari, jus buah segar, yoghurt'],
   no:['Makanan mentah atau setengah matang (sate, telur setengah matang)','Makanan tinggi garam atau diawetkan: makanan kaleng, sarden, sosis, ham, kornet, nugget','Jamu, kopi, teh, cokelat, minuman bersoda, minuman beralkohol','Minuman kemasan tinggi gula','Minyak goreng yang dipakai berulang-ulang'],
-  ingat:['Minum TTD atau MMS 1 tablet setiap hari selama kehamilan, sebaiknya malam sebelum tidur agar tidak mual','Minum TTD/MMS bersama air putih atau buah sumber vitamin C; jangan bersama teh, kopi, susu, atau obat maag','Makan 3 kali makanan utama ditambah 1–2 kali selingan; bila mual, porsi kecil tapi sering','Garam paling banyak 1 sendok teh sehari','Periksa kehamilan minimal 6 kali dan timbang berat badan setiap kunjungan']},
+  ingat:['Minum TTD/MMS 1 tablet setiap hari selama kehamilan, 1 jam sesudah makan malam sebelum tidur agar tidak mual','Minum TTD/MMS dengan air putih atau air jeruk/jus buah; beri jarak 2 jam dari teh, kopi, susu, tablet kalsium, atau obat maag','Makan 3 kali makanan utama ditambah 1–2 kali selingan; bila mual, porsi kecil tapi sering','Garam paling banyak 1 sendok teh sehari','Periksa kehamilan minimal 6 kali dan timbang berat badan setiap kunjungan']},
  menyusui:{tujuan:'Mencukupi kebutuhan gizi ibu agar tetap sehat dan memproduksi ASI yang berkualitas bagi bayi.',
   ok:['Makanan pokok: nasi, kentang, jagung, ubi, mi, roti','Lauk hewani setiap kali makan: ikan, telur, ayam, daging','Tahu, tempe, kacang-kacangan','Semua sayur dan buah segar','Air putih, jus buah segar, yoghurt, teh encer'],
   no:['Teh kental, kopi, jamu, cokelat, minuman bersoda, minuman beralkohol','Minuman kemasan tinggi gula','Makanan tinggi garam atau diawetkan (makanan kaleng, sosis, kornet)','Makanan mentah atau setengah matang'],
   ingat:['Susui bayi sesering mungkin; makin sering menyusu, ASI makin banyak','Ikan, telur, dan makanan pedas boleh dimakan; tidak membuat bayi sakit','Batasi gula, garam, lemak, kopi, dan teh']},
+ anemia:{tujuan:'Mencegah dan memperbaiki anemia dengan makanan bergizi seimbang yang kaya zat besi, didukung Tablet Tambah Darah (TTD) sesuai anjuran.',
+  ok:['Lauk hewani setiap kali makan: ikan teri/rebon, hati ayam atau hati sapi, kerang, belut, daging sapi, abon, telur, ikan','Lauk nabati: tempe, oncom, kacang-kacangan (kacang merah, kedelai, kacang hijau)','Sayur hijau: bayam merah, daun singkong, brokoli; makan bersama lauk hewani','Buah sumber vitamin C: jeruk, jambu, pepaya, tomat'],
+  no:['Teh atau kopi bersamaan dengan makan atau TTD (beri jarak 2 jam)','Susu, tablet kalsium, atau obat maag bersamaan dengan TTD (beri jarak 2 jam)','Diet ketat atau melewatkan makan untuk menurunkan berat badan'],
+  ingat:[FE_TIP,'Cegah cacingan: cuci tangan pakai sabun, pakai alas kaki, dan masak makanan sampai matang','Minum air cukup: ibu hamil 8–12 gelas, remaja putri 7–8 gelas sehari']},
  purin:{tujuan:'Menurunkan kadar asam urat darah dan mencegah terbentuknya batu asam urat.',
   ok:['Nasi, bubur, bihun, roti, makaroni, jagung, kentang, ubi, singkong, havermut','Daging tanpa lemak, ayam tanpa kulit, ikan segar, telur, susu skim/rendah lemak','Wortel, labu siam, kacang panjang, terong, paria, oyong, ketimun, tomat, selada, lobak','Semua buah-buahan','Semua minuman yang tidak beralkohol'],
   no:['Batasi seafood (udang, kerang, kepiting, cumi): paling banyak 50 g sehari','Batasi tempe/tahu paling banyak 50 g sehari; kacang-kacangan paling banyak 25 g sehari','Batasi bayam, buncis, daun/biji melinjo, kangkung, daun singkong, kembang kol, asparagus, jamur: paling banyak 100 g sehari','Batasi teh kental, kopi, santan kental, gorengan','Hindari jeroan (limpa, babat, usus, paru, otak), ham, sosis, sarden, bebek, remis','Hindari kaldu daging, emping, kacang mede, ragi, minuman bersoda dan beralkohol'],
@@ -1355,12 +1495,14 @@ const SUBST_=()=>[[`Nasi ${fr(100/CTG())} centong (100 g)`,'roti 3 iris · kenta
  ['Lauk nabati 1 porsi','tempe 1 potong sedang (50 g) · tahu 2 potong sedang (100 g) · kacang hijau 2½ sendok makan'],
  ['Buah 1 porsi','pisang 1 potong sedang · pepaya 1 potong besar · jeruk 2 buah sedang · apel 1 buah kecil · mangga ¾ buah besar']];
 const NA_TXT={2300:'Natrium kurang dari 2.300 mg sehari: garam tambahan untuk masakan paling banyak 5 saset kecil (@0,8 g), kira-kira ¾ sendok teh sehari',1500:'Natrium kurang dari 1.500 mg sehari: garam tambahan untuk masakan paling banyak 3 saset kecil (@0,8 g), kira-kira ½ sendok teh sehari'};
-const DSRC={dm:'Penuntun Diet dan Terapi Gizi Ed. 5 (PERSAGI & AsDI, 2025): Diet DM',rg:'Penuntun Diet dan Terapi Gizi Ed. 5: Diet Rendah Natrium (DASH)',hamil:'Buku KIA 2024; Leaflet Makanan Sehat Ibu Hamil (Kemenkes 2018)',menyusui:'Poster Isi Piringku Ibu Menyusui (Kemenkes 2023); Leaflet Makanan Sehat Ibu Menyusui (Kemenkes 2018)',purin:'Leaflet Diet Purin Rendah (Kemenkes 2018)',lambung:'Leaflet Diet Lambung (Kemenkes 2018)',lansia:'Leaflet Makanan Sehat Lanjut Usia (Kemenkes 2018)'};
-function dietAlerts(R){const a=[];const L=S.lab;
-  if(R.fis==='hamil'){if(R.kek)a.push(`LiLA ${fmt(R.lila,1)} cm (< 23,5 cm): risiko KEK. Tambah porsi makanan pokok dan lauk serta selingan padat gizi; ikuti PMT ibu hamil dari Puskesmas dan konsultasikan ke bidan/dokter.`);
-    const hb=num(L.hb);if(hb!=null&&hb<11)a.push(`Hb ${fmt(hb,1)} g/dL: ${hb<7?'anemia berat':hb<10?'anemia sedang':'anemia ringan'}. Perbanyak lauk hewani sumber zat besi (hati, daging, ikan) dan sayur hijau; minum TTD/MMS setiap hari${hb<10?'; segera rujuk ke dokter':'; periksakan ulang ke bidan/dokter'}.`);
-    if(S.klien.ttd==='kadang'||S.klien.ttd==='tidak')a.push(`TTD/MMS ${S.klien.ttd==='tidak'?'belum diminum':'belum diminum rutin'}: minum 1 tablet setiap hari selama kehamilan. Bila mual, minum malam hari sebelum tidur.`)}
+const DSRC={dm:'Penuntun Diet dan Terapi Gizi Ed. 5 (PERSAGI & AsDI, 2025): Diet DM',rg:'Penuntun Diet dan Terapi Gizi Ed. 5: Diet Rendah Natrium (DASH)',hamil:'Buku KIA 2024; Leaflet Makanan Sehat Ibu Hamil (Kemenkes 2018)',menyusui:'Poster Isi Piringku Ibu Menyusui (Kemenkes 2023); Leaflet Makanan Sehat Ibu Menyusui (Kemenkes 2018)',anemia:'Buku Saku Pencegahan Anemia pada Ibu Hamil dan Remaja Putri (Kemenkes 2023); batas Hb WHO',purin:'Leaflet Diet Purin Rendah (Kemenkes 2018)',lambung:'Leaflet Diet Lambung (Kemenkes 2018)',lansia:'Leaflet Makanan Sehat Lanjut Usia (Kemenkes 2018)'};
+function dietAlerts(R){const a=[];const L=S.lab,k=S.klien;const uY=R.u?R.u.y:null;
+  if(R.fis==='hamil'&&R.kek)a.push(`LiLA ${fmt(R.lila,1)} cm (< 23,5 cm): risiko KEK. Tambah porsi makanan pokok dan lauk serta selingan padat gizi; ikuti PMT ibu hamil dari Puskesmas dan konsultasikan ke bidan/dokter.`);
   else if(R.kek)a.push(`LiLA ${fmt(R.lila,1)} cm (< 23,5 cm): risiko kurang energi kronis. Perbaiki asupan makan dan pantau berat badan.`);
+  const g=hbGrade(inR(num(L.hb),'hb'),k.jk,uY,R.fis==='hamil');
+  if(g&&g.lvl>0)a.push(`Hb ${fmt(g.hb,1)} g/dL: ${g.lab.toLowerCase()}. Perbanyak lauk hewani sumber zat besi dan buah sumber vitamin C; ${g.lvl>=2?'segera rujuk ke dokter/Puskesmas':'periksakan ulang ke bidan/dokter'}.`);
+  const t=ttdRule(k.jk,uY,R.fis);
+  if(t&&(k.ttd==='kadang'||k.ttd==='tidak'))a.push(`${R.fis==='hamil'?'TTD/MMS':'TTD'} ${k.ttd==='tidak'?'belum diminum':'belum diminum rutin'}. ${t} Bila mual, minum 1 jam sesudah makan malam sebelum tidur.`);
   return a}
 function dietPlan(){const sel=dietSel();const keys=DLIST.filter(k=>sel[k]);if(!keys.length)return null;const R=calc();const need=R.T.energi||null;const k=S.klien;
   let E,i=null,note='',meals=[],nilai=null,base,subst=SUBST_();const u=R.u?R.u.y:30;const alerts=dietAlerts(R);
@@ -1382,11 +1524,13 @@ function dietPlan(){const sel=dietSel();const keys=DLIST.filter(k=>sel[k]);if(!k
   if(keys.length===2&&sel.dm&&sel.rg){ok=DIET_BOTH.ok;no=DIET_BOTH.no;ingat=[...DIET_BOTH.ingat]}
   else{ok=uniq(keys.flatMap(x=>DIET[x].ok)).slice(0,10);no=uniq(keys.flatMap(x=>DIET[x].no)).slice(0,10);ingat=uniq(keys.flatMap(x=>DIET[x].ingat))}
   if(sel.rg)ingat.unshift(NA_TXT[S.diet.na==='1500'?1500:2300]);
+  if(sel.anemia&&!sel.hamil){const t=ttdRule(k.jk,R.u?R.u.y:null,R.fis);const has=t&&alerts.some(x=>x.includes(t));ingat.push(...(t?[...(has?[]:[t]),...TTD_CARA.slice(has?1:0),TTD_EFEK]:['Bila Hb rendah, periksakan ke dokter/Puskesmas untuk mencari penyebab dan pengobatannya']))}
+  if(sel.anemia&&sel.hamil)ingat.push(TTD_EFEK);
   if(sel.menyusui)ingat.push(k.mp==='2'?'Minum air putih 12 gelas sehari (bayi 6 bulan kedua)':'Minum air putih 14 gelas sehari (bayi 6 bulan pertama)');
-  ingat=uniq([...alerts,...ingat]).slice(0,11);
+  ingat=uniq([...alerts,...ingat]).slice(0,13);
   return {sel,keys,base,E,i,note,meals,alerts,nama:keys.map(x=>DNAME[x]).join(' + '),tujuan:uniq(keys.map(x=>DIET[x].tujuan)).join(' '),ok,no,ingat,subst,nilai,src:keys.map(x=>DSRC[x]).join('; ')}}
 function renderDiet(R){const el=document.getElementById('dietOut');const sg=dietSuggest(),sel=dietSel(),D=dietPlan(),k=S.klien;
-  const SUB={dm:'Gula darah tinggi / DM',rg:'Tekanan darah tinggi / hipertensi',hamil:'Ibu hamil, termasuk KEK & anemia',menyusui:'Ibu menyusui',purin:'Asam urat tinggi / gout',lambung:'Gastritis, maag, GERD, dispepsia',lansia:'Umur 60 tahun ke atas'};
+  const SUB={dm:'Gula darah tinggi / DM',rg:'Tekanan darah tinggi / hipertensi',hamil:'Ibu hamil, termasuk KEK & anemia',menyusui:'Ibu menyusui',anemia:'Hb rendah; remaja putri & WUS',purin:'Asam urat tinggi / gout',lambung:'Gastritis, maag, GERD, dispepsia',lansia:'Umur 60 tahun ke atas'};
   const card=key=>`<label class="dcard"><input type="checkbox" data-diet="${key}" ${sel[key]?'checked':''}><div><b>${DNAME[key]}</b><small>${SUB[key]}</small>${sg[key].length?`<br><span class="sug">Disarankan: ${esc(sg[key].join(', '))}</span>`:''}</div></label>`;
   const lv=D&&D.base==='dm'?DM_LV.map(x=>`<option value="${x}" ${D.E===x?'selected':''}>${fmt(x)} kkal</option>`).join(''):'';
   const eCtl=!D?'':D.base==='dm'?`<select id="diet-e" data-dietE>${lv}</select>`:(D.base==='hamil'||D.base==='menyusui')?`<div style="padding:8px 0;font-weight:700">±${fmt(D.E)} kkal (porsi baku)</div>`:`<div class="unit"><input id="diet-e" type="number" step="100" min="1200" max="2800" value="${D.E}" data-dietE><span>kkal</span></div>`;
@@ -1408,6 +1552,7 @@ function leafHTML(D,k,pen){return `<div class="leaf">
    <div class="two-col"><div><h4>Yang dianjurkan</h4><ul class="lst ok">${D.ok.map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ul></div>
    <div><h4>Yang perlu dibatasi/dihindari</h4><ul class="lst no">${D.no.map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ul></div></div>
    <h4>Ingat</h4><ul class="lst dot">${D.ingat.map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ul>
+   ${D.sel.anemia||D.sel.hamil?mitosHTML():''}
    <p class="note" style="margin:14px 0 0">Sumber: ${esc(D.src)}; Daftar Bahan Makanan Penukar.</p></div>`}
 
 document.getElementById('dietOut').addEventListener('change',e=>{const t=e.target;
@@ -1541,7 +1686,7 @@ async function needPdf(){if(!(window.jspdf&&window.jspdf.jsPDF)){await loadScrip
 const P=x=>String(x??'').replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/β/g,'beta').replace(/[−]/g,'-').replace(/→/g,'->').replace(/[^\x00-\xFF–—‘’“”•…]/g,'');
 const slug=x=>(norm(x||'klien').replace(/ /g,'-')||'klien').slice(0,40);
 const fileBase=pre=>`${pre}_${slug(S.klien.nama)}_${S.klien.tglk||today()}`;
-function msg(html){const b=document.getElementById(MODE==='posy'?'pfPosy':MODE==='pam'?'pfPam':(document.getElementById('expModal')&&!document.getElementById('expModal').hidden?'expMsg':'printFallback'));if(b){b.innerHTML=html;b.hidden=!html}}
+function msg(html){const b=document.getElementById(MODE==='posy'?'pfPosy':MODE==='pam'?'pfPam':MODE==='tl'?'pfTl':(document.getElementById('expModal')&&!document.getElementById('expModal').hidden?'expMsg':'printFallback'));if(b){b.innerHTML=html;b.hidden=!html}}
 function deliverDownload(blob,name){const url=URL.createObjectURL(blob);
   if(inFrame){let w=null;try{w=window.open(url,'_blank')}catch(e){}
     msg(w?`File dibuka di tab baru; simpan dari sana.`:`Unduhan diblokir oleh halaman ini. <a class="lnk-open" href="${url}" target="_blank" rel="noopener">Buka ${esc(name)}</a>`);return}
@@ -1591,16 +1736,16 @@ async function buildPdf(){const jsPDF=await needPdf();const R=calc(),t=totals(),
     const nRows=ms.reduce((a,m)=>a+Math.max(1,m.items.length),0)+1;let first=true;
     ms.forEach(m=>{const list=m.items.length?m.items:[null];list.forEach((i,j)=>{const row=[];
       if(first)row.push({content:P(lab),rowSpan:nRows,styles:{fontStyle:'bold'}});if(j===0)row.push({content:P(m.name),rowSpan:list.length});
-      if(!i){row.push('–','','','','','','','')}else{const f=FOOD.get(i.kode);const g=i.gram||0,v=x=>f[x]==null?null:f[x]*g/100;const e=v('energi'),p=v('protein'),l=v('lemak'),c=v('kh');
+      if(!i){row.push('–','','','','','','')}else{const f=FOOD.get(i.kode);const g=i.gram||0,v=x=>f[x]==null?null:f[x]*g/100;const e=v('energi'),p=v('protein'),l=v('lemak'),c=v('kh');
         sub.e+=e||0;sub.p+=p||0;sub.l+=l||0;sub.c+=c||0;const pp=penOf(f,g);
-        row.push(P(f.nama),P(i.urt==='gram'?'–':fmt(i.qty,1)+' '+i.urt),fmt(g),pp?P((pp.exact?'':'±')+fmt(pp.n,1)+' '+pp.gol):'–',fmt(e),fmt(p,1),fmt(l,1),fmt(c,1))}
+        row.push(P(f.nama),P(i.urt==='gram'?'–':fmt(i.qty,1)+' '+i.urt),fmt(g),fmt(e),fmt(p,1),fmt(l,1),fmt(c,1))}
       body.push(row);first=false})});
-    body.push([{content:P('Subtotal '+lab.toLowerCase()),colSpan:5,styles:{fontStyle:'bold',fillColor:245}},...[fmt(sub.e),fmt(sub.p,1),fmt(sub.l,1),fmt(sub.c,1)].map(x=>({content:x,styles:{fontStyle:'bold',fillColor:245}}))]);
+    body.push([{content:P('Subtotal '+lab.toLowerCase()),colSpan:4,styles:{fontStyle:'bold',fillColor:245}},...[fmt(sub.e),fmt(sub.p,1),fmt(sub.l,1),fmt(sub.c,1)].map(x=>({content:x,styles:{fontStyle:'bold',fillColor:245}}))]);
     tot.e+=sub.e;tot.p+=sub.p;tot.l+=sub.l;tot.c+=sub.c}
-  if(body.length){body.push([{content:'TOTAL ASUPAN',colSpan:6,styles:{fontStyle:'bold',fillColor:228}},...[fmt(tot.e),fmt(tot.p,1),fmt(tot.l,1),fmt(tot.c,1)].map(x=>({content:x,styles:{fontStyle:'bold',fillColor:228}}))]);
-    doc.autoTable({startY:y,margin:{left:M,right:M,top:14,bottom:18},head:[['Waktu','Menu','Bahan makanan','URT','Berat (g)','Penukar','Energi (kkal)','Protein (g)','Lemak (g)','KH (g)']],body,theme:'grid',
+  if(body.length){body.push([{content:'TOTAL ASUPAN',colSpan:5,styles:{fontStyle:'bold',fillColor:228}},...[fmt(tot.e),fmt(tot.p,1),fmt(tot.l,1),fmt(tot.c,1)].map(x=>({content:x,styles:{fontStyle:'bold',fillColor:228}}))]);
+    doc.autoTable({startY:y,margin:{left:M,right:M,top:14,bottom:18},head:[['Waktu','Menu','Bahan makanan','URT','Berat (g)','Energi (kkal)','Protein (g)','Lemak (g)','KH (g)']],body,theme:'grid',
       styles:{fontSize:7.6,cellPadding:1.1,lineColor:150,lineWidth:.15,textColor:0,valign:'middle'},headStyles:{fillColor:235,textColor:0,fontStyle:'bold',fontSize:7.4},
-      columnStyles:{0:{cellWidth:18},1:{cellWidth:24},2:{cellWidth:'auto'},3:{cellWidth:22},4:{halign:'right',cellWidth:12},5:{halign:'right',cellWidth:14},6:{halign:'right',cellWidth:14},7:{halign:'right',cellWidth:13},8:{halign:'right',cellWidth:12},9:{halign:'right',cellWidth:12}}});
+      columnStyles:{0:{cellWidth:18},1:{cellWidth:26},2:{cellWidth:'auto'},3:{cellWidth:24},4:{halign:'right',cellWidth:13},5:{halign:'right',cellWidth:15},6:{halign:'right',cellWidth:14},7:{halign:'right',cellWidth:13},8:{halign:'right',cellWidth:13}}});
     y=doc.lastAutoTable.finalY+7}
   else{doc.setFontSize(9);doc.text('Belum ada data recall.',M,y+4);y+=10}
   // E tingkat konsumsi
@@ -1610,7 +1755,7 @@ async function buildPdf(){const jsPDF=await needPdf();const R=calc(),t=totals(),
       styles:{fontSize:8,cellPadding:1.1,lineColor:150,lineWidth:.15,textColor:0},headStyles:{fillColor:235,textColor:0,fontStyle:'bold'},columnStyles:{1:{halign:'right'},2:{halign:'right'},3:{halign:'right'}}});
     y=doc.lastAutoTable.finalY+4;const E=t.t.energi||1,pe=[t.t.protein*4/E*100,t.t.lemak*9/E*100,t.t.kh*4/E*100];const ps=penSum();
     doc.setFontSize(7.6);doc.setTextColor(60);
-    const note=doc.splitTextToSize(P(`Komposisi energi asupan: protein ${fmt(pe[0])}%, lemak ${fmt(pe[1])}%, karbohidrat ${fmt(pe[2])}%. Satuan penukar: ${Object.keys(MAINL).filter(x=>ps.s[x]).map(x=>`gol. ${x} ${fmt(ps.s[x],1)} P`).join(' · ')}. Kategori makro: Depkes (1996); mikro: cukup bila >=77% AKG. * sebagian bahan tidak memiliki data di TKPI; ± = perkiraan.`),W-2*M);
+    const note=doc.splitTextToSize(P(`Komposisi energi asupan: protein ${fmt(pe[0])}%, lemak ${fmt(pe[1])}%, karbohidrat ${fmt(pe[2])}%. Kategori makro: Depkes (1996); mikro: cukup bila >=77% AKG. * sebagian bahan tidak memiliki data di TKPI.`),W-2*M);
     ensure(note.length*3.3);doc.text(note,M,y+1);y+=note.length*3.3+5;doc.setTextColor(0);
     // F
     const ip=interpret(R,t,pe);doc.setFontSize(8.8);const lines=ip.flatMap(x=>doc.splitTextToSize(P('•  '+x),W-2*M-2));
@@ -1654,8 +1799,8 @@ async function buildCard(){const R=calc(),t=totals(),T=R.T,k=S.klien;
   const pe=[t.t.protein*4/(E||1)*100,t.t.lemak*9/(E||1)*100,t.t.kh*4/(E||1)*100];
   const pts=t.n?interpret(R,t,pe).filter(x=>!/^Natrium dihitung/.test(x)).map(x=>/^Hasil lab/.test(x)?'Hasil lab di luar normal: '+labFlags().map(f=>f.t.replace(/ [\d,.]+.*$/,'').replace('Gula darah','GD')).join(', ')+'.':x).slice(0,4):[];
   const D=dietPlan();
-  const MMS_T='Minum TTD atau MMS 1 tablet setiap hari selama kehamilan, sebaiknya malam sebelum tidur; jangan bersama teh, kopi, susu, atau obat maag.';
-  let cat=(S.catatan||'').trim()||(R.fis==='hamil'?MMS_T:'Ikuti anjuran konselor gizi dan kontrol kembali sesuai jadwal.');if(R.fis==='hamil'&&!/TTD|MMS/i.test(cat))cat+='\n'+MMS_T;
+  const MMS_T='Minum TTD/MMS 1 tablet setiap hari selama kehamilan, sebaiknya malam sebelum tidur; jangan bersama teh, kopi, susu, atau obat maag.';
+  let cat=(S.catatan||'').trim()||(R.fis==='hamil'?MMS_T:'Ikuti anjuran konselor gizi dan kontrol kembali sesuai jadwal.');if(R.fis==='hamil'&&!/TTD|MMS/i.test(cat))cat+='\n'+MMS_T;{const uY=R.u?R.u.y:null;const g=hbGrade(inR(num(S.lab.hb),'hb'),S.klien.jk,uY,R.fis==='hamil');if(g&&g.lvl>0&&!/zat besi/i.test(cat))cat+='\n'+g.lab+': perbanyak lauk hewani sumber zat besi dan buah sumber vitamin C'+(g.lvl>=2?'; segera periksa ke dokter/Puskesmas.':'.');const tw=R.fis!=='hamil'?ttdRule(S.klien.jk,uY,R.fis):null;if(tw&&!/TTD/i.test(cat))cat+='\n'+tw}
   function draw(g,dry){let y=0;
     if(!dry){g.fillStyle=C.bg;g.fillRect(0,0,W,g.canvas.height);g.fillStyle=C.green;g.fillRect(0,0,W,300)}
     // logo + judul
@@ -1743,8 +1888,13 @@ function invPanel(msgs,imtOdd,bb,tb){if(!msgs.length&&imtOdd==null)return '';
     `</div><p class="note" style="margin:8px 0 0">Hasil yang memakai data ini ditahan sampai diperbaiki.</p></div></div>`}
 // anak <5 tahun di mode Klinik/Pameran -> tawarkan pindah ke Posyandu
 function toPosyHTML(src,u){return `<div class="panel" style="border-color:var(--kunyit)"><div class="panel-b"><p class="eyebrow" style="color:var(--kunyit);margin:0 0 6px">Anak balita</p>
-  <p style="margin:0 0 10px">Umur ${u} tahun. Status gizi balita dinilai dengan z-skor (Permenkes No. 2/2020) di mode Posyandu, bukan IMT dewasa.</p>
-  <button class="btn primary" type="button" data-toposy="${src}">Buka di mode Posyandu</button></div></div>`}
+  <p style="margin:0 0 10px">Umur ${typeof u==='number'?u+' tahun':u}. Status gizi balita dinilai dengan z-skor (Permenkes No. 2/2020) di mode Posyandu, bukan IMT dewasa.</p>
+  <div class="exp-row"><button class="btn primary" type="button" data-toposy="${src}">Buka di mode Posyandu</button>${src==='klinik'?'<button class="btn" type="button" data-totlk>Tata Laksana Balita (gizi buruk)</button>':''}</div>
+  <p class="note" style="margin:8px 0 0">Bila balita sakit atau dicurigai gizi buruk (6–59 bulan), pilih Tata Laksana Balita untuk konfirmasi, triase, dan MTG.</p></div></div>`}
+// data dewasa yang tampak seperti balita (kemungkinan salah tahun lahir/umur)
+function kidLikeHTML(u,bb,tb){return `<div class="panel" style="border-color:var(--bad)"><div class="panel-b"><p class="eyebrow" style="color:var(--bad);margin:0 0 6px">Periksa umur / tanggal lahir</p>
+  <p style="margin:0">Umur ${u} tahun dengan BB ${fmt(bb,1)} kg dan TB ${fmt(tb,1)} cm tidak wajar untuk dewasa; ukuran ini sesuai anak balita. Kemungkinan umur atau tahun lahir salah ketik (mis. 2005 seharusnya 2025). Hasil IMT dewasa ditahan.</p>
+  <p class="note" style="margin:8px 0 0">Bila klien memang balita, perbaiki tanggal lahir; aplikasi akan menawarkan mode Posyandu atau Tata Laksana Balita.</p></div></div>`}
 function toPosy(src){const keep=PY;PY=pblank(keep);
   if(src==='klinik'){const k=S.klien,d=k.dob||{};Object.assign(PY,{nama:k.nama||'',jk:k.jk,dob:{d:d.d??'',m:d.m??'',y:d.y??''},tglu:k.tglk||today(),bb:k.bb||'',tb:k.tb||''});
     const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k.tgll||'');if(m)PY.dob={d:String(+m[3]),m:String(+m[2]),y:m[1]}}
@@ -1761,12 +1911,15 @@ function kondVis(R){const k=S.klien;const u=R.u;const wus=k.jk==='P'&&(!u||(u.y>
   document.querySelectorAll('#kondPanel [data-wus]').forEach(el=>el.hidden=!wus);
   document.querySelectorAll('#kondPanel [data-fis]').forEach(el=>el.hidden=!(wus&&k.fis===el.dataset.fis));
   const hk=document.getElementById('f-hbk');if(hk&&document.activeElement!==hk)hk.value=S.lab.hb??'';
-  const hn=document.getElementById('hbNote');if(hn){const hb=inR(num(S.lab.hb),'hb');hn.textContent=hb==null?'Anemia bila < 11 g/dL · sama dengan isian di Data Lab':hb<7?'Anemia berat · rujuk ke dokter':hb<10?'Anemia sedang · rujuk ke dokter':hb<11?'Anemia ringan':'Tidak anemia (≥ 11 g/dL)';hn.style.color=hb!=null&&hb<11?'var(--bad)':''}
+  const uY=u?u.y:null;const tr=ttdRule(k.jk,uY,R.fis);document.querySelectorAll('#kondPanel [data-ttd]').forEach(el=>el.hidden=!tr);
+  const tl=document.getElementById('ttdLab');if(tl)tl.textContent=R.fis==='hamil'?'Minum TTD/MMS (setiap hari)':'Minum TTD (setiap minggu)';
+  const hn=document.getElementById('hbNote');if(hn){const c=hbCut(k.jk,uY,R.fis==='hamil');const g=hbGrade(inR(num(S.lab.hb),'hb'),k.jk,uY,R.fis==='hamil');hn.textContent=!g?`Anemia bila < ${String(c.thr).replace('.',',')} g/dL (${c.grp}) · sama dengan isian di Data Lab`:g.lvl===0?`Tidak anemia (batas ${String(c.thr).replace('.',',')} g/dL)`:g.lab+(g.lvl>=2?' · rujuk ke dokter':'');hn.style.color=g&&g.lvl>0?'var(--bad)':''}
   const n=document.getElementById('ukNote');if(n)n.textContent=R.tm?`Trimester ${R.tm===1?'I':R.tm===2?'II':'III'}`:'Trimester dihitung otomatis'}
 function kondRows(R){const k=S.klien,o=[];
   if(R.fis==='hamil'){o.push(['Kehamilan',`${R.uk?R.uk+' minggu (trimester '+(R.tm===1?'I':R.tm===2?'II':'III')+')':'hamil, usia kehamilan belum diisi'}`]);
     if(R.imtPra)o.push(['IMT sebelum hamil',`${fmt(R.imtPra,1)} (${R.katPra[0]}); anjuran kenaikan BB ${R.katPra[2]} kg${R.gain!=null?`; naik ${fmt(R.gain,1)} kg`:''}`]);
-    if(k.ttd)o.push(['TTD/MMS',{rutin:'rutin setiap hari',kadang:'tidak rutin',tidak:'tidak minum'}[k.ttd]])}
+}
+  if(k.ttd&&ttdRule(k.jk,R.u?R.u.y:null,R.fis))o.push([R.fis==='hamil'?'TTD/MMS':'TTD mingguan',{rutin:R.fis==='hamil'?'rutin setiap hari':'rutin setiap minggu',kadang:'tidak rutin',tidak:'tidak minum'}[k.ttd]]);
   if(R.fis==='menyusui')o.push(['Menyusui',k.mp==='2'?'bayi 7–12 bulan':'bayi 0–6 bulan']);
   if(R.lila!=null)o.push(['LiLA',`${fmt(R.lila,1)} cm${R.kek?' · risiko KEK':''}`]);
   const sh=inR(num(k.suhu),'suhu');if(sh&&sh>37)o.push(['Suhu tubuh',`${fmt(sh,1)} °C (demam)`]);
@@ -1775,25 +1928,40 @@ function maternalHTML(R){const k=S.klien;if(R.fis!=='hamil'&&R.lila==null)return
   if(R.fis==='hamil'){rows.push(['Usia kehamilan',R.uk?`${R.uk} minggu · trimester ${R.tm===1?'I':R.tm===2?'II':'III'}`:'belum diisi']);
     if(R.imtPra){rows.push(['IMT sebelum hamil',`${fmt(R.imtPra,1)} · ${R.katPra[0]}`]);rows.push(['Anjuran kenaikan BB selama hamil',`${R.katPra[2]} kg`]);if(R.gain!=null)rows.push(['Kenaikan BB sampai sekarang',`${R.gain>=0?'+':''}${fmt(R.gain,1)} kg`])}
     else rows.push(['IMT sebelum hamil','isi BB sebelum hamil']);
-    rows.push(['Hemoglobin',hb!=null?fmt(hb,1)+' g/dL':'belum diisi']);}
+}
   const pills=[];if(R.lila!=null)pills.push(R.kek?['Risiko KEK (LiLA < 23,5 cm)','p-bad']:['LiLA normal','p-ok']);
-  if(R.fis==='hamil'&&hb!=null)pills.push(hb<7?['Anemia berat','p-bad']:hb<10?['Anemia sedang','p-bad']:hb<11?['Anemia ringan','p-warn']:['Hb normal','p-ok']);
-  if(R.fis==='hamil'&&k.ttd)pills.push(k.ttd==='rutin'?['TTD/MMS rutin','p-ok']:[k.ttd==='tidak'?'Tidak minum TTD/MMS':'TTD/MMS tidak rutin','p-warn']);
+
   const msgs=[];if(R.fis==='hamil'){if(R.kek)msgs.push(['bad','Risiko KEK: konsultasikan ke bidan/dokter, ikuti PMT ibu hamil dari Puskesmas, tambah porsi makanan pokok dan lauk serta selingan padat gizi.']);
-    if(hb!=null&&hb<10)msgs.push(['bad','Anemia sedang/berat: segera rujuk ke dokter.']);else if(hb!=null&&hb<11)msgs.push(['warn','Anemia ringan: perbanyak sumber zat besi, minum TTD/MMS setiap hari, periksa ulang Hb sesuai anjuran bidan.']);
-    msgs.push(['','Minum TTD atau MMS 1 tablet setiap hari selama kehamilan, bersama air putih/buah sumber vitamin C, jangan bersama teh, kopi, susu, atau obat maag (Buku KIA 2024).'])}
+}
   else if(R.kek)msgs.push(['warn','LiLA < 23,5 cm: risiko kurang energi kronis. Perbaiki asupan dan pantau berat badan.']);
   return `<div class="panel"><div class="panel-h"><h2>${R.fis==='hamil'?'Ibu hamil':'Lingkar lengan atas'}</h2><span class="hint">Buku KIA 2024</span></div><div class="panel-b">
     ${pills.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${pills.map(([t,c])=>`<span class="pill ${c}">${t}</span>`).join('')}</div>`:''}
     ${rows.length?`<dl class="kv">${rows.map(([a,b])=>`<dt>${a}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`:''}
     ${msgs.length?`<div class="msgs" style="margin-top:10px">${msgs.map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}</div>`:''}</div></div>`}
+function anemiaHTML(R){const k=S.klien;const uY=R.u?R.u.y:null;const hm=R.fis==='hamil';const hb=inR(num(S.lab.hb),'hb');const g=hbGrade(hb,k.jk,uY,hm);const t=ttdRule(k.jk,uY,R.fis);
+  if(!g&&!t)return '';const pills=[],rows=[],msgs=[];
+  if(g){pills.push([g.lab,g.pill]);rows.push(['Hemoglobin',`${fmt(hb,1)} g/dL`]);rows.push(['Batas anemia',`${String(g.thr).replace('.',',')} g/dL (${g.grp})`])}
+  else if(hm)msgs.push(['','Hb belum diisi. Ibu hamil periksa Hb minimal 2 kali: trimester I dan trimester III.']);
+  if(t&&k.ttd)pills.push(k.ttd==='rutin'?[hm?'TTD/MMS rutin':'TTD rutin','p-ok']:[k.ttd==='tidak'?(hm?'Tidak minum TTD/MMS':'Tidak minum TTD'):(hm?'TTD/MMS tidak rutin':'TTD tidak rutin'),'p-warn']);
+  if(g&&g.lvl>0){msgs.push([g.lvl>=2?'bad':'warn',(g.lvl>=2?'Segera rujuk ke dokter/Puskesmas untuk pemeriksaan dan pengobatan anemia. ':'Periksakan ke bidan/dokter dan ulangi pemeriksaan Hb sesuai anjuran. ')+(uY!=null&&uY<5?'':GEJALA_AN[g.lvl])]);
+    msgs.push(['',`Sumber zat besi hewani: ${FE_HEWANI}. Nabati: ${FE_NABATI}. ${FE_TIP}`]);
+    msgs.push(['','Cegah cacingan: cuci tangan pakai sabun, pakai alas kaki, masak makanan sampai matang.'])}
+  if(t)msgs.push([k.ttd==='kadang'||k.ttd==='tidak'?'warn':'',t+(hm?' (Buku KIA 2024)':'')]);
+  return `<div class="panel"><div class="panel-h"><h2>Anemia &amp; tablet tambah darah</h2><span class="hint">Hb: WHO · TTD: Kemenkes</span></div><div class="panel-b">
+    ${pills.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${pills.map(([a,c])=>`<span class="pill ${c}">${a}</span>`).join('')}</div>`:''}
+    ${rows.length?`<dl class="kv">${rows.map(([a,b])=>`<dt>${a}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`:''}
+    ${msgs.length?`<div class="msgs" style="margin-top:10px">${msgs.map(([c,x])=>`<p class="msg ${c}">${esc(x)}</p>`).join('')}</div>`:''}
+    ${t?`<p class="eyebrow" style="margin:14px 0 6px">Cara minum ${hm?'TTD/MMS':'TTD'}</p><ul class="lst dot">${ttdCara(hm).map(x=>`<li><span>${esc(x)}</span></li>`).join('')}<li><span>${esc(TTD_EFEK)}</span></li></ul>${mitosHTML()}`:''}
+    <p class="note" style="margin:12px 0 0">Sumber: ${esc(AN_SRC)}.</p></div></div>`}
+function hbAge(){const u=umur(S.klien.tgll,S.klien.tglk);return u?u.y:null}
+function hbHamil(){return S.klien.jk==='P'&&S.klien.fis==='hamil'}
 /* ===== Mode & Beranda ===== */
 let MODE='home';
 const modeTag=document.getElementById('modeTag'),brandSub=document.getElementById('brandSub');
 function setMode(m,push){MODE=m;document.body.dataset.mode=m;
-  modeTag.textContent=m==='klinik'?'Klinik':m==='posy'?'Posyandu':m==='pam'?'Pameran':'';
-  brandSub.textContent=m==='posy'?'Status gizi balita · Permenkes 2/2020':m==='pam'?'Cek gizi kilat pengunjung':'Asuhan gizi berbasis TKPI 2017';msg('');
-  if(m==='home')renderHome();if(m==='posy'){loadPosy();renderPosy()}if(m==='klinik')refresh();if(m==='pam'){loadPam();renderPam()}
+  modeTag.textContent=m==='klinik'?'Klinik':m==='posy'?'Posyandu':m==='pam'?'Pameran':m==='tl'?'Tata Laksana':'';
+  brandSub.textContent=m==='posy'?'Status gizi balita · Permenkes 2/2020':m==='pam'?'Cek gizi kilat pengunjung':m==='tl'?'Gizi buruk rawat jalan · MTG':'Asuhan gizi berbasis TKPI 2017';msg('');
+  if(m==='home')renderHome();if(m==='posy'){loadPosy();renderPosy()}if(m==='klinik')refresh();if(m==='pam'){loadPam();renderPam()}if(m==='tl'){loadTl();renderTl()}
   if(push!==false){try{history.pushState({m},'',m==='home'?location.pathname+location.search:'#'+m)}catch(e){}}
   window.scrollTo({top:0})}
 window.addEventListener('popstate',e=>{const m=(e.state&&e.state.m)||'home';setMode(m,false)});
@@ -1822,6 +1990,9 @@ function renderHome(){
   const q=document.getElementById('actPam');
   q.innerHTML=PM.list.length||PM.cur.nama||PM.cur.bb?`<button class="btn primary" type="button" id="mLanjut">Lanjutkan${PM.ev.nama?': '+esc(PM.ev.nama):''}</button><small>${PM.list.length} pengunjung tersimpan</small>`:`<button class="btn primary" type="button" id="mMulai">Mulai layanan pameran</button>`;
   q.querySelector('button').onclick=()=>setMode('pam');
+  const t=document.getElementById('actTl');const na=TL.list.filter(x=>x.status==='aktif').length;
+  t.innerHTML=TL.list.length?`<button class="btn primary" type="button" id="tLanjut">Buka daftar balita</button><small>${na} sedang dirawat · ${TL.list.length} tercatat</small>`:`<button class="btn primary" type="button" id="tMulai">Mulai tata laksana</button>`;
+  t.querySelector('button').onclick=()=>setMode('tl');
 }
 
 /* ===== Posyandu: status gizi balita (Permenkes No. 2/2020) ===== */
@@ -1920,7 +2091,8 @@ function renderPosy(){const o=calcPosy();const el=document.getElementById('posyO
       if(o.lila)h+=`<div class="kv"><dt>LiLA ${fmt(num(PY.lila),1)} cm</dt><dd><span class="pill ${o.lila[1]}">${o.lila[0]}</span></dd></div>`;
       if(o.nt){const s=o.nt.s;h+=`<div class="ntbox"><div class="ntbadge" style="background:var(${s==='N'?'--ok-soft':s==='T'?'--warn-soft':'--surface-2'});color:var(${s==='N'?'--ok':s==='T'?'--warn':'--muted'})">${s||'–'}</div><div><b>${s==='N'?'Naik':s==='T'?'Tidak naik':'Belum dinilai'}</b><br><small style="color:var(--muted)">${s?`Perubahan ${o.nt.g>=0?'+':''}${fmt(o.nt.g)} g; KBM umur ${m} bulan = ${fmt(o.nt.kbm)} g (Buku KIA). Anggap penimbangan lalu ±1 bulan sebelumnya.`:'KBM berlaku mulai umur 1 bulan.'}</small></div></div>`}
       h+=`</div></div>`}
-    if(o.idx.some(x=>x.z!=null)||o.lila||o.nt)h+=`<div class="panel"><div class="panel-h"><h2>Tindak lanjut</h2></div><div class="panel-b msgs">${tindakLanjut(o).map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}</div></div>`;
+    if(o.idx.some(x=>x.z!=null)||o.lila||o.nt){const wz=zget(o,'bbpb');const toTl=(wz!=null&&wz<-2)||(o.lila&&o.lila[0]!=='Gizi baik');
+      h+=`<div class="panel"><div class="panel-h"><h2>Tindak lanjut</h2></div><div class="panel-b msgs">${tindakLanjut(o).map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}${toTl&&m>=6?`<div><button class="btn primary" type="button" data-totl>Lanjut ke Tata Laksana (konfirmasi &amp; triase nakes)</button></div>`:''}</div></div>`}
     const k=pesanKIA(m);h+=`<div class="panel"><div class="panel-h"><h2>Pesan konseling</h2><span class="hint">Buku KIA · umur ${k.t}</span></div><div class="panel-b"><ul class="lst dot">${k.l.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`;
     h+=`<p class="note">Z-skor dihitung dari tabel SD Permenkes No. 2 Tahun 2020 (median dan ±1 SD; panjang/tinggi diinterpolasi). Hasil dapat berbeda di desimal kedua dibanding WHO Anthro.</p>`}
   el.innerHTML=h}
@@ -1955,26 +2127,28 @@ function calcPam(c){const o={};const u=num(c.umur),tl=inR(num(c.tl),'tl'),lp=inR
   if(bb&&tb){const m=tb/100;o.imt=bb/(m*m);o.kat=o.dewasa&&o.fis!=='hamil'?imtKat(o.imt):null;
     o.bbi=(c.jk==='L'&&tb<160)||(c.jk==='P'&&tb<150)?tb-100:(tb-100)*0.9;o.bbMin=18.5*m*m;o.bbMax=25*m*m;
     if((o.u!=null&&o.u<18)||o.fis==='hamil')o.bbi=o.bbMin=o.bbMax=null;
+    if(o.u!=null&&o.u>=5&&tb<110&&bb<25){o.kidLike=true;o.bbi=o.bbMin=o.bbMax=o.kat=null}
     if(!IMT_OK(o.imt)){o.imtOdd=o.imt;o.imt=o.kat=o.bbi=o.bbMin=o.bbMax=null;o.bb=bb=null}}
   if(lp&&o.dewasa){o.lpv=lp;o.lp=lp>=(c.jk==='L'?90:80)?['Obesitas sentral','p-bad']:['Normal','p-ok']}
   const a=AKT[c.akt]||AKT.r;
-  if(o.dewasa&&bb&&tb){let E=(10*bb+6.25*tb-5*o.u+(c.jk==='L'?5:-161))*a.f;o.tuj='tetap';
+  if(o.dewasa&&bb&&tb){let E=(c.jk==='L'?66.47+13.75*bb+5.003*tb-6.755*o.u:655.1+9.563*bb+1.85*tb-4.676*o.u)*a.f;o.tuj='tetap';
     if(o.fis){E+=o.addE;o.tuj=o.fis}
     else if(o.imt>25){o.tuj='turun';E=Math.max(E-500,c.jk==='L'?1500:1200)}else if(o.imt<18.5){o.tuj='naik';E+=500}
-    o.E=E;o.Pr=E*.15/4;o.Lm=E*.25/9;o.KH=E*.6/4;o.src='Mifflin-St Jeor × aktivitas '+a.l.toLowerCase()}
+    o.E=E;o.Pr=E*.15/4;o.Lm=E*.25/9;o.KH=E*.6/4;o.src='Harris-Benedict × aktivitas '+a.l.toLowerCase()}
   else if(o.u!=null&&o.imtOdd==null){const g=akgFor(c.jk,o.u);if(g){o.E=g.energi+o.addE;o.Pr=g.protein;o.Lm=g.lemak;o.KH=g.kh;o.src='AKG 2019 '+g.label;if(o.fis)o.tuj=o.fis}}
   const s=inR(num(c.sis),'sis'),d=inR(num(c.dia),'dia');o.td=bpStat(s,d);o.tdHi=!!(o.td&&o.td[1]==='p-bad');o.tdv=s||d?`${s?fmt(s):'–'}/${d?fmt(d):'–'}`:'';
   o.lilav=inR(num(c.lila),'lilaD');if(o.lilav!=null&&c.jk==='P'&&o.u!=null&&o.u>=15&&o.u<=50){o.kek=o.lilav<23.5;o.lilaS=o.kek?['Risiko KEK','p-bad']:['Normal','p-ok']}
-  o.hbv=inR(num(c.hb),'hb');if(o.hbv!=null&&o.u!=null){const thr=o.fis==='hamil'?11:o.u<12?11.5:o.u<15?12:c.jk==='P'?12:13;o.anemia=o.hbv<thr;const hm=o.fis==='hamil';o.hbS=!o.anemia?['Normal','p-ok']:o.hbv<(hm?7:8)?['Anemia berat','p-bad']:o.hbv<(hm?10:11)?['Anemia sedang','p-bad']:['Anemia ringan','p-warn']}
+  o.hbv=inR(num(c.hb),'hb');if(o.hbv!=null&&o.u!=null){const g=hbGrade(o.hbv,c.jk,o.u,o.fis==='hamil');o.hbG=g;o.anemia=g.lvl>0;o.hbS=[g.lvl?g.lab:'Normal',g.pill]}
+  o.jk=c.jk;o.ttd=ttdRule(c.jk,o.u,o.fis);
   const gd=inR(num(c.gds),'gds'),ko=inR(num(c.kol),'kol');if(gd!=null){o.gdsv=gd;o.gds=LABI.gds.st(gd)}if(ko!=null){o.kolv=ko;o.kol=LABI.kol.st(ko)}
   return o}
 
-function saranPam(o){const out=[];const k=o.kat&&o.kat[0];
-  if(o.fis==='hamil'){if(o.kek)out.push('LiLA < 23,5 cm (risiko KEK): segera konsultasi ke bidan/Puskesmas untuk pemeriksaan dan PMT ibu hamil; tambah porsi makan dan selingan padat gizi.');
-    if(o.anemia)out.push(`Hb ${fmt(o.hbv,1)} g/dL (${o.hbS[0].toLowerCase()}): ${o.hbv<10?'segera rujuk ke dokter/Puskesmas':'periksakan ke bidan/dokter'}; perbanyak lauk hewani sumber zat besi (hati, daging, ikan) dan sayur hijau.`);
-    out.push('Minum TTD atau MMS 1 tablet setiap hari selama kehamilan, sebaiknya malam sebelum tidur; minum bersama air putih atau buah, jangan bersama teh, kopi, susu, atau obat maag (Buku KIA 2024).')}
-  else{if(o.kek)out.push('LiLA < 23,5 cm: risiko kurang energi kronis. Perbaiki porsi makan dan periksakan ke Puskesmas.');
-    if(o.anemia)out.push(`Hb ${fmt(o.hbv,1)} g/dL: ${o.hbS[0].toLowerCase()}. Perbanyak lauk hewani sumber zat besi dan buah sumber vitamin C, lalu periksakan ke Puskesmas${PM.cur.jk==='P'&&o.u>=12&&o.u<=18?'; remaja putri minum TTD sesuai program sekolah/Puskesmas':''}.`)}
+function saranPam(o,short){const out=[];const k=o.kat&&o.kat[0];
+  if(o.fis==='hamil'){if(o.kek)out.push('LiLA < 23,5 cm (risiko KEK): segera konsultasi ke bidan/Puskesmas untuk pemeriksaan dan PMT ibu hamil; tambah porsi makan dan selingan padat gizi.')}
+  else if(o.kek)out.push('LiLA < 23,5 cm: risiko kurang energi kronis. Perbaiki porsi makan dan periksakan ke Puskesmas.');
+  if(o.anemia){const g=o.hbG;out.push(`Hb ${fmt(o.hbv,1)} g/dL: ${g.lab.toLowerCase()}${short?'':` (batas ${g.grp} ${String(g.thr).replace('.',',')} g/dL)`}. ${g.lvl>=2?'Segera rujuk ke dokter/Puskesmas.':'Periksakan ke bidan/dokter/Puskesmas.'}${short?'':' '+GEJALA_AN[g.lvl]}`);
+    out.push(short?'Perbanyak lauk hewani sumber zat besi (hati, daging, ikan, telur, teri) dan buah sumber vitamin C.':`Perbanyak sumber zat besi. Hewani: ${FE_HEWANI}. Nabati: ${FE_NABATI}. ${FE_TIP}`)}
+  if(o.ttd)out.push(short?`${o.ttd} Minum 1 jam sesudah makan malam; beri jarak 2 jam dari teh, kopi, susu.`:`${o.ttd}${o.fis==='hamil'?' (Buku KIA 2024)':''} ${ttdCara(o.fis==='hamil').join(' ')} ${TTD_EFEK}`);
   if(o.u!=null&&o.u>=60)out.push('Lansia: makanan lunak dan mudah dikunyah, porsi kecil tapi sering, minum air cukup, perbanyak serat, dan tetap aktif bergerak.');
   if(o.fis==='hamil')out.push(`Ibu hamil: tambah makan ±${o.addE} kkal sehari (mis. 1 kali selingan bergizi) dan periksa kehamilan minimal 6 kali. Status gizi ibu hamil dinilai dari LiLA dan kenaikan BB, bukan IMT saat hamil.`);
   if(o.fis==='menyusui')out.push(`Ibu menyusui: tambah makan ±${o.addE} kkal sehari, minum air putih ${PM.cur.mp==='2'?12:14} gelas sehari, dan berikan ASI eksklusif sampai bayi 6 bulan.`);
@@ -1995,6 +2169,7 @@ function pamResultHTML(o){const c=PM.cur;
   const um=document.getElementById('m-umur');const ub=um.value!==''&&(o.u==null);um.classList.toggle('inv',ub);if(ub)inv.unshift('Umur harus 0–120 tahun.');
   let pre=invPanel(inv,o.imtOdd,o.bbRaw,o.tb);
   if(o.u!=null&&o.u<5)pre+=toPosyHTML('pam',o.u);
+  else if(o.kidLike)pre+=kidLikeHTML(o.u,o.bb,o.tb);
   else if(o.u!=null&&o.u<18)pre+=`<div class="panel" style="border-color:var(--kunyit)"><div class="panel-b"><p class="eyebrow" style="color:var(--kunyit);margin:0 0 6px">Anak/remaja ${o.u} tahun</p><p style="margin:0">Kategori IMT dewasa tidak berlaku. Status gizi umur 5–18 tahun dinilai dengan IMT menurut umur (IMT/U, z-skor). Kebutuhan gizi di bawah memakai AKG 2019.</p></div></div>`;
   if(o.u==null&&!o.imt)return pre+ `<div class="panel"><div class="empty-r">Isi umur, berat badan, dan tinggi badan pengunjung.</div></div>`;
   let h=`<div class="panel"><div class="panel-h"><h2>Status gizi</h2><span class="hint">${o.tbEst?'TB estimasi dari tinggi lutut':''}</span></div><div class="panel-b">`;
@@ -2012,7 +2187,7 @@ function pamResultHTML(o){const c=PM.cur;
     <dl class="kv" style="margin-top:10px"><dt>Protein</dt><dd>${fmt(o.Pr)} g</dd><dt>Lemak</dt><dd>${fmt(o.Lm)} g</dd><dt>Karbohidrat</dt><dd>${fmt(o.KH)} g</dd></dl></div></div>`;
   if(!inv.length)h+=menuPanelHTML(c,o);
   const sr=saranPam(o);
-  h+=`<div class="panel"><div class="panel-h"><h2>Saran untuk pengunjung</h2></div><div class="panel-b">${sr.length?`<div class="msgs" style="margin-bottom:12px">${sr.map(x=>`<p class="msg ${/tinggi|berlebih|di atas/i.test(x)?'warn':'ok'}">${x}</p>`).join('')}</div>`:''}
+  h+=`<div class="panel"><div class="panel-h"><h2>Saran untuk pengunjung</h2></div><div class="panel-b">${sr.length?`<div class="msgs" style="margin-bottom:12px">${sr.map(x=>`<p class="msg ${/tinggi|berlebih|di atas|anemia|rujuk|KEK/i.test(x)?'warn':'ok'}">${x}</p>`).join('')}</div>`:''}${o.ttd?mitosHTML():''}
     <p class="eyebrow" style="margin:0 0 6px">Pedoman Gizi Seimbang · Isi Piringku</p><ul class="lst dot">${ISI_PIRINGKU.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`;
   return h}
 
@@ -2071,7 +2246,7 @@ function pamXlsx(){const r=pamRekap();
     ...KATS.map(k=>[k,r.kat[k]||0,r.n?+((r.kat[k]||0)/r.n*100).toFixed(1):'']),['Umur <18 tahun (pakai IMT/U)',r.anak,''],[],
     ['Obesitas sentral',r.lp,r.lpN?+(r.lp/r.lpN*100).toFixed(1):''],['Tekanan darah tinggi',r.ht,r.tdN?+(r.ht/r.tdN*100).toFixed(1):''],['Tekanan darah normal-tinggi',r.nt,r.tdN?+(r.nt/r.tdN*100).toFixed(1):''],
     ['Gula darah sewaktu tinggi',r.gd,r.gdN?+(r.gd/r.gdN*100).toFixed(1):''],['Kolesterol ≥200 mg/dL',r.ko,r.koN?+(r.ko/r.koN*100).toFixed(1):''],['Risiko KEK (LiLA < 23,5 cm)',r.kek,r.kekN?+(r.kek/r.kekN*100).toFixed(1):''],['Anemia (Hb rendah)',r.an,r.anN?+(r.an/r.anN*100).toFixed(1):''],['Ibu hamil',r.hamil,''],[],
-    ['Catatan: persen IMT dari seluruh pengunjung; persen LP/TD/GDS/kolesterol/LiLA/Hb dari yang diperiksa.'],['Rujukan: IMT Kemenkes RI; TD JNC 7; GDS PERKENI 2021; kolesterol NCEP-ATP III; LiLA Buku KIA 2024; Hb WHO.']];
+    ['Catatan: persen IMT dari seluruh pengunjung; persen LP/TD/GDS/kolesterol/LiLA/Hb dari yang diperiksa.'],['Rujukan: IMT Kemenkes RI; TD JNC 7; GDS PERKENI 2021; kolesterol NCEP-ATP III; LiLA Buku KIA 2024; Hb WHO (batas menurut umur, jenis kelamin, dan kehamilan); TTD Buku Saku Pencegahan Anemia Kemenkes 2023.']];
   return makeXlsx([{name:'Pengunjung',rows:[head,...rows],bold:[0],widths:[5,8,24,13,12,9,8,8,10,7,24,12,16,9,9,20,11,14,12,16,9,12,9,14,12]},{name:'Rekap',rows:rek,bold:[0,5,10],widths:[40,12,10]}])}
 document.getElementById('pamXls').addEventListener('click',()=>{if(!PM.list.length){msg('Belum ada pengunjung tersimpan.');return}
   deliverDownload(pamXlsx(),`Rekap-Pameran_${slug(PM.ev.nama||'kegiatan')}_${PM.ev.tgl||today()}.xlsx`)});
@@ -2194,7 +2369,7 @@ function menuCard(){const c=PM.cur,o=calcPam(c);const Mn=menuPam(c,o);if(!Mn)ret
 /* ===== Ekspor generik (Posyandu & Pameran): spesifikasi -> HTML cetak / PDF / JPG ===== */
 const stripH=s=>String(s??'').replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 const nowID=()=>new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});
-function docTitle(){if(MODE==='posy')return 'Hasil Penimbangan Balita - '+(PY.nama||'Balita');if(MODE==='pam')return 'Hasil Cek Gizi - '+(PM.cur.nama||'Pengunjung');return 'Lembar Kajian Gizi - '+(S.klien.nama||'Klien')}
+function docTitle(){if(MODE==='tl')return 'Kartu Status Gizi Buruk - '+((tlP()||{}).nama||'Balita');if(MODE==='posy')return 'Hasil Penimbangan Balita - '+(PY.nama||'Balita');if(MODE==='pam')return 'Hasil Cek Gizi - '+(PM.cur.nama||'Pengunjung');return 'Lembar Kajian Gizi - '+(S.klien.nama||'Klien')}
 function specHTML(sp){const kv=a=>`<div class="kv4">${a.map(([l,v])=>`<span>${esc(l)}</span><div>${v}</div>`).join('')}</div>`;
   return `<div class="rh"><div style="display:flex;gap:12px;align-items:center"><img src="${document.querySelector('img.inst').src}" alt="" style="height:38px;width:auto"><div><h1>${esc(sp.title)}</h1><small>${esc(sp.sub)}</small></div></div>
    <div style="text-align:right;font-size:9pt">${esc(sp.dateL)}<small>Dicetak ${nowID()}</small></div></div>`+
@@ -2205,9 +2380,11 @@ const TONE={'p-ok':[42,122,75],'p-warn':[154,101,18],'p-bad':[176,62,43],'p-mute
 async function specPdf(sp){const jsPDF=await needPdf();const doc=new jsPDF({unit:'mm',format:'a4',compress:true});const W=210,M=14,BOT=283;let y=12;
   const logo=document.querySelector('img.inst');
   try{const lw=30,lh=lw*(logo.naturalHeight/logo.naturalWidth||0.27);doc.addImage(logo.src,'PNG',M,y,lw,lh,'logo','FAST')}catch(e){}
-  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.text(P(sp.title),M+34,y+4.5);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(P(sp.sub),M+34,y+9);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);const rw=Math.max(doc.getTextWidth(P(sp.dateL)),doc.getTextWidth(P('Dicetak '+nowID())))+4;const av=W-M-rw-(M+34);
+  doc.setFont('helvetica','bold');let fs=14;doc.setFontSize(fs);while(doc.getTextWidth(P(sp.title))>av&&fs>11){fs-=.5;doc.setFontSize(fs)}const tl=doc.splitTextToSize(P(sp.title),av);doc.text(tl,M+34,y+4.5);const ex=(tl.length-1)*fs*.42;
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(doc.splitTextToSize(P(sp.sub),av),M+34,y+9+ex);
   doc.text(P(sp.dateL),W-M,y+4.5,{align:'right'});doc.setTextColor(90);doc.text(P('Dicetak '+nowID()),W-M,y+9,{align:'right'});doc.setTextColor(0);
-  y+=13;doc.setLineWidth(.6);doc.line(M,y,W-M,y);y+=3;
+  y+=13+ex;doc.setLineWidth(.6);doc.line(M,y,W-M,y);y+=3;
   const need=h=>{if(y+h>BOT){doc.addPage();y=14}};
   for(const s of sp.sections){need(16);y+=4;doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(P(s.h.toUpperCase()),M,y);y+=1.5;doc.setLineWidth(.3);doc.line(M,y,W-M,y);y+=2;doc.setFont('helvetica','normal');
     if(s.kv){const body=[];for(let i=0;i<s.kv.length;i+=2){const a=s.kv[i],b=s.kv[i+1]||['',''];body.push([P(a[0]),P(stripH(a[1])),P(b[0]),P(stripH(b[1]))])}
@@ -2315,42 +2492,284 @@ function pamSpec(){const c=PM.cur,o=calcPam(c);
   const ms=menuSpecSection(c,o);if(ms)sec.push(ms);
   sec.push({h:'Saran gizi',list:[...saranPam(o),...ISI_PIRINGKU]});
   return {title:'HASIL CEK GIZI PENGUNJUNG',sub:(PM.ev.nama||'Layanan gizi pameran'),dateL:'Tanggal: '+tglID(PM.ev.tgl||today()),sections:sec,sign:[['Pengunjung',c.nama],['Petugas gizi',PM.ev.ptg]],
-    foot:'Rujukan: klasifikasi IMT Kemenkes RI; BB ideal Broca modifikasi; energi Mifflin-St Jeor/AKG 2019; TD JNC 7; GDS PERKENI 2021; kolesterol NCEP-ATP III; LiLA & TTD/MMS Buku KIA 2024; Hb WHO; Pedoman Gizi Seimbang (Permenkes No. 41/2014).<br>Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.'}}
+    foot:'Rujukan: klasifikasi IMT Kemenkes RI; BB ideal Broca modifikasi; energi Harris-Benedict/AKG 2019; TD JNC 7; GDS PERKENI 2021; kolesterol NCEP-ATP III; LiLA & TTD/MMS Buku KIA 2024; Hb WHO; TTD remaja putri/WUS Buku Saku Pencegahan Anemia (Kemenkes 2023); Pedoman Gizi Seimbang (Permenkes No. 41/2014).<br>Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.'}}
 function pamCard(){const c=PM.cur,o=calcPam(c);
   const kv=[['BB ideal',o.bbi?fmt(o.bbi,1)+' kg':'–'],['BB normal',o.bbMin?fmt(o.bbMin,1)+'–'+fmt(o.bbMax,1)+' kg':'–'],['Berat badan',o.bb?fmt(o.bb,1)+' kg':'–']];
   if(o.dewasa&&o.bbMax!=null&&o.bb>o.bbMax)kv[2]=['Turunkan',fmt(o.bb-o.bbMax,1)+' kg'];
   const rows=[o.E?{l:'Kebutuhan energi',v:fmt(o.E)+' kkal',s:`Protein ${fmt(o.Pr)} g · Lemak ${fmt(o.Lm)} g · KH ${fmt(o.KH)} g`}:null,o.lilaS?{l:'LiLA',v:fmt(o.lilav,1)+' cm',pill:o.lilaS}:null,o.hbS?{l:'Hemoglobin',v:fmt(o.hbv,1)+' g/dL',pill:o.hbS}:null,o.lp?{l:'Lingkar perut',v:fmt(o.lpv,1)+' cm',pill:o.lp}:null,o.td?{l:'Tekanan darah',v:o.tdv,pill:o.td}:null,o.gds?{l:'Gula darah sewaktu',v:fmt(o.gdsv)+' mg/dL',pill:o.gds}:null,o.kol?{l:'Kolesterol',v:fmt(o.kolv)+' mg/dL',pill:o.kol}:null].filter(Boolean);
-  const sr=saranPam(o);
+  const sr=saranPam(o,true);
   return {title:'Hasil Cek Gizi',date:tglID(PM.ev.tgl||today()),name:c.nama||'Pengunjung',line:[c.jk==='P'?'Perempuan':'Laki-laki',o.u!=null?o.u+' tahun':null,PM.ev.nama||null].filter(Boolean).join(' · '),
     hero:{h:'STATUS GIZI',big:o.imt?fmt(o.imt,1):'–',label:'IMT (kg/m²)',pill:o.kat?[o.kat[0].replace(' (berat badan lebih)',''),o.kat[1]]:null,kv},
     rows:{h:'HASIL & KEBUTUHAN',items:rows},
-    lists:[{h:'SARAN UNTUK ANDA',items:sr,tone:sr.some(x=>/tinggi|berlebih|di atas/i.test(x))?'warn':'ok'},{h:'ISI PIRINGKU',items:ISI_PIRINGKU.slice(0,4)}],
+    lists:[{h:'SARAN UNTUK ANDA',items:sr,tone:sr.some(x=>/tinggi|berlebih|di atas|anemia|KEK/i.test(x))?'warn':'ok'},{h:'ISI PIRINGKU',items:ISI_PIRINGKU.slice(0,4)}],
     foot:[`Petugas: ${PM.ev.ptg||'–'}`,'Aplikasi Konsultasi Gizi · Poltekkes Kemenkes Makassar']}}
 
 /* --- tombol ekspor mode Posyandu & Pameran --- */
-const xSpec=()=>MODE==='posy'?posySpec():pamSpec();
-const xCard=()=>MODE==='posy'?posyCard():pamCard();
-const xBase=pre=>MODE==='posy'?`${pre}_${slug(PY.nama||'balita')}_${PY.tglu||today()}`:`${pre}_${slug(PM.cur.nama||'pengunjung')}_${PM.ev.tgl||today()}`;
-const xReady=()=>MODE==='posy'?!!(calcPosy().idx||[]).length:!!calcPam(PM.cur).imt;
+const xSpec=()=>MODE==='tl'?tlSpec():MODE==='posy'?posySpec():pamSpec();
+const xCard=()=>MODE==='tl'?tlCard():MODE==='posy'?posyCard():pamCard();
+const xBase=pre=>MODE==='tl'?`${pre}_${slug((tlP()||{}).nama||'balita')}_${((tlP()||{visits:[{}]}).visits[TL.vi]||{}).tgl||today()}`:MODE==='posy'?`${pre}_${slug(PY.nama||'balita')}_${PY.tglu||today()}`:`${pre}_${slug(PM.cur.nama||'pengunjung')}_${PM.ev.tgl||today()}`;
+const xReady=()=>MODE==='tl'?!!(tlP()&&dobStr(tlP().dob)&&tlVisit(tlP(),TL.vi).bb):MODE==='posy'?!!(calcPosy().idx||[]).length:!!calcPam(PM.cur).imt;
 let CARDNAME=null;
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-xprint],[data-xpdf],[data-xpdfshare],[data-xcard],[data-xmenu]');if(!b)return;
-  if(!xReady()){msg(MODE==='posy'?'Lengkapi tanggal lahir, BB, dan PB/TB dulu.':'Isi umur, BB, dan TB pengunjung dulu.');return}
-  const pre=MODE==='posy'?'Penimbangan-Balita':'Cek-Gizi';
+  if(!xReady()){msg(MODE==='tl'?'Lengkapi tanggal lahir dan BB kunjungan dulu.':MODE==='posy'?'Lengkapi tanggal lahir, BB, dan PB/TB dulu.':'Isi umur, BB, dan TB pengunjung dulu.');return}
+  const pre=MODE==='tl'?'Kartu-Status-GB':MODE==='posy'?'Penimbangan-Balita':'Cek-Gizi';
   if(b.matches('[data-xprint]'))return doPrint();
   if(b.matches('[data-xpdf]'))return withBusy(b,async()=>deliverDownload(await specPdf(xSpec()),xBase(pre)+'.pdf'));
   if(b.matches('[data-xpdfshare]'))return withBusy(b,async()=>{const bl=await specPdf(xSpec());if(!(await shareFile(bl,xBase(pre)+'.pdf',docTitle())))deliverDownload(bl,xBase(pre)+'.pdf')});
   if(b.matches('[data-xmenu]')){const cs=menuCard();if(!cs){msg('Contoh menu belum tersedia: lengkapi umur, BB, dan TB.');return}return withBusy(b,async()=>{CARD=await specCard(cs);CARDNAME=xBase('Menu-Sehari')+'.jpg';const im=document.getElementById('cardImg');if(im.src)URL.revokeObjectURL(im.src);im.src=URL.createObjectURL(CARD);cardModal.hidden=false})}
-  if(b.matches('[data-xcard]'))return withBusy(b,async()=>{CARD=await specCard(xCard());CARDNAME=xBase(MODE==='posy'?'Kartu-Balita':'Kartu-Cek-Gizi')+'.jpg';const im=document.getElementById('cardImg');if(im.src)URL.revokeObjectURL(im.src);im.src=URL.createObjectURL(CARD);cardModal.hidden=false})},true);
+  if(b.matches('[data-xcard]'))return withBusy(b,async()=>{CARD=await specCard(xCard());CARDNAME=xBase(MODE==='tl'?'Kartu-MTG':MODE==='posy'?'Kartu-Balita':'Kartu-Cek-Gizi')+'.jpg';const im=document.getElementById('cardImg');if(im.src)URL.revokeObjectURL(im.src);im.src=URL.createObjectURL(CARD);cardModal.hidden=false})},true);
 
-function buildReport(){if(MODE==='posy'||MODE==='pam'){document.getElementById('report').innerHTML=specHTML(xSpec());return}buildReportKlinik()}
+/* ===== Tata Laksana Balita Gizi Buruk Rawat Jalan (6–59 bulan) =====
+   Juknis Penggunaan Makanan Terapi Gizi (MTG) dalam Penanganan Rawat Jalan Balita Gizi Buruk Usia 6–59 Bulan (Kemenkes 2026, draf);
+   Paparan Kebijakan Tata Laksana Balita Gizi Buruk di Layanan Rawat Jalan (Dit. Yankes Keluarga, 2026). Tanpa dosis obat. */
+const TL_SRC='Juknis Penggunaan Makanan Terapi Gizi dalam Penanganan Rawat Jalan Balita Gizi Buruk 6–59 Bulan (Kemenkes 2026, draf); Paparan Kebijakan Tata Laksana Balita Gizi Buruk Rawat Jalan (Kemenkes 2026); Permenkes No. 2/2020; batas Hb WHO';
+// Tabel 6: dosis MTG (bungkus/hari, bungkus/7 hari) menurut BB dan 150/165/185 kkal/kgBB/hari
+const MTG_DOSE=[[4,[1.5,10],[1.5,10],[1.5,10]],[5,[2,14],[2,14],[2,14]],[6,[2,14],[2,14],[2.5,18]],[7,[2.5,18],[2.5,18],[3,21]],[8,[2.5,18],[3,21],[3,21]],[9,[3,21],[3,21],[3.5,25]],
+  [10,[3,21],[3.5,25],[4,28]],[11,[3.5,25],[4,28],[4,28]],[12,[4,28],[4,28],[4.5,32]],[13,[4,28],[4,28],[5,35]],[14,[4.5,32],[5,35],[5.5,39]]];
+const KK=['150','165','185'];
+function mtgDose(bb,kk){if(bb==null||bb<4||bb>=15)return null;const r=MTG_DOSE.find(x=>bb>=x[0]&&bb<x[0]+1);const j=Math.max(0,KK.indexOf(String(kk||'150')));return {d:r[j+1][0],w:r[j+1][1],kk:KK[j],row:r}}
+// Tabel 3: jumlah minimal MTG yang harus habis saat tes nafsu makan
+const apMin=bb=>bb==null?null:bb>=4&&bb<7?'¼':bb>=7&&bb<10?'⅓':bb>=10&&bb<15?'½':null;
+const KOMP=[['anoreksia','Tidak mau makan sama sekali (anoreksia)'],['dehidrasi','Muntah terus-menerus / diare dengan dehidrasi berat'],['letargi','Letargi atau penurunan kesadaran'],['demam','Demam tinggi'],['pneumonia','Pneumonia berat (sesak, napas cepat)'],['anemia','Anemia berat (menurut dokter/hasil lab)'],['mtbs','Tanda bahaya MTBS lain / kegawatdaruratan medis']];
+const KOMPN=Object.fromEntries(KOMP);
+const STATN={aktif:'Sedang dirawat',sembuh:'Sembuh',rujuk:'Dirujuk rawat inap',tidakrespons:'Tidak respons',dropout:'Drop out',pindah:'Pindah',meninggal:'Meninggal'};
+const MTG_CARA=['Cuci tangan pengasuh dan anak, wajah anak, serta kemasan MTG dengan sabun dan air mengalir.',
+  'Bila masih menyusu, berikan ASI dulu; MTG menjadi makanan pertama setelah anak bangun pagi.',
+  'Berikan sedikit-sedikit tapi sering, 6–8 kali sehari, sampai dosis hari itu habis.',
+  'Jangan campur MTG dengan makanan lain atau air; sediakan air matang yang cukup.',
+  'Makanan rumah, jajanan, atau minuman lain baru diberikan setelah dosis MTG hari itu habis.',
+  'MTG yang sudah dibuka simpan dalam wadah bersih tertutup dan habiskan dalam 24 jam.',
+  'Simpan bungkus kosong/sisa dan bawa saat kontrol setiap minggu.',
+  'Bila tinja lebih lunak atau BAB lebih sering, MTG tetap diteruskan bersama ASI dan air matang.',
+  'MTG tidak diganti PMT lokal walaupun anak sudah naik ke gizi kurang; diberikan sampai gizi baik.',
+  'Jaga anak tetap hangat. Bila anak tidak mau makan atau sakit, segera bawa ke Puskesmas/Pustu.'];
+const tlblank=()=>({pkm:'',ptg:'',list:[],cur:null,vi:0});
+const pblankTL=()=>({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),nama:'',ibu:'',jk:'L',dob:{d:'',m:'',y:''},alamat:'',status:'aktif',visits:[vblank(today())]});
+const vblank=tgl=>({tgl,bb:'',tb:'',cara:'',lila:'',hb:'',edema:'0',komp:[],nafsu:'',klinis:'baik',sisa:'',kkal:'150',cat:''});
+let TL;try{TL=JSON.parse(localStorage.getItem('kg-tl-v1'))}catch(e){TL=null}
+if(!TL||typeof TL!=='object'||!Array.isArray(TL.list))TL=tlblank();TL=Object.assign(tlblank(),TL);
+let tlT;function saveTl(){clearTimeout(tlT);tlT=setTimeout(()=>{try{localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}},250)}
+const tlP=()=>TL.cur!=null?TL.list[TL.cur]||null:null;
+const dobStr=d=>{d=d||{};const dd=parseInt(d.d),mm=parseInt(d.m),yy=parseInt(d.y);return (dd&&mm&&yy&&String(yy).length===4&&dd<=new Date(yy,mm,0).getDate())?`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`:''};
+const dDays=(a,b)=>{const x=new Date(a+'T00:00'),y=new Date(b+'T00:00');return isNaN(x)||isNaN(y)?null:Math.round((y-x)/864e5)};
+const addDays=(a,n)=>{const x=new Date(a+'T00:00');if(isNaN(x))return '';x.setDate(x.getDate()+n);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const frB=x=>x==null?'–':String(x).replace('.5','½').replace(/^0½$/,'½');
+
+// hitung satu kunjungan
+function tlVisit(p,i){const v=p.visits[i];const o={i,no:i+1,v};o.lahir=dobStr(p.dob);o.u=o.lahir&&v.tgl?bulanPenuh(o.lahir,v.tgl):null;o.m=o.u?o.u.m:null;
+  const T=PMK[p.jk==='P'?'P':'L'];o.bb=inR(num(v.bb),'pbb');o.lila=inR(num(v.lila),'lila');o.ed=+v.edema||0;o.hb=inR(num(v.hb),'hb');
+  for(let j=i;j>=0;j--){const w=p.visits[j];const tb=inR(num(w.tb),'ptb');if(!tb)continue;const uj=o.lahir&&w.tgl?bulanPenuh(o.lahir,w.tgl):null;if(!uj)continue;
+    const pb=uj.m<24,cara=w.cara||(pb?'baring':'diri');const k=pb&&cara==='diri'?0.7:!pb&&cara==='baring'?-0.7:0;o.L=+(tb+k).toFixed(1);o.Lsrc=j;o.kor=k;break}
+  if(o.m!=null&&o.m<=60){o.pb=o.m<24;o.zn=o.pb?'BB/PB':'BB/TB';
+    if(o.bb&&o.L){const r=rowLen(o.pb?T.bbpb:T.bbtb,o.L);if(r)o.z=zOf(r,o.bb);else o.zOut=true}
+    if(o.bb){const r=rowAge(T.bbu,o.m);if(r)o.zu=zOf(r,o.bb)}}
+  o.zc=o.z!=null?KAT.bbpb(o.z):null;
+  o.lilaC=o.lila!=null?(o.lila<11.5?['Gizi buruk','p-bad']:o.lila<12.5?['Gizi kurang','p-warn']:['Normal','p-ok']):null;
+  o.gb=(o.z!=null&&o.z<-3)||(o.lila!=null&&o.lila<11.5)||o.ed>0;
+  o.gk=!o.gb&&((o.z!=null&&o.z<-2)||(o.lila!=null&&o.lila<12.5));
+  o.baik=o.z!=null&&o.z>=-2&&o.lila!=null&&o.lila>=12.5&&o.ed===0&&v.klinis!=='buruk';
+  o.hbG=o.hb!=null?hbGrade(o.hb,p.jk,o.m!=null?o.m/12:null,false):null;
+  o.komp=[...(v.komp||[])];if(o.hbG&&o.hbG.lvl===3&&!o.komp.includes('anemia'))o.komp.push('anemia');
+  o.day=i>0&&p.visits[0].tgl&&v.tgl?dDays(p.visits[0].tgl,v.tgl):0;o.week=o.day!=null?Math.floor(o.day/7)+1:null;
+  o.dose=mtgDose(o.bb,v.kkal);o.ap=apMin(o.bb);
+  if(i>0){const q=p.visits[i-1];const bp=inR(num(q.bb),'pbb');o.bbPrev=bp;const dd=q.tgl&&v.tgl?dDays(q.tgl,v.tgl):null;o.gap=dd;
+    if(bp&&o.bb&&dd>0){const avg=(o.bb+bp)/2;o.gWk=(o.bb-bp)*1000/avg/(dd/7);o.gDay=o.gWk/7}
+    const qd=mtgDose(bp,q.kkal);o.given=qd?qd.w:null;const s=num(v.sisa);if(o.given&&s!=null&&s>=0){o.eaten=Math.max(0,o.given-s);o.pct=o.eaten/o.given*100}
+    o.edPrev=+q.edema||0}
+  return o}
+function tlAll(p){const a=[];for(let i=0;i<p.visits.length;i++)a.push(tlVisit(p,i));return a}
+
+// keputusan & tindak lanjut untuk kunjungan i
+function tlAdvice(p,i,all){all=all||tlAll(p);const o=all[i],v=o.v,out=[];const inap=[];
+  if(o.m!=null&&o.m<6)inap.push('umur di bawah 6 bulan');
+  if(o.bb!=null&&o.bb<4)inap.push('BB < 4 kg');
+  if(o.ed===3)inap.push('edema +3 (seluruh tubuh)');
+  o.komp.forEach(k=>inap.push((KOMPN[k]||k).toLowerCase()));
+  if(v.nafsu==='gagal')inap.push('tidak lulus tes nafsu makan');
+  if(i>0&&v.klinis==='buruk')inap.push('kondisi klinis memburuk');
+  if(i>0&&o.ed>o.edPrev&&o.ed>0)inap.push(o.edPrev?'derajat edema bertambah':'timbul edema baru');
+  const res={o,inap,rujuk:[],rumah:[],baik:[],keputusan:''};
+  if(o.m!=null&&o.m>60){res.keputusan='luar';out.push(['bad','Umur di atas 59 bulan: di luar sasaran juknis MTG (6–59 bulan).']);res.msgs=out;return res}
+  if(i===0&&!o.gb){inap.length=0;if(o.komp.length){res.keputusan='mtbs';out.push(['bad',`Ada tanda bahaya/komplikasi (${o.komp.map(k=>(KOMPN[k]||k).toLowerCase()).join('; ')}): tangani atau rujuk sesuai MTBS.`])}}
+  if(inap.length){res.keputusan='inap';out.push(['bad',`<b>Rujuk ke rawat inap</b> (${inap.join('; ')}). Jalankan SOP tata laksana gizi buruk rawat inap di rumah sakit/Puskesmas rawat inap; koordinasikan rujukan dan bekali surat pengantar.`])}
+  if(i===0){
+    if(!o.gb){const mt=res.keputusan==='mtbs';if(o.gk){if(!mt)res.keputusan='gk';out.push(['warn','<b>Gizi kurang</b> (bukan gizi buruk): tidak diberi MTG. Pastikan dokter memeriksa red flag/penyakit penyerta; bila tidak ada, berikan <b>PMT lokal kaya protein hewani selama 56 hari</b> dan konseling pemberian makan.'])}
+      else if(o.z!=null||o.lila!=null){if(!mt)res.keputusan='normal';out.push(['ok','Tidak memenuhi kriteria gizi buruk maupun gizi kurang. Lanjutkan pemantauan pertumbuhan bulanan di Posyandu.'+(o.zu!=null&&o.zu<-2?' BB/U kurang: bila tidak ada red flag, PMT lokal 28 hari.':'')])}
+      else out.push(['','Isi BB, panjang/tinggi badan, dan LiLA untuk menilai status gizi.'])}
+    else if(o.gb&&!inap.length){
+      if(v.nafsu==='lulus'){res.keputusan='jalan';out.push(['ok','<b>Gizi buruk tanpa komplikasi, lulus tes nafsu makan: rawat jalan dengan MTG.</b> Kunjungan ulang setiap minggu.'])}
+      else{res.keputusan='tes';out.push(['warn',`Gizi buruk tanpa tanda bahaya. Lakukan <b>tes nafsu makan</b> 30–60 menit (anak tidak makan/minum manis ≥2 jam sebelumnya)${o.ap?`: harus habis minimal <b>${o.ap} bungkus</b> MTG`:''}. Lulus → rawat jalan; tidak lulus → rujuk rawat inap.`])}}
+  }else if(!inap.length){res.keputusan='jalan';
+    // berat badan (Tabel 9 & 10)
+    if(o.gWk!=null){let st=0;for(let j=i;j>=1;j--){const g=all[j].gWk;if(g!=null&&g<35)st++;else break}res.streak=st;
+      if(o.gWk>=35)res.baik.push(`Kenaikan BB ${fmt(o.gWk,1)} g/kgBB/minggu (≥ 35): baik. Puji dan terus motivasi orang tua/pengasuh.`);
+      else if(o.bb<o.bbPrev){const nb=o.pct==null||o.pct>=75;(nb?res.rumah:res.rujuk).push(`BB turun (${fmt(o.gWk,1)} g/kgBB/minggu)${nb?' dengan nafsu makan baik':' dan asupan MTG kurang'}.`)}
+      else if(st>=3)res.rujuk.push(`Kenaikan BB < 35 g/kgBB/minggu selama ${st} minggu berturut-turut: lakukan pemeriksaan lengkap/rujuk.`);
+      else if(st>=2)res.rumah.push(`Kenaikan BB < 35 g/kgBB/minggu selama 2 minggu berturut-turut (${fmt(o.gWk,1)}).`);
+      else out.push(['warn',`Kenaikan BB ${fmt(o.gWk,1)} g/kgBB/minggu (< 35): kurang. Nilai ulang asupan MTG di rumah, infeksi, atau kondisi lain.`])}
+    // edema
+    if(o.ed>0&&o.ed>=all[0].ed&&all[0].ed>0){if(o.week>=4)res.rujuk.push('Edema tidak membaik sampai minggu ke-3.');else if(o.week>=3)res.rumah.push('Edema belum berkurang pada minggu ke-2.')}
+    else if(all[0].ed>0&&o.ed<all[0].ed)res.baik.push(o.ed?'Edema berkurang.':'Edema sudah hilang.');
+    // asupan MTG
+    if(o.pct!=null){if(o.pct<75)res.rumah.push(`MTG yang dimakan ${fmt(o.pct)}% dari dosis minggu lalu (< 75%).`);else res.baik.push(`MTG yang dimakan ${fmt(o.pct)}% dari dosis minggu lalu.`)}
+    if(o.gap!=null&&o.gap>=14)out.push(['warn',`Jarak dari kunjungan sebelumnya ${o.gap} hari (melewatkan ≥ 2 kunjungan = drop out). Bila putus < 7 hari dan anak stabil serta lulus tes nafsu makan, lanjutkan terapi; bila ≥ 7 hari, nilai ulang lengkap seperti kasus baru.`]);
+    else if(o.gap!=null&&o.gap>=10)out.push(['warn',`Jarak dari kunjungan sebelumnya ${o.gap} hari (absen 1 kunjungan): ingatkan jadwal mingguan.`]);
+    // sembuh / tidak respons
+    const prev=all[i-1];
+    if(o.baik&&prev.baik){res.keputusan='sembuh';out.push(['ok','<b>Kriteria sembuh tercapai 2 minggu berturut-turut</b> (z-skor ≥ −2 SD, LiLA ≥ 12,5 cm, tanpa edema, klinis baik). Berikan dosis terakhir MTG <b>1 bungkus per hari selama 1 minggu (7 bungkus)</b>, mulai makanan keluarga sebelum MTG, lalu selesaikan perawatan dan anjurkan ke Posyandu tiap bulan.'])}
+    else if(o.baik)out.push(['ok','Status gizi baik tercapai minggu ini. Konfirmasi pada kunjungan minggu depan (harus 2 minggu berturut-turut).']);
+    else if(o.day!=null&&o.day>=84)res.rujuk.push('Sudah 12 minggu perawatan dan belum mencapai gizi baik: tidak ada respons; perlu pemeriksaan menyeluruh/rujuk.');
+    if(res.keputusan==='sembuh'){res.rujuk.length=0;res.rumah.length=0}
+    if(res.rujuk.length)out.push(['bad','<b>Rujuk / pemeriksaan lengkap:</b> '+res.rujuk.join(' ')]);
+    if(res.rumah.length)out.push(['warn','<b>Lakukan kunjungan rumah</b> (libatkan kader): '+res.rumah.join(' ')+' Nilai pemberian MTG (dosis, dicampur, dibagi ke anggota keluarga), kesehatan anak, kebersihan, dan kendala keluarga.']);
+    if(res.baik.length)out.push(['ok',res.baik.join(' ')]);
+    if(o.gk&&!o.baik)out.push(['','Anak sudah di kategori gizi kurang: MTG tetap diteruskan sesuai BB (tidak diganti PMT lokal), ditambah konseling pemberian makan sesuai umur.'])}
+  if(o.lila==null&&o.m!=null&&o.m>=6&&o.bb!=null)out.push(['warn','LiLA belum diisi: ukur LiLA setiap kunjungan (kriteria gizi buruk dan sembuh).']);
+  // pengukuran PB/TB
+  const ukur=i%4===0;if(ukur&&!num(v.tb))out.push(['warn',`Kunjungan ke-${i+1}: ukur panjang/tinggi badan dan hitung ulang z-skor.`]);
+  if(o.hbG&&o.hbG.lvl>0&&o.hbG.lvl<3)out.push(['',`Hb ${fmt(o.hb,1)} g/dL: ${o.hbG.lab.toLowerCase()} (WHO). MTG sudah mengandung zat besi; tidak perlu suplemen zat gizi mikro tambahan selama mendapat MTG. Tata laksana medis oleh dokter.`]);
+  res.msgs=out;return res}
+
+function tlListHTML(){if(!TL.list.length)return `<p class="empty-r" style="padding:10px">Belum ada balita. Tekan <b>Pasien baru</b> untuk konfirmasi dan triase balita gizi buruk.</p>`;
+  const td=today();let akt=0,sb=0,rj=0,lain=0;
+  const rows=TL.list.map((p,i)=>{const n=p.visits.length;const lv=p.visits[n-1];const o=tlVisit(p,n-1);const nx=p.status==='aktif'&&lv.tgl?addDays(lv.tgl,7):'';const late=nx?dDays(nx,td):null;
+    if(p.status==='aktif')akt++;else if(p.status==='sembuh')sb++;else if(p.status==='rujuk')rj++;else lain++;
+    return `<tr${TL.cur===i?' class="on"':''}><td>${i+1}</td><td class="l">${esc(p.nama||'–')}</td><td>${o.m??'–'}</td><td>${n}</td><td>${tglID(lv.tgl)}</td><td>${fmt(o.bb,1)}</td><td>${o.z!=null?pmI(o.z):'–'}</td>
+      <td class="l"><span class="pill ${p.status==='aktif'?'p-mute':p.status==='sembuh'?'p-ok':p.status==='rujuk'?'p-bad':'p-warn'}">${STATN[p.status]||p.status}</span></td>
+      <td class="l">${nx?`${tglID(nx)}${late>0?` <span class="pill p-warn">lewat ${late} hari</span>`:''}`:'–'}</td>
+      <td style="white-space:nowrap"><button class="btn sm" type="button" data-topen="${i}">Buka</button> <button class="btn sm" type="button" data-tdel="${i}">Hapus</button></td></tr>`}).join('');
+  return `<div class="rekap">${[['Total balita',TL.list.length],['Sedang dirawat',akt],['Sembuh',sb],['Dirujuk rawat inap',rj],['Lainnya',lain]].map(([a,b])=>`<div><b>${b}</b><span>${a}</span></div>`).join('')}</div>
+   <div class="tbl-wrap"><table class="ptab"><thead><tr><th>No</th><th class="l">Nama</th><th>Umur (bln)</th><th>Kunj.</th><th>Terakhir</th><th>BB</th><th>z BB/PB-TB</th><th class="l">Status</th><th class="l">Kunjungan berikut</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`}
+
+function tlOutHTML(){const p=tlP();if(!p)return `<div class="panel"><div class="empty-r">Pilih balita dari daftar atau tekan <b>Pasien baru</b>.</div></div>`;
+  const all=tlAll(p);const i=Math.min(TL.vi,p.visits.length-1);const o=all[i];const A=tlAdvice(p,i,all);const v=o.v;
+  const inv=markAll([['t-bb','pbb'],['t-tb','ptb'],['t-lila','lila'],['t-hb','hb']]);
+  let h=inv.length?invPanel(inv,null):'';
+  if(!o.lahir||!v.tgl)return h+`<div class="panel"><div class="empty-r">Isi tanggal lahir dan tanggal kunjungan.</div></div>`;
+  if(!o.u)return h+`<div class="panel"><div class="empty-r" style="color:var(--bad)">Tanggal kunjungan lebih awal dari tanggal lahir.</div></div>`;
+  const stCls=A.keputusan==='inap'||A.keputusan==='mtbs'?'p-bad':A.keputusan==='sembuh'||A.keputusan==='normal'?'p-ok':A.keputusan==='gk'||A.keputusan==='tes'?'p-warn':'p-mute';
+  const stTxt={inap:'Rujuk rawat inap',jalan:'Rawat jalan MTG',tes:'Perlu tes nafsu makan',gk:'Gizi kurang: PMT lokal',normal:'Bukan gizi buruk',mtbs:'Tangani/rujuk MTBS',sembuh:'Sembuh',luar:'Di luar sasaran'}[A.keputusan]||'Belum lengkap';
+  h+=`<div class="panel"><div class="panel-h"><h2>Kunjungan ke-${o.no}${o.week&&i?` · minggu ke-${o.week}`:''}</h2><span class="pill ${stCls}">${stTxt}</span></div><div class="panel-b">
+    <dl class="kv"><dt>Umur</dt><dd>${o.m} bulan</dd>
+    <dt>${o.zn||'BB/PB'}</dt><dd>${o.z!=null?`${pmI(o.z)} SD <span class="pill ${o.zc[1]}">${o.zc[0]}</span>`:o.zOut?'di luar tabel':'–'}${o.L&&o.Lsrc!==i?` <small style="color:var(--muted)">(${o.pb?'PB':'TB'} ${fmt(o.L,1)} cm dari kunjungan ke-${o.Lsrc+1})</small>`:''}</dd>
+    <dt>LiLA</dt><dd>${o.lila!=null?`${fmt(o.lila,1)} cm <span class="pill ${o.lilaC[1]}">${o.lilaC[0]}</span>`:'–'}</dd>
+    <dt>Edema</dt><dd>${o.ed?`+${o.ed} <span class="pill p-bad">gizi buruk</span>`:'tidak ada'}</dd>
+    ${o.zu!=null?`<dt>BB/U</dt><dd>${pmI(o.zu)} SD</dd>`:''}
+    ${o.hbG?`<dt>Hb</dt><dd>${fmt(o.hb,1)} g/dL <span class="pill ${o.hbG.pill}">${o.hbG.lab}</span></dd>`:''}
+    ${i>0?`<dt>Kenaikan BB</dt><dd>${o.gWk!=null?`${o.gWk>=0?'+':''}${fmt(o.gWk,1)} g/kgBB/minggu (${fmt(o.gDay,1)} g/kgBB/hari) <span class="pill ${o.gWk>=35?'p-ok':'p-warn'}">${o.gWk>=35?'Baik':'Kurang'}</span>`:'–'}</dd>
+      <dt>MTG dimakan</dt><dd>${o.pct!=null?`${fmt(o.eaten,1)} dari ${o.given} bungkus (${fmt(o.pct)}%) <span class="pill ${o.pct>=75?'p-ok':'p-warn'}">${o.pct>=75?'≥ 75%':'< 75%'}</span>`:o.given?`isi sisa bungkus (diberikan ${o.given})`:'–'}</dd>`:''}
+    </dl>
+    <p class="note" style="margin:8px 0 0">Kriteria gizi buruk: ${o.zn||'BB/PB'} &lt; −3 SD, LiLA &lt; 11,5 cm, atau edema pitting bilateral (salah satu).</p></div></div>`;
+  h+=`<div class="panel"><div class="panel-h"><h2>Keputusan &amp; tindak lanjut</h2></div><div class="panel-b msgs">${A.msgs.map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}
+    <p class="msg">Pemeriksaan dan tata laksana medis (termasuk penyakit penyerta) oleh dokter sesuai protokol.</p></div></div>`;
+  const showDose=A.keputusan==='jalan'||A.keputusan==='tes'||A.keputusan==='sembuh';
+  if(showDose){h+=`<div class="panel"><div class="panel-h"><h2>Dosis Makanan Terapi Gizi</h2><span class="hint">1 bungkus 90–92 g = 500 kkal</span></div><div class="panel-b">`;
+    if(A.keputusan==='sembuh')h+=`<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span class="big">1</span><span>bungkus/hari selama 1 minggu = <b>7 bungkus</b> (dosis terakhir)</span></div>`;
+    else if(o.dose)h+=`<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span class="big">${frB(o.dose.d)}</span><span>bungkus/hari · <b>${o.dose.w} bungkus</b> untuk 7 hari</span><span class="pill p-mute">${o.dose.kk} kkal/kgBB/hari</span></div>
+      <div class="tbl-wrap" style="margin-top:10px"><table class="ptab" style="min-width:0"><thead><tr><th class="l">BB ${o.dose.row[0]},0–${o.dose.row[0]},9 kg</th><th>150 kkal/kg</th><th>165 kkal/kg</th><th>185 kkal/kg</th></tr></thead><tbody><tr><td class="l">bungkus/hari · /7 hari</td>${[1,2,3].map(j=>`<td${KK[j-1]===o.dose.kk?' style="font-weight:800"':''}>${frB(o.dose.row[j][0])} · ${o.dose.row[j][1]}</td>`).join('')}</tr></tbody></table></div>`;
+    else h+=`<p class="note" style="margin:0">${o.bb==null?'Isi BB untuk menghitung dosis.':'BB di luar Tabel 6 juknis (4,0–14,9 kg): konsultasikan dosis.'}</p>`;
+    if(A.keputusan==='tes'&&o.ap)h+=`<p class="msg" style="margin-top:10px">Tes nafsu makan: minimal <b>${o.ap} bungkus</b> habis dalam 30–60 menit. Bila lulus, MTG untuk tes menjadi bagian jatah 7 hari.</p>`;
+    h+=`<p class="note" style="margin:10px 0 0">Kunjungan berikutnya: <b>${tglID(addDays(v.tgl,7))}</b>. Dosis dihitung ulang setiap minggu sesuai BB. Tidak perlu suplemen zat gizi mikro atau seng tambahan karena sudah ada dalam MTG.</p></div></div>`;
+    const kons=o.week!=null&&o.week<=3&&!o.gk?'1–3 minggu awal: fokus pada pemberian MTG.':o.m<24?'Anak sudah gizi kurang/membaik: MTG + konseling PMBA sesuai umur (alat bantu kartu konseling PMBA).':'Anak sudah gizi kurang/membaik: MTG + konseling pemberian makan sesuai umur (leaflet "Pemberian Makan pada Anak dengan BB Kurang").';
+    h+=`<div class="panel"><div class="panel-h"><h2>Konseling pemberian MTG</h2><span class="hint">Juknis MTG 2026</span></div><div class="panel-b"><p class="msg ok" style="margin:0 0 10px">${kons}</p><ul class="lst dot">${MTG_CARA.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>
+      <p class="eyebrow" style="margin:12px 0 4px">Urutan pemberian makan</p><p style="margin:0;font-size:13.5px">1) ASI bila masih menyusu → 2) MTG sesuai dosis harian → 3) makanan rumah padat gizi bila dosis MTG habis dan anak masih lapar.</p></div></div>`}
+  if(p.visits.length>1||i>0)h+=tlHistHTML(p,all);
+  h+=`<p class="note">Sumber: ${esc(TL_SRC)}.</p>`;
+  return h}
+function tlHistHTML(p,all){return `<div class="panel"><div class="panel-h"><h2>Riwayat kunjungan</h2></div><div class="panel-b"><div class="tbl-wrap"><table class="ptab"><thead><tr><th>Ke</th><th class="l">Tanggal</th><th>BB</th><th>PB/TB</th><th>LiLA</th><th>Edema</th><th>z</th><th>g/kg/mgg</th><th>MTG %</th><th>Dosis/hari</th></tr></thead><tbody>${all.map(o=>`<tr${o.i===TL.vi?' class="on"':''}><td>${o.no}</td><td class="l">${tglID(o.v.tgl)}</td><td>${fmt(o.bb,1)}</td><td>${num(o.v.tb)?fmt(num(o.v.tb),1):'–'}</td><td>${fmt(o.lila,1)}</td><td>${o.ed?'+'+o.ed:'–'}</td><td>${o.z!=null?pmI(o.z):'–'}</td><td>${o.gWk!=null?fmt(o.gWk,1):'–'}</td><td>${o.pct!=null?fmt(o.pct):'–'}</td><td>${o.dose?frB(o.dose.d):'–'}</td></tr>`).join('')}</tbody></table></div></div></div>`}
+
+/* --- form --- */
+const TLF={nama:'t-nama',ibu:'t-ibu',alamat:'t-alamat',status:'t-status'};
+const TLV={tgl:'t-tgl',bb:'t-bb',tb:'t-tb',lila:'t-lila',hb:'t-hb',sisa:'t-sisa',cat:'t-cat'};
+const TDOB=['t-ld','t-lm','t-ly'].map(id=>document.getElementById(id));
+document.getElementById('t-komp').innerHTML=KOMP.map(([k,l])=>`<label class="kchk"><input type="checkbox" data-komp="${k}"> <span>${l}</span></label>`).join('');
+function segSet(id,val){document.querySelectorAll(`#${id} button`).forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===String(val??'')))}
+function loadTl(){document.getElementById('t-pkm').value=TL.pkm||'';document.getElementById('t-ptg').value=TL.ptg||'';
+  const p=tlP();document.getElementById('tlWork').hidden=!p;if(!p)return;
+  if(TL.vi>=p.visits.length)TL.vi=p.visits.length-1;const v=p.visits[TL.vi];
+  for(const[k,id]of Object.entries(TLF))document.getElementById(id).value=p[k]??'';
+  const d=p.dob||{};TDOB[0].value=d.d??'';TDOB[1].value=d.m??'';TDOB[2].value=d.y??'';segSet('t-jk',p.jk);
+  for(const[k,id]of Object.entries(TLV))document.getElementById(id).value=v[k]??'';
+  segSet('t-edema',v.edema||'0');segSet('t-nafsu',v.nafsu||'');segSet('t-klinis',v.klinis||'baik');segSet('t-kkal',v.kkal||'150');
+  document.querySelectorAll('#t-komp [data-komp]').forEach(c=>c.checked=(v.komp||[]).includes(c.dataset.komp))}
+function renderTl(){document.getElementById('tlList').innerHTML=tlListHTML();const p=tlP();if(!p){document.getElementById('tlWork').hidden=true;return}
+  document.getElementById('tlWork').hidden=false;const i=TL.vi;const all=tlAll(p);const o=all[i];
+  document.getElementById('tlVisTabs').innerHTML=p.visits.map((w,j)=>`<button type="button" data-tvis="${j}" aria-pressed="${j===i}">Ke-${j+1}${w.tgl?` · ${w.tgl.slice(8,10)}/${w.tgl.slice(5,7)}`:''}</button>`).join('');
+  document.getElementById('tlVisH').textContent=i===0?'Kunjungan ke-1 (konfirmasi & triase)':`Kunjungan ulang ke-${i+1}`;
+  document.querySelectorAll('#tlWork [data-fu]').forEach(el=>el.hidden=i===0);
+  document.getElementById('tlDelVis').hidden=p.visits.length<2;
+  const pb=o.m!=null&&o.m<24;document.querySelectorAll('#t-cara button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===(p.visits[i].cara||(o.m!=null?(pb?'baring':'diri'):''))));
+  document.getElementById('tlTbNote').textContent=i%4===0?`Wajib diukur pada kunjungan ini (ke-${i+1})`:'Diukur pada kunjungan ke-1, 5, 9, 13; bila kosong dipakai ukuran terakhir';
+  document.getElementById('tlApNote').textContent=o.ap?`BB ${fmt(o.bb,1)} kg: minimal ${o.ap} bungkus MTG habis dalam 30–60 menit.`:o.bb!=null?'BB di luar Tabel 3 juknis (4–14,9 kg).':'Isi BB untuk melihat jumlah minimal MTG.';
+  document.getElementById('tlSisaNote').textContent=o.given?`Diberikan kunjungan lalu: ${o.given} bungkus`:'';
+  const hn=document.getElementById('tlHbNote');hn.textContent=o.hbG?`${o.hbG.lab} (batas ${String(o.hbG.thr).replace('.',',')} g/dL)`:'Batas WHO anak 6–59 bulan: 11 g/dL';hn.style.color=o.hbG&&o.hbG.lvl?'var(--bad)':'';
+  document.getElementById('tlIdHint').textContent=p.visits[0].tgl?'Masuk '+tglID(p.visits[0].tgl):'';
+  const A=tlAdvice(p,i,all);const sn=document.getElementById('tlStatusNote');
+  sn.textContent=p.status==='aktif'&&A.keputusan==='inap'?'Saran: ubah status menjadi "Dirujuk ke rawat inap" setelah rujukan dilakukan.':p.status==='aktif'&&A.keputusan==='sembuh'?'Saran: ubah status menjadi "Selesai: sembuh" setelah dosis terakhir diberikan.':p.status==='aktif'&&A.keputusan==='gk'?'Bukan sasaran MTG: catat sebagai penerima PMT lokal di program gizi kurang.':'';
+  document.getElementById('tlOut').innerHTML=tlOutHTML()}
+const tlUpd=()=>{renderTl();saveTl()};
+document.getElementById('t-pkm').addEventListener('input',e=>{TL.pkm=e.target.value;saveTl()});
+document.getElementById('t-ptg').addEventListener('input',e=>{TL.ptg=e.target.value;saveTl()});
+for(const[k,id]of Object.entries(TLF))document.getElementById(id).addEventListener('input',e=>{const p=tlP();if(!p)return;p[k]=e.target.value;tlUpd()});
+for(const[k,id]of Object.entries(TLV))document.getElementById(id).addEventListener('input',e=>{const p=tlP();if(!p)return;p.visits[TL.vi][k]=e.target.value;tlUpd()});
+TDOB.forEach(el=>el.addEventListener('input',()=>{const p=tlP();if(!p)return;p.dob={d:TDOB[0].value,m:TDOB[1].value,y:TDOB[2].value};tlUpd()}));
+TDOB[0].addEventListener('input',()=>{if(TDOB[0].value.length>=2||+TDOB[0].value>3)TDOB[1].focus()});
+const segBind=(id,fn)=>document.querySelectorAll(`#${id} button`).forEach(b=>b.addEventListener('click',()=>{const p=tlP();if(!p)return;fn(p,b.dataset.v);segSet(id,b.dataset.v);tlUpd()}));
+segBind('t-jk',(p,x)=>p.jk=x);segBind('t-cara',(p,x)=>p.visits[TL.vi].cara=x);segBind('t-edema',(p,x)=>p.visits[TL.vi].edema=x);
+segBind('t-nafsu',(p,x)=>p.visits[TL.vi].nafsu=x);segBind('t-klinis',(p,x)=>p.visits[TL.vi].klinis=x);segBind('t-kkal',(p,x)=>p.visits[TL.vi].kkal=x);
+document.getElementById('t-komp').addEventListener('change',e=>{const c=e.target.closest('[data-komp]');const p=tlP();if(!c||!p)return;const v=p.visits[TL.vi];const s=new Set(v.komp||[]);c.checked?s.add(c.dataset.komp):s.delete(c.dataset.komp);v.komp=[...s];tlUpd()});
+document.getElementById('tlVisTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tvis]');if(!b)return;TL.vi=+b.dataset.tvis;loadTl();tlUpd()});
+document.getElementById('tlAddVis').addEventListener('click',()=>{const p=tlP();if(!p)return;const lv=p.visits[p.visits.length-1];const nv=vblank(lv.tgl?addDays(lv.tgl,7):today());
+  nv.kkal=lv.kkal||'150';if(nv.tgl>today())nv.tgl=today();p.visits.push(nv);TL.vi=p.visits.length-1;loadTl();tlUpd();document.getElementById('t-bb').focus()});
+armBtn(document.getElementById('tlDelVis'),'Hapus kunjungan ini','Yakin hapus? Klik lagi',()=>{const p=tlP();if(!p||p.visits.length<2)return;p.visits.splice(TL.vi,1);TL.vi=Math.max(0,TL.vi-1);loadTl();tlUpd()});
+document.getElementById('tlNew').addEventListener('click',()=>{TL.list.push(pblankTL());TL.cur=TL.list.length-1;TL.vi=0;loadTl();tlUpd();document.getElementById('t-nama').focus()});
+document.getElementById('tlList').addEventListener('click',e=>{const b=e.target.closest('[data-topen],[data-tdel]');if(!b)return;
+  if(b.dataset.topen!=null){TL.cur=+b.dataset.topen;TL.vi=TL.list[TL.cur].visits.length-1;loadTl();tlUpd();document.getElementById('tlWork').scrollIntoView({behavior:'smooth'});return}
+  if(!b.classList.contains('danger')){b.classList.add('danger');b.textContent='Yakin?';setTimeout(()=>{if(b.isConnected){b.classList.remove('danger');b.textContent='Hapus'}},3000);return}
+  const i=+b.dataset.tdel;TL.list.splice(i,1);if(TL.cur===i)TL.cur=null;else if(TL.cur>i)TL.cur--;loadTl();tlUpd()});
+// dari Posyandu
+function posyToTl(){const o=calcPosy();const p=pblankTL();Object.assign(p,{nama:PY.nama||'',ibu:PY.ibu||'',jk:PY.jk,dob:{...(PY.dob||{})}});
+  Object.assign(p.visits[0],{tgl:PY.tglu||today(),bb:PY.bb||'',tb:PY.tb||'',cara:PY.cara||'',lila:PY.lila||''});
+  TL.list.push(p);TL.cur=TL.list.length-1;TL.vi=0;saveTl();setMode('tl')}
+function klinikToTl(){const k=S.klien;const p=pblankTL();const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k.tgll||'');
+  Object.assign(p,{nama:k.nama||'',jk:k.jk||'L',dob:m?{d:String(+m[3]),m:String(+m[2]),y:m[1]}:{d:'',m:'',y:''}});
+  Object.assign(p.visits[0],{tgl:k.tglk||today(),bb:k.bb||'',tb:k.tb||''});TL.list.push(p);TL.cur=TL.list.length-1;TL.vi=0;saveTl();setMode('tl')}
+document.addEventListener('click',e=>{if(e.target.closest('[data-totl]'))posyToTl();if(e.target.closest('[data-totlk]'))klinikToTl()});
+
+/* --- ekspor --- */
+function tlSpec(){const p=tlP();const all=tlAll(p);const i=TL.vi;const o=all[i];const A=tlAdvice(p,i,all);
+  const sec=[{h:'A. Identitas',kv:[['Nama anak','<b>'+esc(p.nama||'–')+'</b>'],['Ibu/pengasuh',esc(p.ibu||'–')],['Jenis kelamin',p.jk==='P'?'Perempuan':'Laki-laki'],['Tanggal lahir',tglID(o.lahir)],['Umur',o.m!=null?o.m+' bulan':'–'],['Alamat',esc(p.alamat||'–')],['Tanggal masuk',tglID(p.visits[0].tgl)],['Status',STATN[p.status]||'–']]},
+    {h:`B. Kunjungan ke-${o.no}${i?' (minggu ke-'+o.week+')':''} · ${tglID(o.v.tgl)}`,kv:[['Berat badan',o.bb?fmt(o.bb,1)+' kg':'–'],[o.pb?'Panjang badan':'Tinggi badan',o.L?fmt(o.L,1)+' cm'+(o.Lsrc!==i?` (kunj. ke-${o.Lsrc+1})`:''):'–'],[o.zn||'BB/PB',o.z!=null?pmI(o.z)+' SD · '+o.zc[0]:'–'],['LiLA',o.lila!=null?fmt(o.lila,1)+' cm · '+o.lilaC[0]:'–'],
+      ['Edema',o.ed?'+'+o.ed:'tidak ada'],['Hb',o.hbG?fmt(o.hb,1)+' g/dL · '+o.hbG.lab:'–'],['Tes nafsu makan',o.v.nafsu==='lulus'?'lulus':o.v.nafsu==='gagal'?'tidak lulus':'–'],['Komplikasi',o.komp.length?o.komp.map(k=>KOMPN[k]).join('; '):'tidak ada'],
+      ...(i?[['Kenaikan BB',o.gWk!=null?fmt(o.gWk,1)+' g/kgBB/minggu':'–'],['MTG dimakan',o.pct!=null?fmt(o.pct)+'%':'–']]:[])]}];
+  sec.push({h:'C. Keputusan & tindak lanjut',list:[...A.msgs.map(([,t])=>t),'Pemeriksaan dan tata laksana medis oleh dokter sesuai protokol.']});
+  if(A.keputusan==='jalan'||A.keputusan==='tes'||A.keputusan==='sembuh')sec.push({h:'D. Makanan Terapi Gizi',kv:A.keputusan==='sembuh'?[['Dosis terakhir','<b>1 bungkus/hari selama 7 hari (7 bungkus)</b>'],['','']]:[['Dosis harian',o.dose?`<b>${frB(o.dose.d)} bungkus/hari</b>`:'–'],['Untuk 7 hari',o.dose?o.dose.w+' bungkus':'–'],['Dasar',o.dose?o.dose.kk+' kkal/kgBB/hari':'–'],['Kunjungan berikut',tglID(addDays(o.v.tgl,7))]],list:MTG_CARA});
+  if(p.visits.length>1)sec.push({h:'E. Riwayat kunjungan',table:{head:['Ke','Tanggal','BB','PB/TB','LiLA','Edema','z','g/kg/mgg','MTG %','Bungkus/hari'],rows:all.map(x=>[x.no,tglID(x.v.tgl),fmt(x.bb,1),num(x.v.tb)?fmt(num(x.v.tb),1):'–',fmt(x.lila,1),x.ed?'+'+x.ed:'–',x.z!=null?pmI(x.z):'–',x.gWk!=null?fmt(x.gWk,1):'–',x.pct!=null?fmt(x.pct):'–',x.dose?frB(x.dose.d):'–'])}});
+  return {title:'KARTU STATUS BALITA GIZI BURUK',sub:'Rawat jalan · '+(TL.pkm||'Puskesmas')+' · Makanan Terapi Gizi (MTG)',dateL:'Tanggal kunjungan: '+tglID(o.v.tgl),sections:sec,
+    sign:[['Orang tua / pengasuh',p.ibu],['Petugas',TL.ptg]],foot:'Rujukan: '+TL_SRC+'.<br>Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.'}}
+function tlCard(){const p=tlP();const all=tlAll(p);const i=TL.vi;const o=all[i];const A=tlAdvice(p,i,all);const sb=A.keputusan==='sembuh';const jl=A.keputusan==='jalan'||sb;
+  return {title:'Kartu Makanan Terapi Gizi',date:tglID(o.v.tgl),name:p.nama||'Balita',line:[p.jk==='P'?'Perempuan':'Laki-laki',o.m!=null?o.m+' bulan':null,p.ibu?'Ibu: '+p.ibu:null,`Kunjungan ke-${o.no}`].filter(Boolean).join(' · '),
+    hero:{h:'DOSIS MTG',big:sb?'1':o.dose&&jl?frB(o.dose.d):'–',label:'bungkus per hari',pill:sb?['Dosis terakhir','p-ok']:null,kv:[['Untuk 7 hari',sb?'7 bungkus':o.dose&&jl?o.dose.w+' bungkus':'–'],['Berat badan',o.bb?fmt(o.bb,1)+' kg':'–'],['Kontrol lagi',jl&&!sb?tglID(addDays(o.v.tgl,7)).replace(/ \d{4}$/,''):'–']]},
+    rows:{h:'PERKEMBANGAN',items:[o.z!=null?{l:o.zn,v:pmI(o.z)+' SD',pill:o.zc}:null,o.lila!=null?{l:'LiLA',v:fmt(o.lila,1)+' cm',pill:o.lilaC}:null,i&&o.gWk!=null?{l:'Kenaikan BB',v:fmt(o.gWk,1)+' g/kg/mgg',pill:o.gWk>=35?['Baik','p-ok']:['Kurang','p-warn']}:null].filter(Boolean)},
+    lists:[{h:'CARA MEMBERI MTG',items:MTG_CARA.slice(1,8),tone:'ok'},...(A.keputusan==='inap'?[{h:'PERHATIAN',items:['Anak perlu dirawat inap. Segera bawa ke rumah sakit/Puskesmas rawat inap sesuai surat rujukan.'],tone:'bad'}]:[])],
+    foot:[`Petugas: ${TL.ptg||'–'}${TL.pkm?' · '+TL.pkm:''}`,'Aplikasi Konsultasi Gizi · Poltekkes Kemenkes Makassar']}}
+function tlXlsx(){const n=v=>v==null||isNaN(v)?'':+(+v).toFixed(1);
+  const h1=['No','Nama anak','Ibu/pengasuh','JK','Tanggal lahir','Alamat','Tanggal masuk','Umur masuk (bln)','BB masuk','LiLA masuk','Edema masuk','z BB/PB-TB masuk','Jumlah kunjungan','Kunjungan terakhir','BB terakhir','LiLA terakhir','z terakhir','Lama rawat (minggu)','Status'];
+  const r1=TL.list.map((p,k)=>{const a=tlAll(p);const f=a[0],l=a[a.length-1];return [k+1,p.nama,p.ibu,p.jk,tglID(f.lahir),p.alamat,tglID(p.visits[0].tgl),f.m??'',n(f.bb),n(f.lila),f.ed?'+'+f.ed:'',f.z!=null?+f.z.toFixed(2):'',a.length,tglID(l.v.tgl),n(l.bb),n(l.lila),l.z!=null?+l.z.toFixed(2):'',l.day!=null?+(l.day/7).toFixed(1):'',STATN[p.status]||p.status]});
+  const h2=['Nama anak','Kunjungan ke','Tanggal','Umur (bln)','BB (kg)','PB/TB (cm)','LiLA (cm)','Edema','Hb (g/dL)','z BB/PB-TB','Kenaikan BB (g/kg/minggu)','MTG diberikan lalu (bks)','MTG sisa (bks)','MTG dimakan (%)','Tes nafsu makan','Komplikasi','Dosis (bks/hari)','Dosis (bks/7 hari)','Keputusan','Catatan'];
+  const r2=TL.list.flatMap(p=>{const a=tlAll(p);return a.map((o,i)=>{const A=tlAdvice(p,i,a);return [p.nama,o.no,tglID(o.v.tgl),o.m??'',n(o.bb),n(num(o.v.tb)),n(o.lila),o.ed?'+'+o.ed:'',n(o.hb),o.z!=null?+o.z.toFixed(2):'',o.gWk!=null?+o.gWk.toFixed(1):'',o.given??'',o.v.sisa===''?'':n(num(o.v.sisa)),o.pct!=null?+o.pct.toFixed(0):'',o.v.nafsu,o.komp.map(k=>KOMPN[k]).join('; '),o.dose?o.dose.d:'',o.dose?o.dose.w:'',{inap:'Rujuk rawat inap',jalan:'Rawat jalan MTG',tes:'Tes nafsu makan',gk:'Gizi kurang (PMT lokal)',normal:'Bukan gizi buruk',sembuh:'Sembuh'}[A.keputusan]||'',o.v.cat||'']})});
+  return makeXlsx([{name:'Pasien',rows:[h1,...r1],bold:[0],widths:[5,22,20,5,14,20,14,10,9,9,9,12,10,14,9,9,10,11,22]},{name:'Kunjungan',rows:[h2,...r2],bold:[0],widths:[22,8,14,8,8,9,8,7,8,10,12,12,10,10,12,30,10,10,20,30]}])}
+document.getElementById('tlXls').addEventListener('click',()=>{if(!TL.list.length){msg('Belum ada balita tersimpan.');return}deliverDownload(tlXlsx(),`Rekap-Gizi-Buruk-Rawat-Jalan_${slug(TL.pkm||'puskesmas')}_${today()}.xlsx`)});
+
+function buildReport(){if(MODE==='posy'||MODE==='pam'||MODE==='tl'){document.getElementById('report').innerHTML=specHTML(xSpec());return}buildReportKlinik()}
 const cardName=()=>MODE!=='klinik'&&CARDNAME?CARDNAME:fileBase('Ringkasan-Gizi')+'.jpg';
 loadForm();show(['klien','recall','lab','hasil','diet'].includes(S.tab)?S.tab:'klien');
 document.querySelectorAll('img[data-logo]').forEach(i=>i.src=document.querySelector('img.inst').src);
 const startM=(location.hash||'').slice(1);
 try{history.replaceState({m:'home'},'',location.pathname+location.search)}catch(e){}
 setMode('home',false);
-if(startM==='klinik'||startM==='posy'||startM==='pam')setMode(startM);
-const flushAll=()=>{try{localStorage.setItem('kg-v1',JSON.stringify(S));localStorage.setItem('kg-posy-v1',JSON.stringify(PY));localStorage.setItem('kg-pam-v1',JSON.stringify(PM))}catch(e){}};
+if(startM==='klinik'||startM==='posy'||startM==='pam'||startM==='tl')setMode(startM);
+const flushAll=()=>{try{localStorage.setItem('kg-v1',JSON.stringify(S));localStorage.setItem('kg-posy-v1',JSON.stringify(PY));localStorage.setItem('kg-pam-v1',JSON.stringify(PM));localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}};
 addEventListener('pagehide',flushAll);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushAll()});
 
 </script>
