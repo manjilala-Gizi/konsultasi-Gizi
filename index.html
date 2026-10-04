@@ -1469,13 +1469,13 @@ function porsiEnergi(E,jk,age,cap){const r=pgsRow(jk,age,'').p;const p={...r};if
     if(!mv)break}
   return {p,kal:kal()}}
 function porsiMeals(p,opt={}){const sel=opt.sel||{};const lam=!!sel.lambung;const out={};const add=(m,r)=>(out[m]||(out[m]=[])).push(r);
-  const N=lam?dist(p.n,{pagi:.25,sp:.1,siang:.3,ss:.1,malam:.25},.5):dist(p.n,{pagi:.3,siang:.4,malam:.3},.5);
+  const N=splitPokok(p.n);
   const D=dist(p.d||0,{pagi:.25,siang:.4,malam:.35},.5),T=dist(p.t||0,{pagi:.25,siang:.4,malam:.35},.5),Sy=dist(p.s||0,{pagi:.25,siang:.4,malam:.35},.5);
   const B=lam?dist(p.b||0,{sp:.3,siang:.2,ss:.3,sm:.2},.5):dist(p.b||0,{sp:.35,siang:.15,ss:.35,malam:.15},.5);
   const M=dist(p.m||0,{pagi:.3,siang:.4,malam:.3},1),G=dist(p.g||0,{sp:.5,ss:.5},1);
   for(const m of ['pagi','sp','siang','ss','malam','sm']){
     const n=N[m]||0;if(n){if(m==='pagi'||m==='siang'||m==='malam')add(m,{g:lam?'Nasi tim / bubur':'Nasi',u:ctgTxt(n*100)+(lam?'; bubur/nasi tim setara':''),p:`${fr(n)} P makanan pokok = ${fr(n*.75)} gelas nasi`,b:Math.round(n*100)});
-      else add(m,{g:'Selingan makanan pokok',u:`roti ${fr(n*3)} iris atau biskuit ${fr(n*4)} buah`,p:`${fr(n)} P makanan pokok`,b:Math.round(n*40)})}
+      else add(m,{g:'Selingan makanan pokok',u:lam?`roti ${fr(n*3)} iris atau biskuit ${fr(n*4)} buah`:m==='sp'?`ubi jalar rebus ${fr(n)} buah sedang, singkong rebus ${fr(n*1.5)} potong, atau roti ${fr(n*3)} iris`:`roti ${fr(n*3)} iris, jagung rebus ${fr(n)} buah sedang, atau kentang rebus ${fr(n*2)} buah sedang`,p:`${fr(n)} P makanan pokok`,b:Math.round(n*(m==='sp'?135:70))})}
     if(D[m])add(m,{g:'Lauk hewani',u:`${fr(D[m])} potong sedang ikan/ayam/daging atau ${fr(D[m])} butir telur`,p:`${fr(D[m])} P hewani`,b:Math.round(D[m]*50)});
     if(T[m])add(m,{g:'Lauk nabati',u:`${fr(T[m])} potong sedang tempe atau ${fr(T[m]*2)} potong sedang tahu`,p:`${fr(T[m])} P nabati`,b:Math.round(T[m]*50)});
     if(Sy[m])add(m,{g:'Sayur',u:`${fr(Sy[m])} mangkuk sayur matang${lam?' (lunak, tidak bergas)':''}`,p:`${fr(Sy[m])} P sayuran`,b:Math.round(Sy[m]*100)});
@@ -1547,11 +1547,12 @@ function dietPlan(){const sel=dietSel();const keys=DLIST.filter(k=>sel[k]);if(!k
     meals=porsiMeals(P,{sel});if(sel.hamil&&R.kek){const sp=meals.find(m=>m.m==='sp');if(sp)sp.rows.unshift({g:'Selingan tambahan',u:'PMT ibu hamil dari Puskesmas, atau bubur kacang hijau / roti isi telur',p:'tambahan energi dan protein',b:null})}
     note=sel.hamil?`Porsi sehari ibu hamil ${tm===1?'12 minggu pertama':'usia kehamilan 12–40 minggu'} menurut Buku KIA 2024 (±${fmt(E)} kkal).${R.tm?'':' Usia kehamilan belum diisi; dipakai porsi 12–40 minggu.'}`:`Porsi sehari ibu menyusui (Poster Isi Piringku Ibu Menyusui 2023), ±${fmt(E)} kkal.`;
     if(need)note+=` Kebutuhan energi dihitung: ${fmt(need)} kkal.`;
+    note+=' Nasi tiap makan 2–3–2 centong (Isi Piringku); sisa makanan pokok di selingan.';
     if(sel.rg)note+=' Garam dibatasi sesuai diet rendah garam.'}
   else if(sel.rg){base='rg';E=Math.round((num(S.diet.E)||need||2000)/100)*100;E=Math.min(2600,Math.max(1300,E));note=`Porsi nasi, oat, kacang hijau, gula, dan minyak disesuaikan dari contoh diet 2.000 kkal (Penuntun Diet Ed. 5)${need?` ke kebutuhan klien (${fmt(E)} kkal)`:''}.`;
     const rm=rgMeals(E);for(const m of ['pagi','sp','siang','malam'])meals.push({m,lab:m==='sp'?'Selingan':MEALT[m][0],time:m==='sp'?'10.00 / 16.00':MEALT[m][1],rows:rm[m]})}
-  else{base='umum';E=Math.round((num(S.diet.E)||need||1900)/100)*100;E=Math.min(2800,Math.max(1200,E));const cap=sel.purin?{t:1}:null;const PE=porsiEnergi(E,k.jk,Math.max(u,19),cap);
-    meals=porsiMeals(PE.p,{sel});note=`Porsi disusun dari Pedoman Gizi Seimbang 2014 dan disesuaikan ke ${fmt(E)} kkal (±${fmt(PE.kal)} kkal).`+(sel.purin?' Lauk nabati dibatasi 1 porsi (tempe/tahu maks. 50 g).':'')}
+  else{base='umum';const ag=R.u?R.u.y:30;const f90=!num(S.diet.E)&&need&&ag>=10;E=Math.round((num(S.diet.E)||(need?need*(f90?0.9:1):0)||1900)/100)*100;E=Math.min(2800,Math.max(1200,E));const cap=sel.purin?{t:1}:null;const PE=porsiEnergi(E,k.jk,Math.max(u,19),cap);
+    meals=porsiMeals(PE.p,{sel});note=`Porsi disusun dari Pedoman Gizi Seimbang 2014 dan disesuaikan ke ${fmt(E)} kkal (±${fmt(PE.kal)} kkal)${f90?`, ±90% dari kebutuhan ${fmt(need)} kkal`:''}. Nasi tiap makan mengikuti Isi Piringku (2–3–2 centong); sisa makanan pokok di selingan.`+(sel.purin?' Lauk nabati dibatasi 1 porsi (tempe/tahu maks. 50 g).':'')}
   const uniq=a=>[...new Set(a)];let ok,no,ingat;
   if(keys.length===2&&sel.dm&&sel.rg){ok=DIET_BOTH.ok;no=DIET_BOTH.no;ingat=[...DIET_BOTH.ingat]}
   else{ok=uniq(keys.flatMap(x=>DIET[x].ok)).slice(0,10);no=uniq(keys.flatMap(x=>DIET[x].no)).slice(0,10);ingat=uniq(keys.flatMap(x=>DIET[x].ingat))}
@@ -2352,26 +2353,31 @@ function pgsRow(jk,u,fis,tm){
   return L?R('Laki-laki ≥65 tahun',1900,5,4,4,3,3,1,4,2):R('Perempuan ≥65 tahun',1550,3.5,4,4,3,3,1,4,2)}
 const kalP=p=>GOL.reduce((a,[k,,c])=>a+(p[k]||0)*c,0);
 function porsiPam(c,o){if(o.u==null||o.u<1||!o.E)return null;
-  const row=pgsRow(c.jk,o.u,o.fis,o.tm);const p={...row.p};const notes=[];const dewasa=o.u>=13;
+  const row=pgsRow(c.jk,o.u,o.fis,o.tm);const p={...row.p};const notes=[];const dewasa=o.u>=13;const f90=!o.fis&&o.u>=10;const ET=f90?o.E*0.9:o.E;
   const gdsHi=o.gds&&o.gds[1]==='p-bad',kolHi=o.kol&&o.kol[1]!=='p-ok';
   if(gdsHi){p.g=0;notes.push('Gula darah tinggi: gula pasir/manisan ditiadakan; selingan memakai buah.')}
   if(kolHi){p.m=Math.min(p.m,5);notes.push('Kolesterol di atas normal: minyak dibatasi, pilih lauk rendah lemak (ikan, ayam tanpa kulit), hindari jeroan dan santan kental.')}
   const MIN={n:dewasa?3:2,m:dewasa?3:2,g:gdsHi?0:1,b:3,t:2,d:2,su:0},MAX={n:10,m:8,t:4,d:4,su:2,b:5};
   const DOWN=['g','n','m','n','m','n','b','n','t'],UP=['n','m','n','t','d','su','n','m'];
   let guard=0;
-  while(!o.fis&&guard++<60){const diff=o.E-kalP(p);if(Math.abs(diff)<45)break;const up=diff>0;let moved=false;
+  while(!o.fis&&guard++<60){const diff=ET-kalP(p);if(Math.abs(diff)<45)break;const up=diff>0;let moved=false;
     for(const k of (up?UP:DOWN)){if(k==='g'&&gdsHi)continue;const st=k==='n'?0.5:1;const nv=p[k]+(up?st:-st);
-      if(up?(nv>(MAX[k]??99)):(nv<(MIN[k]??0)))continue;const nd=o.E-(kalP(p)-p[k]*GKAL[k]+nv*GKAL[k]);
+      if(up?(nv>(MAX[k]??99)):(nv<(MIN[k]??0)))continue;const nd=ET-(kalP(p)-p[k]*GKAL[k]+nv*GKAL[k]);
       if(Math.abs(nd)<Math.abs(diff)){p[k]=nv;moved=true;break}}
     if(!moved)break}
   if(o.tdHi)notes.push('Tekanan darah tinggi: garam maksimal 1 sendok teh sehari; kurangi kecap, penyedap (MSG), ikan asin, makanan kaleng dan makanan cepat saji.');
-  return {row,p,kal:kalP(p),notes,susuRL:o.u>=65||kolHi}}
+  return {row,p,kal:kalP(p),notes,susuRL:o.u>=65||kolHi,f90,ET}}
 
 // pembagian ke waktu makan (sarapan ±¼ bila ada selingan; PGS 2014)
 const SLOT_M=[['pagi','Makan pagi','06.00–08.00'],['sp','Selingan pagi','10.00'],['siang','Makan siang','12.00–13.00'],['ss','Selingan sore','16.00'],['malam','Makan malam','18.00–19.00']];
 function dist(T,w,st){const keys=Object.keys(w);const sw=keys.reduce((a,k)=>a+w[k],0);const out={};let used=0;const fr=[];
   keys.forEach(k=>{const raw=T*w[k]/sw;const f=Math.floor(raw/st+1e-9)*st;out[k]=f;used+=f;fr.push([k,raw-f])});
   let rem=Math.round((T-used)/st);fr.sort((a,b)=>b[1]-a[1]);for(let i=0;rem>0&&fr.length;i++,rem--)out[fr[i%fr.length][0]]+=st;return out}
+// Isi Piringku: nasi per makan utama 2–3–2 centong (100–150–100 g); sisa porsi makanan pokok dipindah ke selingan pagi & sore
+const POKOK_MAIN={pagi:1,siang:1.5,malam:1};
+function splitPokok(n){if(!(n>0))return {};if(n<=3.5+1e-9)return dist(n,{pagi:2,siang:3,malam:2},.5);
+  const r=n-3.5;const a=Math.ceil(r)/2;return {...POKOK_MAIN,sp:a,ss:Math.round((r-a)*2)/2}}
+const POKOK_SEL=[['Ubi jalar rebus',1,'buah sedang'],['Roti',3,'iris'],['Singkong rebus',1.5,'potong'],['Jagung rebus',1,'buah sedang']];
 const fq=x=>{x=Math.round(x*4)/4;const w=Math.floor(x),f=x-w;const F={0:'',0.25:'¼',0.5:'½',0.75:'¾'}[f];return (w?String(w):'')+F||'0'};
 const LAUK={ikan:{l:'Ikan',u:'potong sedang',per:1,g:40,dish:['Pepes ikan','Ikan bakar']},
   ayam:{l:'Ayam',u:'potong sedang',per:1,g:40,dish:['Ayam bakar (tanpa kulit)','Sup ayam']},
@@ -2382,7 +2388,7 @@ const BUAH=[['Pepaya',1,'potong besar'],['Jeruk manis',2,'buah sedang'],['Pisang
 function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const lk=LAUK[c.lauk]||LAUK.ikan;const nab=c.lauk==='nabati';
   const M={};SLOT_M.forEach(([k])=>M[k]=[]);
   const add=(k,name,amt,urt)=>{if(amt>0)M[k].push({name,amt:fq(amt),urt})};
-  const N=dist(p.n,{pagi:.3,siang:.4,malam:.3},.5);
+  const ip=o.u>=10||!!o.fis;const N=ip?splitPokok(p.n):dist(p.n,{pagi:.3,siang:.4,malam:.3},.5);
   const Sy=dist(p.s,{pagi:.25,siang:.4,malam:.35},.5);
   const Hw=dist(nab?0:p.d,{pagi:p.d>=3?.34:.2,siang:.36,malam:.3},.5);
   const Nb=dist(p.t+(nab?p.d:0),{pagi:.25,siang:.4,malam:.35},.5);
@@ -2399,6 +2405,8 @@ function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const 
   if(Gu.pagi)add('pagi','Teh manis',Gu.pagi,`gula ${fq(Gu.pagi)} sdm`);else add('pagi','Air putih / teh tawar',1,'1 gelas');
   // selingan pagi
   let bi=0;const buah=(k,q)=>{if(!q)return;const f=BUAH[bi++%BUAH.length];add(k,f[0],q,`${fq(q*f[1])} ${f[2]}`)};
+  const pok=(k,i)=>{const q=N[k];if(!q)return;const f=POKOK_SEL[i];add(k,f[0],q,`${fq(q*f[1])} ${f[2]}`)};
+  pok('sp',o.fis==='hamil'?1:0);
   buah('sp',Bu.sp);
   if(p.su)add('sp',P.susuRL?'Susu rendah lemak':'Susu',p.su,P.susuRL?`${fq(p.su*4)} sdm bubuk + air 1 gelas`:`${fq(p.su)} gelas`);
   // siang
@@ -2408,6 +2416,7 @@ function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const 
   if(Sy.siang)add('siang','Sayur asem',Sy.siang,`${fq(Sy.siang)} mangkuk`);
   buah('siang',Bu.siang);
   // selingan sore
+  pok('ss',2);
   buah('ss',Bu.ss);
   if(Gu.ss)add('ss','Kolak/teh manis (gula)',Gu.ss,`gula ${fq(Gu.ss)} sdm`);
   // malam
@@ -2424,6 +2433,7 @@ function menuPam(c,o){const P=porsiPam(c,o);if(!P)return null;const p=P.p;const 
     'Sayur 1 mangkuk (100 g) boleh diganti sayuran lain; buah boleh diganti buah musim setempat.',
     `Minyak untuk memasak sehari ±${fq(p.m)} sendok teh (${Mi.pagi||0} pagi, ${Mi.siang||0} siang, ${Mi.malam||0} malam). Utamakan direbus, dikukus, dipepes, atau dibakar.`]}}
 
+const N_IP=(o,Mn)=>(o.u>=10||o.fis?'Porsi nasi tiap makan mengikuti Isi Piringku (2–3–2 centong); sisa makanan pokok di selingan. ':'')+(Mn.f90?`Menu ±${fmt(Mn.kal)} kkal = ±90% kebutuhan (${fmt(o.E)} kkal). `:'');
 function menuPanelHTML(c,o){const Mn=menuPam(c,o);if(!Mn)return '';const p=Mn.pd;
   return `<div class="panel"><div class="panel-h"><h2>Contoh menu sehari</h2><span class="hint">±${fmt(Mn.kal)} kkal · ${o.fis?'':'PGS 2014 '}(${esc(Mn.row.lab)})</span></div><div class="panel-b stack" style="gap:12px">
    <div class="field"><label>Lauk utama</label><div class="seg seg-wrap" id="m-lauk">${Object.entries(LAUK).map(([k,v])=>`<button type="button" data-lauk="${k}" aria-pressed="${(c.lauk||'ikan')===k}">${v.l}</button>`).join('')}</div></div>
@@ -2431,15 +2441,15 @@ function menuPanelHTML(c,o){const Mn=menuPam(c,o);if(!Mn)return '';const p=Mn.pd
    ${SLOT_M.filter(([k])=>Mn.M[k].length).map(([k,l,t])=>`<div class="meal"><div class="meal-h"><b>${l}</b><small>${t}</small></div><ul>${Mn.M[k].map(i=>`<li><span>${esc(i.name)}</span><small>${esc(i.urt)}</small></li>`).join('')}</ul></div>`).join('')}
    ${Mn.notes.length?`<div class="msgs">${Mn.notes.map(n=>`<p class="msg warn">${n}</p>`).join('')}</div>`:''}
    <details class="tukar"><summary>Bisa ditukar dengan…</summary><ul class="lst dot">${Mn.tukar.map(x=>`<li>${x}</li>`).join('')}</ul></details>
-   <p class="note" style="margin:0">${o.fis?'Jumlah porsi mengikuti Buku KIA 2024 (ibu hamil) / Isi Piringku Kemenkes 2023 (ibu menyusui).':'Jumlah porsi mengikuti Pedoman Gizi Seimbang 2014 (Lampiran 14), disesuaikan dengan kebutuhan energi.'} Ini contoh; menu dapat diganti dengan makanan setempat yang setara.</p>
+   <p class="note" style="margin:0">${N_IP(o,Mn)}${o.fis?'Jumlah porsi mengikuti Buku KIA 2024 (ibu hamil) / Isi Piringku Kemenkes 2023 (ibu menyusui).':'Jumlah porsi mengikuti Pedoman Gizi Seimbang 2014 (Lampiran 14), disesuaikan dengan kebutuhan energi.'} Ini contoh; menu dapat diganti dengan makanan setempat yang setara.</p>
   </div></div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lauk]');if(!b)return;PM.cur.lauk=b.dataset.lauk;renderPam();savePam()});
 
 function menuSpecSection(c,o){const Mn=menuPam(c,o);if(!Mn)return null;
   return {h:'Contoh menu sehari',table:{head:['Waktu','Menu','Jumlah'],rows:SLOT_M.filter(([k])=>Mn.M[k].length).flatMap(([k,l])=>Mn.M[k].map((i,j)=>[j?'':l,esc(i.name),esc(i.urt)]))},
-    note:`Lauk utama: ${Mn.lk.l}. Porsi sehari: ${GOL.filter(([k])=>Mn.pd[k]).map(([k,l])=>`${l.replace(' (nasi)','').toLowerCase()} ${fq(Mn.pd[k])} p`).join(', ')} (±${fmt(Mn.kal)} kkal; PGS 2014, ${Mn.row.lab}). Minyak memasak ±${fq(Mn.p.m)} sdt sehari. `+Mn.notes.join(' ')}}
+    note:`Lauk utama: ${Mn.lk.l}. Porsi sehari: ${GOL.filter(([k])=>Mn.pd[k]).map(([k,l])=>`${l.replace(' (nasi)','').toLowerCase()} ${fq(Mn.pd[k])} p`).join(', ')} (±${fmt(Mn.kal)} kkal; PGS 2014, ${Mn.row.lab}). ${N_IP(o,Mn)}Minyak memasak ±${fq(Mn.p.m)} sdt sehari. `+Mn.notes.join(' ')}}
 function menuCard(){const c=PM.cur,o=calcPam(c);const Mn=menuPam(c,o);if(!Mn)return null;
-  return {title:'Menu Sehari Saya',date:tglID(PM.ev.tgl||today()),name:c.nama||'Pengunjung',line:`Kebutuhan ±${fmt(Mn.kal)} kkal · Lauk utama: ${Mn.lk.l}`,
+  return {title:'Menu Sehari Saya',date:tglID(PM.ev.tgl||today()),name:c.nama||'Pengunjung',line:`Menu ±${fmt(Mn.kal)} kkal${Mn.f90?' (90% kebutuhan)':''} · Lauk utama: ${Mn.lk.l}`,
     lists:[...SLOT_M.filter(([k])=>Mn.M[k].length).map(([k,l,t])=>({h:`${l.toUpperCase()} · ${t}`,items:Mn.M[k].map(i=>`${i.name}: ${i.urt}`)})),
       ...(Mn.notes.length?[{h:'PERHATIAN',items:Mn.notes,tone:'warn'}]:[]),{h:'BISA DITUKAR DENGAN',items:[...Mn.tukar.slice(0,3),Mn.tukar[4]]}],
     foot:[`Petugas: ${PM.ev.ptg||'–'}`,'Pedoman Gizi Seimbang 2014 · Poltekkes Kemenkes Makassar']}}

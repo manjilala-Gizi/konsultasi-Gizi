@@ -1,6 +1,6 @@
 // Service worker: simpan aplikasi di HP agar bisa dibuka tanpa internet.
 // Naikkan VERSI setiap kali index.html diperbarui agar HP mengambil versi baru.
-const VERSI = 'konsultasi-gizi-v37';
+const VERSI = 'konsultasi-gizi-v38';
 const FILE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 // Pustaka pembuat PDF, disimpan agar Unduh PDF bisa dipakai offline
 const LIBS = ['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'];
