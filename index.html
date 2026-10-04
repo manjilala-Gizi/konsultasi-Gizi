@@ -537,7 +537,7 @@ body[data-mode="view"]>*:not(#viewView){display:none!important}
         <div class="field" style="max-width:560px;margin-top:14px"><label for="set-qr">Alamat halaman QR pengunjung (Google Apps Script)</label><input id="set-qr" type="url" inputmode="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec"><small id="qrSetNote">Dipakai tombol <b>QR untuk pengunjung</b> di mode Pameran. Cara membuatnya ada di panduan pemasangan.</small></div>
       </div></details>
       <details><summary>Tentang &amp; cara pasang</summary><div class="db">
-        <p><b>Konsultasi Gizi</b> versi 1.8 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
+        <p><b>Konsultasi Gizi</b> versi 1.11 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
         <p>Aplikasi ini alat bantu; keputusan klinis tetap pada tenaga gizi/tenaga kesehatan.</p>
         <h3>Cara pasang</h3>
         <ul><li><b>Google Sites</b>: Sisipkan → Sematkan → Kode sematan → tempel isi index.html.</li>
@@ -589,7 +589,7 @@ body[data-mode="view"]>*:not(#viewView){display:none!important}
       </div>
       <div class="stack"><div class="stack" id="posyOut"></div>
       <div class="panel xbtn"><div class="panel-h"><h2>Cetak &amp; bagikan</h2></div><div class="panel-b">
-        <div class="exp-row"><button class="btn primary" data-xprint type="button">Cetak</button><button class="btn" data-xpdf type="button">Unduh PDF</button><button class="btn share-only" data-xpdfshare type="button" hidden>Bagikan PDF</button><button class="btn" data-xcard type="button">Gambar (JPG)</button></div>
+        <div class="exp-row"><button class="btn primary" data-xqr type="button">QR untuk orang tua</button><button class="btn" data-xprint type="button">Cetak</button><button class="btn" data-xpdf type="button">Unduh PDF</button><button class="btn share-only" data-xpdfshare type="button" hidden>Bagikan PDF</button><button class="btn" data-xcard type="button">Gambar (JPG)</button></div>
         <p class="note" id="pfPosy" hidden></p></div></div></div>
     </section>
     <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Standar: Permenkes No. 2 Tahun 2020 tentang Standar Antropometri Anak · Buku KIA 2024 (KBM, LiLA, pesan pemberian makan)</div></footer>
@@ -705,7 +705,7 @@ body[data-mode="view"]>*:not(#viewView){display:none!important}
       </div>
       <div class="stack"><div class="stack" id="tlOut"></div>
       <div class="panel xbtn"><div class="panel-h"><h2>Cetak &amp; bagikan</h2></div><div class="panel-b">
-        <div class="exp-row"><button class="btn primary" data-xprint type="button">Cetak</button><button class="btn" data-xpdf type="button">Unduh PDF</button><button class="btn share-only" data-xpdfshare type="button" hidden>Bagikan PDF</button><button class="btn" data-xcard type="button">Gambar (JPG)</button></div>
+        <div class="exp-row"><button class="btn primary" data-xqr type="button">QR untuk orang tua</button><button class="btn" data-xprint type="button">Cetak</button><button class="btn" data-xpdf type="button">Unduh PDF</button><button class="btn share-only" data-xpdfshare type="button" hidden>Bagikan PDF</button><button class="btn" data-xcard type="button">Gambar (JPG)</button></div>
         <p class="note" id="pfTl" hidden></p></div></div></div>
     </section>
     <footer class="credit"><img data-logo src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Kemenkes Poltekkes Makassar"><div>Dikembangkan oleh <b>Manjilala</b> · Poltekkes Kemenkes Makassar<br>Rujukan: Juknis Penggunaan Makanan Terapi Gizi Rawat Jalan Balita Gizi Buruk 6–59 Bulan (Kemenkes 2026, draf) · Permenkes No. 2/2020</div></footer>
@@ -802,7 +802,8 @@ body[data-mode="view"]>*:not(#viewView){display:none!important}
 <div class="modal" id="expModal" role="dialog" aria-modal="true" aria-label="Simpan atau cetak lembar kajian" hidden>
   <div class="modal-c" style="max-width:380px"><div class="modal-h"><b>Simpan / cetak lembar kajian</b><button class="btn" type="button" data-expclose>Tutup</button></div>
     <div style="padding:14px 16px 16px;display:grid;gap:8px">
-      <button class="btn primary exp-big" data-pdf type="button">Unduh PDF<small>Lembar kajian lengkap, langsung tersimpan di HP/laptop</small></button>
+      <button class="btn primary exp-big" data-xqr type="button">QR untuk klien<small>Klien scan dengan HP, lalu menyimpan ringkasan dan anjuran makan</small></button>
+      <button class="btn exp-big" data-pdf type="button">Unduh PDF<small>Lembar kajian lengkap, langsung tersimpan di HP/laptop</small></button>
       <button class="btn exp-big share-only" data-pdfshare type="button" hidden>Bagikan PDF<small>Kirim lewat WhatsApp, email, dll.</small></button>
       <button class="btn exp-big" data-card type="button">Gambar ringkasan (JPG)<small>1 halaman untuk dikirim ke klien</small></button>
       <button class="btn exp-big" data-printnow type="button">Cetak ke printer<small>Membuka menu cetak bawaan perangkat</small></button>
@@ -1038,7 +1039,7 @@ function calc(){
   if(R.akg)['serat','kalsium','besi','vita','vit_c','natrium'].forEach(x=>T[x]=R.akg[x]);
   R.T=T;return R;
 }
-function totals(){
+function totals(){if(window.TOT_OV)return window.TOT_OV;
   const t={},miss={},slot={};NUT.forEach(n=>{t[n.k]=0;miss[n.k]=0});let n=0;const contrib=[];const flagged=[];
   for(const [sk] of SLOTS){slot[sk]=0;for(const i of itemsOf(sk)){const f=FOOD.get(i.kode);if(!f)continue;n++;const g=i.gram||0;
     NUT.forEach(x=>{const v=nv(f,x.k);if(v==null)miss[x.k]++;else t[x.k]+=v*g/100});
@@ -1849,7 +1850,7 @@ async function buildCard(){const R=calc(),t=totals(),T=R.T,k=S.klien;
   const logo=document.querySelector('img.inst');const W=1080,X=56,CW=W-2*X;
   const E=t.t.energi||0,pE=T.energi?E/T.energi*100:null,pP=T.protein?t.t.protein/T.protein*100:null;
   const pe=[t.t.protein*4/(E||1)*100,t.t.lemak*9/(E||1)*100,t.t.kh*4/(E||1)*100];
-  const pts=t.n?interpret(R,t,pe).filter(x=>!/^Natrium dihitung/.test(x)).map(x=>/^Hasil lab/.test(x)?'Hasil lab di luar normal: '+labFlags().map(f=>f.t.replace(/ [\d,.]+.*$/,'').replace('Gula darah','GD')).join(', ')+'.':x).slice(0,4):[];
+  const pts=t.n?interpret(R,t,pe).filter(x=>!/^Natrium dihitung/.test(x)).map(x=>/^Hasil lab/.test(x)?'Hasil lab di luar normal: '+labFlags().map(f=>f.t.replace('Gula darah','GD')).join(', ')+'.':x).slice(0,4):[];
   const D=dietPlan();
   const MMS_T='Minum TTD/MMS 1 tablet setiap hari selama kehamilan, sebaiknya malam sebelum tidur; jangan bersama teh, kopi, susu, atau obat maag.';
   let cat=(S.catatan||'').trim()||(R.fis==='hamil'?MMS_T:'Ikuti anjuran konselor gizi dan kontrol kembali sesuai jadwal.');if(R.fis==='hamil'&&!/TTD|MMS/i.test(cat))cat+='\n'+MMS_T;{const uY=R.u?R.u.y:null;const g=hbGrade(inR(num(S.lab.hb),'hb'),S.klien.jk,uY,R.fis==='hamil');if(g&&g.lvl>0&&!/zat besi/i.test(cat))cat+='\n'+g.lab+': perbanyak lauk hewani sumber zat besi dan buah sumber vitamin C'+(g.lvl>=2?'; segera periksa ke dokter/Puskesmas.':'.');const tw=R.fis!=='hamil'?ttdRule(S.klien.jk,uY,R.fis):null;if(tw&&!/TTD/i.test(cat))cat+='\n'+tw}
@@ -3154,10 +3155,46 @@ function b64uEnc(str){const b=new TextEncoder().encode(str);let x='';for(const c
 function b64uDec(s){s=String(s).replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const x=atob(s);return new TextDecoder().decode(Uint8Array.from(x,ch=>ch.charCodeAt(0)))}
 const inisial=n=>String(n||'').trim().split(/\s+/).filter(Boolean).map(w=>w[0].toUpperCase()+'.').join(' ');
 const qrFull=()=>!!setGet().qrFull;
-function qrPayload(){const c=PM.cur,clean=v=>String(v??'').replace(/[~\r\n]/g,' ').trim();
+function pamPayload(){const c=PM.cur,clean=v=>String(v??'').replace(/[~\r\n]/g,' ').trim();
   const a=['1',PM.ev.tgl||today(),PM.ev.nama||'',PM.ev.ptg||'',String(CTG()),...QR_F.map(k=>k==='nama'?(qrFull()?c.nama:inisial(c.nama)):c[k])].map(clean);
   while(a.length>5&&a[a.length-1]==='')a.pop();return b64uEnc(a.join('~'))}
-function qrDecode(q){const a=b64uDec(q).split('~');if(a[0]!=='1'||a.length<6)throw new Error('format');return a}
+function qrDecode(q){const a=b64uDec(q).split('~');if(!((a[0]==='1'&&a.length>=6)||(a[0]==='P1'&&a.length>=8)||(a[0]==='T1'&&a.length>=9)||(a[0]==='K1'&&a.length>=6)))throw new Error('format');return a}
+/* Posyandu: data hari ini + riwayat penimbangan sebelumnya (bila ada di perangkat petugas) */
+const QR_HMAX=12,QR_NMAX=89;
+const qrNum=v=>{const x=num(v);return x==null?'':String(x)};
+const qrCara=c=>c==='baring'?'b':c==='diri'?'d':'';
+function posyHistRows(){if(!HIST.ok||!PY.id)return [];const p=HIST.p.find(x=>x.id===PY.id);if(!p)return [];
+  return p.visits.filter(v=>v.tglu&&v.tglu<PY.tglu&&v.tglu!==PY._vt&&num(v.bb)).sort((a,b)=>a.tglu<b.tglu?-1:1)
+    .map(v=>{const o=withPY({...p,...v,dob:p.dob,jk:p.jk},()=>calcPosy());return [v.tglu.replace(/-/g,'').slice(2),qrNum(v.bb),qrNum(v.tb),qrCara(v.cara),(o.nt&&o.nt.s)||'']})}
+function posyPayload(nh){const clean=v=>String(v??'').replace(/[~;,\r\n]/g,' ').trim(),full=qrFull(),o=calcPosy(),H=posyHistRows();
+  const hs=nh==null?H:H.slice(Math.max(0,H.length-nh));
+  const a=['P1',PY.tglu||today(),clean(PY.pos),clean(PY.ptg),clean(full?PY.nama:inisial(PY.nama)),clean(full?PY.ibu:inisial(PY.ibu)),PY.jk==='P'?'P':'L',o.lahir||'',
+    qrNum(PY.bb),qrNum(PY.tb),qrCara(PY.cara),qrNum(PY.lila),qrNum(PY.bbl),PY.sakit?'1':'',PY.sakit?(PY.kel||[]).join(','):'',PY.sakit?(PY.bhy||[]).join(','):'',
+    hs.map(r=>r.join(',').replace(/,+$/,'')).join(';')];
+  while(a.length>8&&a[a.length-1]==='')a.pop();return b64uEnc(a.join('~'))}
+/* Tata laksana gizi buruk: semua kunjungan sejak masuk sampai kunjungan yang dibuka (alamat dan catatan tidak ikut) */
+function tlPayload(lite){const p=tlP(),clean=v=>String(v??'').replace(/[~;,+\r\n]/g,' ').trim(),full=qrFull();
+  const vs=p.visits.slice(0,TL.vi+1).map((v,i,arr)=>{const last=i===arr.length-1,lt=lite&&!last;
+    const f=[String(v.tgl||'').replace(/-/g,'').slice(2),qrNum(v.bb),qrNum(v.tb),qrCara(v.cara),qrNum(v.lila),lt?'':qrNum(v.hb),+v.edema?String(+v.edema):'',
+      (v.komp||[]).map(clean).join('+'),v.nafsu==='lulus'?'l':v.nafsu==='gagal'?'g':'',v.klinis==='buruk'?'b':'',qrNum(v.sisa),String(v.kkal||'150')==='150'?'':clean(v.kkal)];
+    return f.join(',').replace(/,+$/,'')});
+  const a=['T1',clean(TL.pkm),clean(TL.ptg),clean(full?p.nama:inisial(p.nama)),clean(full?p.ibu:inisial(p.ibu)),p.jk==='P'?'P':'L',dobStr(p.dob),clean(p.status||'aktif'),vs.join(';')];
+  return b64uEnc(a.join('~'))}
+/* Klinik: data klien, lab, pilihan diet, dan TOTAL zat gizi recall (bukan per bahan). Catatan konselor tidak ikut. */
+const qrKv=(o,skip)=>Object.entries(o||{}).filter(([k,v])=>!(skip||[]).includes(k)&&v!==''&&v!=null&&typeof v!=='object').map(([k,v])=>`${k}=${String(v).replace(/[~|=\r\n]/g,' ').trim()}`).join('|');
+const qrKvP=str=>Object.fromEntries(String(str||'').split('|').filter(x=>x.includes('=')).map(x=>{const i=x.indexOf('=');return [x.slice(0,i),x.slice(i+1)]}));
+function klinikPayload(){const k=S.klien,t=totals(),full=qrFull(),d=S.diet||{},sel=Object.keys(dietSel()).filter(x=>dietSel()[x]);
+  const r=(v,dp)=>v==null||isNaN(v)?'':String(+(+v).toFixed(dp));
+  const a=['K1',qrKv({...k,nama:full?k.nama:inisial(k.nama)}),qrKv(S.lab),qrKv({t:d.touched?1:0,E:d.E,na:d.na,pen:d.pen?1:'',sel:d.touched?DLIST.filter(x=>d.sel&&d.sel[x]).join('.'):sel.join('.')}),
+    t.n?[t.n,...NUT.map(n=>r(t.t[n.k],n.d+1))].join(','):'',t.n?SLOTS.map(([sk])=>r(t.slot[sk],0)).join(','):''];
+  while(a.length>3&&a[a.length-1]==='')a.pop();return b64uEnc(a.join('~'))}
+function qrPayload(nh){return MODE==='posy'?posyPayload(nh):MODE==='tl'?tlPayload():MODE==='klinik'?klinikPayload():pamPayload()}
+function qrBuild(){const base=qrBase();
+  if(MODE==='tl'){for(const lite of [false,true]){const link=base+'#q='+tlPayload(lite),Q=qrSVG(link);if(Q&&(Q.n<=QR_NMAX+8||lite))return {link,Q,lite,nv:TL.vi+1}}}
+  if(MODE==='klinik'){const link=base+'#q='+klinikPayload();return {link,Q:qrSVG(link)}}
+  if(MODE!=='posy'){const link=base+'#q='+pamPayload();return {link,Q:qrSVG(link)}}
+  const tot=posyHistRows().length;for(let nh=Math.min(tot,QR_HMAX);nh>=0;nh--){const link=base+'#q='+posyPayload(nh),Q=qrSVG(link);if(Q&&(Q.n<=QR_NMAX||nh===0))return {link,Q,nh,tot}}
+  return {link:'',Q:null,nh:0,tot}}
 function qrSVG(text){for(const ec of ['M','L']){try{const q=qrcode(0,ec);q.addData(text,'Byte');q.make();const n=q.getModuleCount(),m=4;let d='';
     for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c+m} ${r+m}h1v1h-1z`;
     return {n,ec,svg:`<svg xmlns="http:\/\/www.w3.org\/2000\/svg" viewBox="0 0 ${n+2*m} ${n+2*m}" shape-rendering="crispEdges" role="img" aria-label="Kode QR hasil cek gizi"><rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#000"/></svg>`}}catch(e){}}
@@ -3168,18 +3205,40 @@ function qrSetupHTML(warn){return `${warn?`<p class="msg warn">${esc(warn)}</p>`
   <div class="field"><label for="qrUrlIn">Alamat halaman QR<\/label><input id="qrUrlIn" type="url" inputmode="url" autocomplete="off" placeholder="https:\/\/script.google.com\/macros\/s\/…\/exec" value="${esc(setGet().qr||'')}"></div>
   <div class="exp-row"><button class="btn primary" type="button" data-qrurlsave>Simpan alamat</button></div>
   <p class="note">Cara membuat halaman ini ada di panduan pemasangan. Alamat bisa diubah lagi di Beranda → Pengaturan.</p>`}
-function renderQr(){const b=document.getElementById('qrBody');const base=qrBase();if(!base){b.innerHTML=qrSetupHTML();return}
-  const Q=qrSVG(base+'#q='+qrPayload());const c=PM.cur,o=calcPam(c);
-  if(!Q){b.innerHTML='<p class="msg bad">Data terlalu panjang untuk satu kode QR. Persingkat nama kegiatan atau nama pengunjung.</p>';return}
-  const nm=qrFull()?(c.nama||'–'):(inisial(c.nama)||'–');
+function renderQr(){const b=document.getElementById('qrBody');const base=qrBase();const T=MODE==='tl',K=MODE==='klinik',P=MODE==='posy'||T;
+  document.getElementById('qrTitle').textContent=K?'QR untuk klien':P?'QR untuk orang tua':'QR untuk pengunjung';
+  if(!base){b.innerHTML=qrSetupHTML();return}
+  const R=qrBuild(),Q=R.Q;
+  if(!Q){b.innerHTML=`<p class="msg bad">Data terlalu panjang untuk satu kode QR. Persingkat nama ${P?'posyandu atau nama balita':'kegiatan atau nama pengunjung'}.</p>`;return}
+  let who,steps,extra='';
+  if(K){const k=S.klien,R=calc();const nm=qrFull()?(k.nama||'–'):(inisial(k.nama)||'–');
+    who=`<b>${esc(nm)}</b> · ${k.jk==='P'?'Perempuan':'Laki-laki'}${R.u?' · '+R.u.y+' tahun':''}`;
+    steps=['Klien membuka <b>kamera HP</b> dan mengarahkannya ke kode.','Ketuk link yang muncul; ringkasan konseling dan anjuran makan tampil di HP.','Tekan <b>Simpan gambar</b> atau <b>Simpan PDF</b>.'];
+    extra='<p class="note">Yang ikut: data klien, hasil lab, jenis diet, dan total asupan recall. Catatan konselor dan rincian recall per bahan tidak ikut.</p>'}
+  else if(T){const p=tlP(),o=tlVisit(p,TL.vi);const nm=qrFull()?(p.nama||'–'):(inisial(p.nama)||'–');
+    who=`<b>${esc(nm)}</b> · ${p.jk==='P'?'Perempuan':'Laki-laki'}${o.m!=null?' · '+o.m+' bulan':''} · kunjungan ke-${o.no}`;
+    steps=['Orang tua membuka <b>kamera HP</b> dan mengarahkannya ke kode.','Ketuk link yang muncul; kartu MTG, dosis, jadwal kontrol, dan tanda bahaya tampil di HP.','Tekan <b>Simpan gambar</b> atau <b>Simpan PDF</b>.'];
+    extra=`<p class="note">Memuat <b>${R.nv} kunjungan</b> sejak anak masuk layanan${R.lite?' (nilai Hb kunjungan lama tidak ikut agar kode tetap mudah di-scan)':''}. Alamat dan catatan petugas tidak ikut.</p>`}
+  else if(P){const o=calcPosy();const nm=qrFull()?(PY.nama||'–'):(inisial(PY.nama)||'–');
+    who=`<b>${esc(nm)}</b> · ${PY.jk==='P'?'Perempuan':'Laki-laki'}${o.u?' · '+o.u.m+' bulan':''}`;
+    steps=['Orang tua membuka <b>kamera HP</b> dan mengarahkannya ke kode.',`Ketuk link yang muncul; hasil penimbangan${R.nh?' dan riwayatnya':''} tampil di HP.`,'Tekan <b>Simpan gambar</b> atau <b>Simpan PDF</b>.'];
+    extra=R.tot?`<p class="note">Termasuk riwayat <b>${R.nh} penimbangan sebelumnya</b>${R.nh<R.tot?` (${R.tot-R.nh} yang lebih lama tidak ikut agar kode tetap mudah di-scan)`:''}.</p>`:'<p class="note">Belum ada riwayat penimbangan sebelumnya untuk balita ini di perangkat ini, jadi yang tampil hasil hari ini saja.</p>'}
+  else{const c=PM.cur,o=calcPam(c);const nm=qrFull()?(c.nama||'–'):(inisial(c.nama)||'–');
+    who=`<b>${esc(nm)}</b> · ${c.jk==='P'?'Perempuan':'Laki-laki'}${o.u!=null?' · '+o.u+' tahun':''}`;
+    steps=['Pengunjung membuka <b>kamera HP</b> dan mengarahkannya ke kode.','Ketuk link yang muncul; hasil cek gizi dan contoh menu tampil di HP.','Tekan <b>Simpan gambar</b> atau <b>Simpan PDF</b>.']}
   b.innerHTML=`<div class="qr-img">${Q.svg}</div>
-   <p class="qr-who"><b>${esc(nm)}</b> · ${c.jk==='P'?'Perempuan':'Laki-laki'}${o.u!=null?' · '+o.u+' tahun':''}</p>
-   <div class="seg" role="group" aria-label="Nama yang tampil di HP pengunjung"><button type="button" data-qrname="0" aria-pressed="${!qrFull()}">Inisial saja</button><button type="button" data-qrname="1" aria-pressed="${qrFull()}">Nama lengkap</button></div>
-   <ol class="qr-steps"><li>Pengunjung membuka <b>kamera HP</b> dan mengarahkannya ke kode.</li><li>Ketuk link yang muncul; hasil cek gizi dan contoh menu tampil di HP.</li><li>Tekan <b>Simpan gambar</b> atau <b>Simpan PDF</b>.</li></ol>
-   <p class="note">Butuh kuota internet di HP pengunjung. Data hanya ada di kode ini dan di HP pengunjung; tidak disimpan di server.</p>
+   <p class="qr-who">${who}</p>
+   <div class="seg" role="group" aria-label="Nama yang tampil di HP"><button type="button" data-qrname="0" aria-pressed="${!qrFull()}">Inisial saja</button><button type="button" data-qrname="1" aria-pressed="${qrFull()}">Nama lengkap</button></div>
+   <ol class="qr-steps">${steps.map(t=>`<li>${t}</li>`).join('')}</ol>${extra}
+   <p class="note">Butuh kuota internet di HP ${K?'klien':P?'orang tua':'pengunjung'}. Data hanya ada di kode ini dan di HP ${K?'klien':P?'orang tua':'pengunjung'}; tidak disimpan di server.</p>
    <div class="exp-row"><button class="btn sm" type="button" data-qrcopy>Salin link</button><button class="btn sm" type="button" data-qrurledit>Ubah alamat halaman</button></div><p class="note" id="qrMsg" hidden></p>`}
-function openQr(){if(document.querySelector('#pamView input.inv')||calcPam(PM.cur).imtOdd!=null){msg('QR belum dibuat: ada data tidak wajar. Periksa kolom yang ditandai merah.');return}
-  if(!xReady()){msg('Isi umur, BB, dan TB pengunjung dulu.');return}
+function openQr(){const P=MODE==='posy',T=MODE==='tl';
+  if(MODE==='klinik'){const R=calc();if(R.imtOdd!=null||document.querySelector('#klinikView input.inv')){msg('QR belum dibuat: ada data tidak wajar. Periksa kolom yang ditandai merah.');return}
+    if(!R.imt||!R.u){msg('Isi tanggal lahir, tanggal kunjungan, BB, dan TB klien dulu.');return}
+    const em=document.getElementById('expModal');if(em)em.hidden=true;msg('');renderQr();QRM.hidden=false;const f=QRM.querySelector('[data-qrclose]');if(f)f.focus();return}
+  if(T){if(!xReady()){msg('Lengkapi tanggal lahir dan BB kunjungan dulu.');return}if(document.querySelector('#tlView input.inv')){msg('QR belum dibuat: ada data tidak wajar. Periksa kolom yang ditandai merah.');return}}
+  else if(document.querySelector(P?'#posyView input.inv':'#pamView input.inv')||(P?calcPosy():calcPam(PM.cur)).imtOdd!=null){msg('QR belum dibuat: ada data tidak wajar. Periksa kolom yang ditandai merah.');return}
+  if(!T&&!xReady()){msg(P?'Isi tanggal lahir, tanggal penimbangan, dan berat badan balita dulu.':'Isi umur, BB, dan TB pengunjung dulu.');return}
   msg('');renderQr();QRM.hidden=false;const f=QRM.querySelector('[data-qrclose]');if(f)f.focus()}
 function syncQrSet(){const el=document.getElementById('set-qr');if(el&&document.activeElement!==el)el.value=setGet().qr||''}
 document.addEventListener('click',e=>{const t=e.target;
@@ -3190,7 +3249,7 @@ document.addEventListener('click',e=>{const t=e.target;
   if(t.closest('[data-qrurlsave]')){const v=document.getElementById('qrUrlIn').value.trim().split('#')[0];
     if(!/^https:\/\/\S+$/i.test(v)){document.getElementById('qrBody').innerHTML=qrSetupHTML('Alamat harus diawali https://');return}
     setPut({qr:v});syncQrSet();renderQr();return}
-  if(t.closest('[data-qrcopy]')){const link=qrBase()+'#q='+qrPayload();const m=document.getElementById('qrMsg');
+  if(t.closest('[data-qrcopy]')){const link=qrBuild().link;const m=document.getElementById('qrMsg');
     const done=ok=>{m.hidden=false;m.textContent=ok?'Link disalin. Tempel di peramban untuk menguji.':link};
     try{navigator.clipboard.writeText(link).then(()=>done(true),()=>done(false))}catch(err){done(false)}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!QRM.hidden)QRM.hidden=true});
@@ -3203,39 +3262,131 @@ function blobDataURL(b){return new Promise(r=>{const f=new FileReader();f.onload
 async function vSave(blob,name){const f=new File([blob],name,{type:blob.type});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Hasil Cek Gizi'});return 'share'}}catch(e){if(e&&e.name==='AbortError')return 'abort'}
   try{const u=URL.createObjectURL(blob);const x=document.createElement('a');x.href=u;x.download=name;document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);return 'dl'}catch(e){return 'fail'}}
-function startViewer(q){window.KG_NOFLUSH=true;try{clearTimeout(saveT)}catch(e){}
-  let a=null;try{a=qrDecode(q)}catch(e){}
-  const logo=document.querySelector('img.inst').src;
-  document.body.insertAdjacentHTML('beforeend',`<main id="viewView" class="vv"><div class="vv-wrap"><header class="vv-h"><img src="${logo}" alt="Kemenkes Poltekkes Makassar"><div><b>Hasil Cek Gizi</b><small id="vvSub">Layanan gizi pameran</small></div></header><div id="vvBody"></div>
+function vShell(t){const logo=document.querySelector('img.inst').src;
+  document.body.insertAdjacentHTML('beforeend',`<main id="viewView" class="vv"><div class="vv-wrap"><header class="vv-h"><img src="${logo}" alt="Kemenkes Poltekkes Makassar"><div><b id="vvT">${esc(t)}</b><small id="vvSub"></small></div></header><div id="vvBody"></div>
     <footer class="note vv-f">Data hanya ada di HP Anda dan tidak disimpan di server. Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</footer></div></main>`);
-  document.body.dataset.mode='view';document.title='Hasil Cek Gizi';
-  const body=document.getElementById('vvBody');
-  const bad=t=>{body.innerHTML=`<p class="msg bad">${t}</p><p class="note">Minta petugas menampilkan ulang kode QR, lalu scan sekali lagi.</p>`};
-  if(!a){bad('Kode QR tidak terbaca atau rusak.');return}
-  const [,tgl,ev,ptg,ctg,...f]=a;window.CTG_OV=(+ctg>=20&&+ctg<=300)?+ctg:0;
-  PM=mblank({nama:ev,tgl:/^\d{4}-\d\d-\d\d$/.test(tgl)?tgl:today(),ptg});const c=cblank();QR_F.forEach((k,i)=>{if(f[i])c[k]=f[i]});PM.cur=c;
-  const o=calcPam(c);if(!o.imt){bad('Data di kode QR belum lengkap.');return}
-  document.getElementById('vvSub').textContent=[ev||'Layanan gizi pameran',tglID(PM.ev.tgl)].join(' · ');
-  const base=`${slug(c.nama||'pengunjung')}_${PM.ev.tgl}`,hasMenu=!!menuPam(c,o);
-  body.innerHTML=`<p class="vv-hi">Hasil untuk <b>${esc(c.nama||'Pengunjung')}</b><br>Simpan ke HP agar bisa dilihat lagi kapan saja.</p>
-   <div class="vv-btns"><button class="btn primary" type="button" data-vsave="a" disabled>Simpan gambar hasil</button>${hasMenu?'<button class="btn" type="button" data-vsave="b" disabled>Simpan gambar menu</button>':''}<button class="btn" type="button" data-vsave="pdf">Simpan PDF (hasil + menu)</button></div>
+  document.body.dataset.mode='view';document.title=t;return document.getElementById('vvBody')}
+function vBad(body,t){body.innerHTML=`<p class="msg bad">${t}</p><p class="note">Minta petugas menampilkan ulang kode QR, lalu scan sekali lagi.</p>`}
+// cfg: {hi, imgs:[{k,btn,alt,card}], pdfBtn, pdf, file(k)}
+function vRun(body,cfg){
+  body.innerHTML=`<p class="vv-hi">${cfg.hi}<br>Simpan ke HP agar bisa dilihat lagi kapan saja.</p>
+   <div class="vv-btns">${cfg.imgs.map((m,i)=>`<button class="btn${i?'':' primary'}" type="button" data-vsave="${m.k}" disabled>${m.btn}</button>`).join('')}<button class="btn" type="button" data-vsave="pdf">${cfg.pdfBtn}</button></div>
    <p class="vv-st" id="vvSt" role="status">Menyiapkan gambar…</p>
-   <figure><img id="vvA" alt="Gambar hasil cek gizi"><figcaption>Bila tombol tidak berfungsi, tekan lama gambar lalu pilih <b>Simpan gambar</b> / <b>Download image</b>.</figcaption></figure>
-   ${hasMenu?'<figure><img id="vvB" alt="Gambar contoh menu sehari"></figure>':''}`;
+   ${cfg.imgs.map((m,i)=>`<figure><img id="vv${m.k.toUpperCase()}" alt="${m.alt}">${i?'':'<figcaption>Bila tombol tidak berfungsi, tekan lama gambar lalu pilih <b>Simpan gambar</b> / <b>Download image</b>.</figcaption>'}</figure>`).join('')}`;
   const V={},st=document.getElementById('vvSt'),say=t=>{st.textContent=t};
-  (async()=>{try{V.a=await specCard(pamCard());document.getElementById('vvA').src=await blobDataURL(V.a);
-      if(hasMenu){V.b=await specCard(menuCard());document.getElementById('vvB').src=await blobDataURL(V.b)}
+  (async()=>{try{for(const m of cfg.imgs){V[m.k]=m.make?await m.make():await specCard(m.card());document.getElementById('vv'+m.k.toUpperCase()).src=await blobDataURL(V[m.k])}
       body.querySelectorAll('[data-vsave]').forEach(x=>x.disabled=false);say('Siap disimpan.')}
     catch(e){console.error(e);say('Gambar gagal dibuat. Coba muat ulang halaman.')}})();
   body.addEventListener('click',async e=>{const b=e.target.closest('[data-vsave]');if(!b||b.disabled)return;const k=b.dataset.vsave,t0=b.textContent;
     b.disabled=true;b.textContent='Menyiapkan…';
-    try{let blob,name;
-      if(k==='pdf'){blob=await specPdf(pamSpec());name=`Cek-Gizi_${base}.pdf`}else{blob=V[k];name=`${k==='a'?'Cek-Gizi':'Menu-Sehari'}_${base}.jpg`}
-      const r=await vSave(blob,name);
+    try{const blob=k==='pdf'?await specPdf(cfg.pdf()):V[k];const r=await vSave(blob,cfg.file(k));
       say(r==='share'?'Terkirim lewat menu bagikan.':r==='dl'?'File disimpan ke folder Unduhan. Bila tidak muncul, tekan lama gambar lalu pilih Simpan gambar.':r==='abort'?'Dibatalkan.':'Tidak bisa menyimpan otomatis. Tekan lama gambar lalu pilih Simpan gambar.')}
     catch(err){console.error(err);say(k==='pdf'?'PDF gagal dibuat (periksa koneksi internet). Simpan gambar saja.':'Gagal menyimpan. Tekan lama gambar lalu pilih Simpan gambar.')}
-    finally{b.disabled=false;b.textContent=t0}});
-}
+    finally{b.disabled=false;b.textContent=t0}})}
+function startViewer(q){window.KG_NOFLUSH=true;try{clearTimeout(saveT)}catch(e){}
+  let a=null;try{a=qrDecode(q)}catch(e){}
+  if(a&&a[0]==='P1'){viewPosy(a);return}
+  if(a&&a[0]==='T1'){viewTl(a);return}
+  if(a&&a[0]==='K1'){viewKlinik(a);return}
+  const body=vShell('Hasil Cek Gizi');document.getElementById('vvSub').textContent='Layanan gizi pameran';
+  if(!a){vBad(body,'Kode QR tidak terbaca atau rusak.');return}
+  const [,tgl,ev,ptg,ctg,...f]=a;window.CTG_OV=(+ctg>=20&&+ctg<=300)?+ctg:0;
+  PM=mblank({nama:ev,tgl:/^\d{4}-\d\d-\d\d$/.test(tgl)?tgl:today(),ptg});const c=cblank();QR_F.forEach((k,i)=>{if(f[i])c[k]=f[i]});PM.cur=c;
+  const o=calcPam(c);if(!o.imt){vBad(body,'Data di kode QR belum lengkap.');return}
+  document.getElementById('vvSub').textContent=[ev||'Layanan gizi pameran',tglID(PM.ev.tgl)].join(' · ');
+  const base=`${slug(c.nama||'pengunjung')}_${PM.ev.tgl}`,hasMenu=!!menuPam(c,o);
+  vRun(body,{hi:`Hasil untuk <b>${esc(c.nama||'Pengunjung')}</b>`,
+    imgs:[{k:'a',btn:'Simpan gambar hasil',alt:'Gambar hasil cek gizi',card:()=>pamCard()},...(hasMenu?[{k:'b',btn:'Simpan gambar menu',alt:'Gambar contoh menu sehari',card:()=>menuCard()}]:[])],
+    pdfBtn:'Simpan PDF (hasil + menu)',pdf:()=>pamSpec(),file:k=>k==='pdf'?`Cek-Gizi_${base}.pdf`:`${k==='a'?'Cek-Gizi':'Menu-Sehari'}_${base}.jpg`})}
+
+/* --- Penampil Klinik --- */
+function klinikMenuCard(D){const k=S.klien;
+  return {title:'Anjuran Makan Sehari',date:tglID(k.tglk),name:k.nama||'Klien',line:`${D.nama} · ±${fmt(D.E)} kkal`,
+    lists:[...D.meals.map(m=>({h:`${m.lab.toUpperCase()}${m.time?' · '+m.time:''}`,items:m.rows.map(r=>`${r.g}: ${r.u}`)})),
+      ...(D.ok&&D.ok.length?[{h:'DIANJURKAN',items:D.ok.slice(0,8),tone:'ok'}]:[]),...(D.no&&D.no.length?[{h:'HINDARI / BATASI',items:D.no.slice(0,8),tone:'bad'}]:[]),...(D.ingat&&D.ingat.length?[{h:'INGAT',items:D.ingat.slice(0,8),tone:'warn'}]:[])],
+    foot:[`Konselor: ${k.kons||'–'}`,'Aplikasi Konsultasi Gizi · Poltekkes Kemenkes Makassar']}}
+function klinikPatientSpec(){const R=calc(),t=totals(),T=R.T,k=S.klien,D=dietPlan();
+  const sec=[{h:'A. Identitas & status gizi',kv:[['Nama','<b>'+esc(k.nama||'–')+'</b>'],['Jenis kelamin',k.jk==='P'?'Perempuan':'Laki-laki'],['Umur',R.u?R.u.y+' tahun':'–'],['Tanggal kunjungan',tglID(k.tglk)],
+    ['BB / TB',`${R.bb?fmt(R.bb,1):'–'} kg / ${R.tb?fmt(R.tb,1):'–'} cm${R.tbEst?' (estimasi tinggi lutut)':''}`],['IMT',R.imt?`<b>${fmt(R.imt,1)}</b>${R.kat?' · '+R.kat[0]:''}`:'–'],
+    ...(R.fis==='hamil'?[['Usia kehamilan',R.uk?R.uk+' minggu':'–'],['LiLA',R.lila!=null?fmt(R.lila,1)+' cm'+(R.kek?' (KEK)':''):'–']]:[['BB ideal',R.bbi?fmt(R.bbi,1)+' kg':'–'],['Rentang BB normal',R.bbMin?fmt(R.bbMin,1)+'–'+fmt(R.bbMax,1)+' kg':'–']]),
+    ...(R.lpStat?[['Lingkar perut',fmt(R.lp,1)+' cm · '+R.lpStat[0]],['','']]:[])]}];
+  if(t.n){const rows=NUT.filter(n=>n.cls).map(n=>{const v=t.t[n.k],tg=T[n.k],pc=tg?v/tg*100:null;return [n.l,`${fmt(v,n.d)} ${n.u}`,tg?`${fmt(tg,n.d)} ${n.u}`:'–',pc!=null?fmt(pc)+'%':'–',pc!=null?klas(pc,n.cls)[0]:'–']});
+    sec.push({h:'B. Kebutuhan dan asupan sehari (recall 24 jam)',table:{head:['Zat gizi','Asupan','Kebutuhan','%','Kategori'],rows}})}
+  else sec.push({h:'B. Kebutuhan sehari',kv:[['Energi',T.energi?fmt(T.energi)+' kkal':'–'],['Protein',T.protein?fmt(T.protein,1)+' g':'–']]});
+  const L=S.lab,labR=Object.values(LABI).map(x=>{const v=num(L[x.k]);if(v==null)return null;const st=x.st(v,k.jk);return [x.l,`${fmt(v,v%1?1:0)} ${x.u}`,st[0]]}).filter(Boolean);
+  const bs=bpStat(num(L.sis),num(L.dia));if(bs)labR.unshift(['Tekanan darah',`${L.sis||'–'}/${L.dia||'–'} mmHg`,bs[0]]);
+  if(labR.length)sec.push({h:`${String.fromCharCode(65+sec.length)}. Hasil laboratorium & klinis`,table:{head:['Pemeriksaan','Hasil','Keterangan'],rows:labR}});
+  if(t.n){const E=t.t.energi||1;const ip=interpret(R,t,[t.t.protein*4/E*100,t.t.lemak*9/E*100,t.t.kh*4/E*100]).filter(x=>!/^Natrium dihitung/.test(x));if(ip.length)sec.push({h:`${String.fromCharCode(65+sec.length)}. Hasil kajian`,list:ip})}
+  if(D){sec.push({h:`${String.fromCharCode(65+sec.length)}. Saran diet: ${D.nama} (±${fmt(D.E)} kkal)`,table:{head:['Waktu makan','Bahan makanan','Porsi'],rows:D.meals.flatMap(m=>m.rows.map((r,i)=>[i?'':m.lab+(m.time?' ('+m.time+')':''),r.g,r.u]))},note:D.note});
+    if(D.no&&D.no.length)sec.push({h:`${String.fromCharCode(65+sec.length)}. Hindari / batasi`,list:D.no});
+    if(D.ingat&&D.ingat.length)sec.push({h:`${String.fromCharCode(65+sec.length)}. Ingat`,list:D.ingat})}
+  return {title:'RINGKASAN KONSELING GIZI',sub:'Untuk klien · Konseling gizi',dateL:'Tanggal kunjungan: '+tglID(k.tglk),sections:sec,sign:[['Klien',k.nama],['Konselor',k.kons]],
+    foot:'Data: Tabel Komposisi Pangan Indonesia 2017; AKG 2019 (Permenkes No. 28/2019); Daftar Bahan Makanan Penukar (Depkes RI, 2006).<br>Aplikasi Konsultasi Gizi, dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.'}}
+function viewKlinik(a){const body=vShell('Ringkasan Konseling Gizi');
+  const [,kv,lab,dt,tot,slot]=a;const K=qrKvP(kv),Lb=qrKvP(lab),Dt=qrKvP(dt);
+  S=blank();Object.assign(S.klien,K);S.lab=Lb;S.catatan='';
+  const sel=Object.fromEntries(String(Dt.sel||'').split('.').filter(x=>DLIST.includes(x)).map(x=>[x,true]));
+  S.diet=Object.assign(S.diet,{touched:Dt.t==='1',sel,E:Dt.E||'',na:Dt.na||'2300',pen:Dt.pen==='1'});
+  if(tot){const v=tot.split(','),n=+v[0]||0,tt={},miss={},sl={};NUT.forEach((x,i)=>{tt[x.k]=+(v[i+1]||0);miss[x.k]=0});const sv=String(slot||'').split(',');SLOTS.forEach(([sk],i)=>{sl[sk]=+(sv[i]||0)});
+    window.TOT_OV={t:tt,miss,slot:sl,n,contrib:[],flagged:[]}}
+  else window.TOT_OV={t:Object.fromEntries(NUT.map(x=>[x.k,0])),miss:Object.fromEntries(NUT.map(x=>[x.k,0])),slot:Object.fromEntries(SLOTS.map(([sk])=>[sk,0])),n:0,contrib:[],flagged:[]};
+  const R=calc();if(!R.imt){vBad(body,'Data di kode QR belum lengkap.');return}
+  document.getElementById('vvSub').textContent=['Konseling gizi',tglID(S.klien.tglk)].join(' · ');
+  const D=dietPlan(),base=`${slug(S.klien.nama||'klien')}_${S.klien.tglk}`;
+  vRun(body,{hi:`Hasil konseling untuk <b>${esc(S.klien.nama||'Klien')}</b>`,
+    imgs:[{k:'a',btn:'Simpan gambar ringkasan',alt:'Gambar ringkasan konseling gizi',make:()=>buildCard()},...(D?[{k:'b',btn:'Simpan gambar anjuran makan',alt:'Gambar anjuran makan sehari',card:()=>klinikMenuCard(D)}]:[])],
+    pdfBtn:'Simpan PDF ringkasan',pdf:()=>klinikPatientSpec(),file:k=>k==='pdf'?`Ringkasan-Konseling_${base}.pdf`:`${k==='a'?'Ringkasan-Konseling':'Anjuran-Makan'}_${base}.jpg`})}
+
+/* --- Penampil Tata Laksana Gizi Buruk --- */
+const TL_BAHAYA=['Anak tidak mau makan sama sekali, termasuk MTG.','Muntah terus-menerus, atau diare dan anak tampak sangat lemas.','Anak sangat lemas, mengantuk terus, atau sulit dibangunkan.','Kejang.','Demam tinggi.','Napas cepat atau sesak.','Bengkak di kaki atau tubuh bertambah, atau muncul bengkak baru.'];
+function tlHistCard(){const p=tlP(),all=tlAll(p).slice(0,TL.vi+1),o=all[all.length-1];
+  return {title:all.length>1?'Riwayat & Tanda Bahaya':'Tanda Bahaya',date:tglID(o.v.tgl),name:p.nama||'Balita',line:[p.jk==='P'?'Perempuan':'Laki-laki',`${all.length} kali kunjungan`,TL.pkm||null].filter(Boolean).join(' · '),
+    rows:all.length>1?{h:'PERKEMBANGAN SETIAP KUNJUNGAN',items:all.slice().reverse().map(x=>{const c=x.gb?['Gizi buruk','p-bad']:x.gk?['Gizi kurang','p-warn']:(x.z!=null||x.lila!=null)?['Gizi baik','p-ok']:null;
+      return {l:`Ke-${x.no} · ${tglID(x.v.tgl)}`,v:`${x.bb?fmt(x.bb,1)+' kg':'–'}${x.lila!=null?' · LiLA '+fmt(x.lila,1):''}`,pill:c?[c[0]+(x.dose?` · ${frB(x.dose.d)} bks/hari`:''),c[1]]:null}})}:null,
+    lists:[{h:'SEGERA BAWA KE PUSKESMAS BILA',items:TL_BAHAYA,tone:'bad'},{h:'INGAT',items:['Datang kontrol setiap minggu sesuai jadwal; bawa bungkus MTG yang kosong maupun sisa.','MTG diberikan sampai petugas menyatakan anak sembuh, walaupun anak sudah terlihat membaik.']}],
+    foot:[`Petugas: ${TL.ptg||'–'}${TL.pkm?' · '+TL.pkm:''}`,'Aplikasi Konsultasi Gizi · Poltekkes Kemenkes Makassar']}}
+function viewTl(a){const body=vShell('Kartu Makanan Terapi Gizi');
+  const [,pkm,ptg,nama,ibu,jk,lahir,status,vis]=a;const dm=/^(\d{4})-(\d\d)-(\d\d)$/.exec(lahir||'');const ok=d=>/^\d{4}-\d\d-\d\d$/.test(d||'');
+  const visits=String(vis||'').split(';').filter(Boolean).map(r=>{const [d,bb,tb,c,lila,hb,ed,komp,nf,kl,sisa,kk]=r.split(',');
+    return Object.assign(vblank(`20${(d||'').slice(0,2)}-${(d||'').slice(2,4)}-${(d||'').slice(4,6)}`),{bb:bb||'',tb:tb||'',cara:c==='b'?'baring':c==='d'?'diri':'',lila:lila||'',hb:hb||'',edema:ed||'0',
+      komp:komp?komp.split('+').filter(k=>KOMPN[k]):[],nafsu:nf==='l'?'lulus':nf==='g'?'gagal':'',klinis:kl==='b'?'buruk':'baik',sisa:sisa||'',kkal:kk||'150'})}).filter(v=>ok(v.tgl));
+  const p=Object.assign(pblankTL(),{nama:nama||'',ibu:ibu||'',jk:jk==='P'?'P':'L',dob:dm?{d:String(+dm[3]),m:String(+dm[2]),y:dm[1]}:{d:'',m:'',y:''},status:STATN[status]?status:'aktif',visits});
+  TL=Object.assign(tlblank(),{pkm:pkm||'',ptg:ptg||'',list:[p],cur:0,vi:Math.max(0,visits.length-1)});
+  if(!visits.length||!dobStr(p.dob)||!tlVisit(p,TL.vi).bb){vBad(body,'Data di kode QR belum lengkap.');return}
+  const o=tlVisit(p,TL.vi);document.getElementById('vvSub').textContent=[pkm||'Rawat jalan gizi buruk',tglID(o.v.tgl)].join(' · ');
+  const base=`${slug(p.nama||'balita')}_${o.v.tgl}`,h=visits.length>1;
+  vRun(body,{hi:`Kartu MTG untuk <b>${esc(p.nama||'balita')}</b> · kunjungan ke-${o.no}`,
+    imgs:[{k:'a',btn:'Simpan gambar kartu MTG',alt:'Gambar kartu makanan terapi gizi',card:()=>tlCard()},{k:'b',btn:h?'Simpan gambar riwayat & tanda bahaya':'Simpan gambar tanda bahaya',alt:'Gambar riwayat kunjungan dan tanda bahaya',card:()=>tlHistCard()}],
+    pdfBtn:'Simpan PDF kartu status',pdf:()=>tlSpec(),file:k=>k==='pdf'?`Kartu-Status-GB_${base}.pdf`:`${k==='a'?'Kartu-MTG':'Tanda-Bahaya-MTG'}_${base}.jpg`})}
+
+/* --- Penampil Posyandu --- */
+function posyHistData(H,oc){const p={dob:PY.dob,jk:PY.jk};
+  const all=H.map(v=>({...v,o:withPY({...p,tglu:v.tglu,bb:v.bb,tb:v.tb,cara:v.cara},()=>calcPosy())})).concat([{tglu:PY.tglu,bb:PY.bb,tb:PY.tb,nt:(oc.nt&&oc.nt.s)||'',o:oc,cur:true}]);
+  return all.map(v=>{const z=k=>{const x=(v.o.idx||[]).find(i=>i.k===k);return x&&x.z!=null?x:null};return {...v,m:v.o.u?v.o.u.m:null,L:v.o.L,bbu:z('bbu'),pbu:z('pbu'),bbpb:z('bbpb')}})}
+function posyHistCard(R){const worst=(...c)=>c.includes('p-bad')?'p-bad':c.includes('p-warn')?'p-warn':'p-ok';
+  return {title:'Riwayat Penimbangan',date:tglID(PY.tglu),name:PY.nama||'Balita',line:[PY.jk==='P'?'Perempuan':'Laki-laki',`${R.length} kali penimbangan`,PY.pos||null].filter(Boolean).join(' · '),
+    rows:{h:'BERAT DAN PANJANG/TINGGI BADAN',items:R.slice().reverse().map(v=>{const nt=v.nt==='N'?'Naik':v.nt==='T'?'Tidak naik':'';const c=v.bbu&&v.bbu.c;const t=[nt,c?c[0]:''].filter(Boolean).join(' · ');
+      return {l:`${tglID(v.tglu)}${v.m!=null?' · '+v.m+' bln':''}`,v:`${fmt(num(v.bb),1)} kg${v.L?' · '+fmt(v.L,1)+' cm':''}`,pill:t?[t,worst(v.nt==='T'?'p-warn':'p-ok',c?c[1]:'p-ok')]:null}})},
+    lists:[{h:'CATATAN',items:['Naik: berat badan bertambah minimal sebesar kenaikan berat badan minimal (KBM) di Buku KIA. Tidak naik: kurang dari KBM.','Kategori di setiap baris adalah berat badan menurut umur (BB/U), Permenkes No. 2 Tahun 2020.','Bawa anak ke posyandu setiap bulan untuk ditimbang dan diukur.']}],
+    foot:[`Petugas: ${PY.ptg||'–'}`,'Permenkes No. 2/2020 · Buku KIA · Poltekkes Kemenkes Makassar']}}
+function posyHistSec(R,n){const z=x=>x?pmI(x.z):'–';
+  return {h:`${String.fromCharCode(65+n)}. Riwayat penimbangan`,table:{head:['Tanggal','Umur (bln)','BB (kg)','PB/TB (cm)','BB/U','PB/U','BB/PB','N/T'],
+    rows:R.map(v=>[tglID(v.tglu),v.m!=null?String(v.m):'–',fmt(num(v.bb),1),v.L?fmt(v.L,1):'–',z(v.bbu),z(v.pbu),z(v.bbpb),v.nt||'–'].map(String))},
+    note:'Z-skor dalam SD menurut Permenkes No. 2 Tahun 2020. N = naik, T = tidak naik (KBM Buku KIA). Baris terakhir adalah penimbangan hari ini.'}}
+function viewPosy(a){const body=vShell('Hasil Penimbangan Balita');
+  const [,tglu,pos,ptg,nama,ibu,jk,lahir,bb,tb,cara,lila,bbl,sakit,kel,bhy,hist]=a;const ok=d=>/^\d{4}-\d\d-\d\d$/.test(d||'');const cr=c=>c==='b'?'baring':c==='d'?'diri':'';
+  const dm=/^(\d{4})-(\d\d)-(\d\d)$/.exec(lahir||'');
+  PY=Object.assign(pblank(),{tglu:ok(tglu)?tglu:today(),pos:pos||'',ptg:ptg||'',nama:nama||'',ibu:ibu||'',jk:jk==='P'?'P':'L',dob:dm?{d:String(+dm[3]),m:String(+dm[2]),y:dm[1]}:{d:'',m:'',y:''},
+    bb:bb||'',tb:tb||'',cara:cr(cara),lila:lila||'',bbl:bbl||'',sakit:sakit==='1',kel:kel?kel.split(','):[],bhy:bhy?bhy.split(','):[]});
+  document.getElementById('vvSub').textContent=[pos||'Posyandu',tglID(PY.tglu)].join(' · ');
+  const o=calcPosy();if(!(o.idx||[]).some(x=>x.z!=null)){vBad(body,'Data di kode QR belum lengkap.');return}
+  const H=String(hist||'').split(';').filter(Boolean).map(r=>{const [d,b,t,c,s]=r.split(',');return {tglu:`20${(d||'').slice(0,2)}-${(d||'').slice(2,4)}-${(d||'').slice(4,6)}`,bb:b||'',tb:t||'',cara:cr(c),nt:s||''}})
+    .filter(v=>ok(v.tglu)&&v.tglu<PY.tglu&&num(v.bb));
+  const R=H.length?posyHistData(H,o):null,base=`${slug(PY.nama||'balita')}_${PY.tglu}`;
+  vRun(body,{hi:`Hasil penimbangan <b>${esc(PY.nama||'balita')}</b>`,
+    imgs:[{k:'a',btn:'Simpan gambar hasil',alt:'Gambar hasil penimbangan balita',card:()=>posyCard()},...(R?[{k:'b',btn:'Simpan gambar riwayat',alt:'Gambar riwayat penimbangan',card:()=>posyHistCard(R)}]:[])],
+    pdfBtn:R?'Simpan PDF (hasil + riwayat)':'Simpan PDF',pdf:()=>{const sp=posySpec();if(R)sp.sections.push(posyHistSec(R,sp.sections.length));return sp},
+    file:k=>k==='pdf'?`Hasil-Posyandu_${base}.pdf`:`${k==='a'?'Hasil-Posyandu':'Riwayat-Posyandu'}_${base}.jpg`})}
 
 function buildReport(){if(MODE==='posy'||MODE==='pam'||MODE==='tl'){document.getElementById('report').innerHTML=specHTML(xSpec());return}buildReportKlinik()}
 const cardName=()=>MODE!=='klinik'&&CARDNAME?CARDNAME:fileBase('Ringkasan-Gizi')+'.jpg';
