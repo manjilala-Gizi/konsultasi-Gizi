@@ -298,6 +298,23 @@ fieldset.komp small{color:var(--muted);font-size:12px}
 .kchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;padding:3px 0;cursor:pointer}
 .kchk input{width:18px;height:18px;margin-top:1px;accent-color:var(--bad);flex:none}
 #tlWork[hidden]{display:none!important}
+.minirow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.minirow .btn{flex:1}.mode .act .minirow .btn{padding:6px 10px;font-size:13px;font-weight:600}
+.dmodal .modal-c{max-width:860px}.dm-b{padding:14px 16px 18px;overflow:auto}
+.rk-ctl{display:grid;gap:10px}.rk-dates{display:flex;gap:10px;flex-wrap:wrap}.rk-dates label{display:grid;gap:3px;font-size:12px;font-weight:600;color:var(--muted)}
+.rk-dates input,.rk-dates select{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;font-size:13.5px}
+.db-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.db-stats div{background:var(--surface-2);border-radius:10px;padding:9px 11px;display:grid;line-height:1.25}
+.db-stats b{font-size:20px;font-weight:800}.db-stats span{font-size:12.5px;font-weight:600}.db-stats small{font-size:11px;color:var(--muted)}
+#klinikView .panel-h .exp-row,#posyView .panel-h .exp-row{gap:6px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.webban{background:#FBEFD5;border-top:1px solid #E9C987;color:#5a3d07}.webban[hidden]{display:none}
+.webban-in{display:flex;align-items:center;gap:10px;padding-block:7px;flex-wrap:wrap}
+.webban p{margin:0;font-size:13.5px;line-height:1.35;flex:1 1 260px}.wb-ic{font-size:18px}
+.wb-act{display:flex;gap:6px;align-items:center}.wb-x{border:0;background:transparent;font-size:22px;line-height:1;color:#5a3d07;cursor:pointer;padding:2px 6px;border-radius:6px}
+.wb-x:focus-visible{outline:2px solid var(--accent)}
+.webtoast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;max-width:min(560px,calc(100vw - 24px));background:#5a3d07;color:#fff;border-radius:12px;padding:10px 12px 10px 14px;display:flex;gap:10px;align-items:center;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:all .25s}
+.webtoast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}.webtoast .btn{background:#fff;color:#5a3d07;border:0;white-space:nowrap}
+.db-web{background:#FBEFD5;border:1px solid #E9C987;border-radius:10px;padding:10px 12px;margin-bottom:12px;color:#4a3306;font-size:13.5px}.db-web p{margin:4px 0 0}
+@media (prefers-color-scheme:dark){.webban{background:#3a2c10;border-color:#6b5320;color:#f3dfb5}.wb-x{color:#f3dfb5}.db-web{background:#3a2c10;border-color:#6b5320;color:#f3dfb5}}
 .xbtn{display:none!important}.can-print .xbtn{display:block!important}.can-print button.xbtn{display:inline-flex!important}
 .btn.sm{padding:4px 9px;font-size:12px}
 .seg button{white-space:nowrap}
@@ -449,6 +466,7 @@ body[data-mode="home"] .modetag{display:none}
         <ul><li>Kriteria gizi buruk (z-skor, LiLA, edema)</li><li>Tanda bahaya, tes nafsu makan, rujuk rawat inap</li><li>Dosis MTG per BB, kunjungan mingguan, kriteria sembuh</li><li>Kartu status (PDF), kartu MTG (JPG), rekap Excel</li></ul>
         <div class="act" id="actTl"></div></article>
     </div>
+    <section class="panel" id="dataPanel"><div class="panel-h"><h2>Data &amp; cadangan</h2><span class="hint">Tersimpan di perangkat ini</span></div><div class="panel-b" id="dataBox"></div></section>
     <div class="home-tools"><button class="ref-btn" id="btnPenHome" type="button" aria-haspopup="dialog" aria-controls="penDrawer" style="margin:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7M8 11h5"/></svg>Daftar Bahan Makanan Penukar</button></div>
     <div class="home-more">
       <details><summary>Cara penggunaan</summary><div class="db">
@@ -472,7 +490,11 @@ body[data-mode="home"] .modetag{display:none}
         <li>Bila gizi buruk tanpa tanda bahaya, lakukan tes nafsu makan; aplikasi menampilkan jumlah minimal MTG. Lulus → rawat jalan, dosis MTG muncul; tidak lulus atau ada komplikasi → rujuk rawat inap (SOP rawat inap).</li>
         <li>Setiap minggu tekan <b>Kunjungan berikutnya</b>: isi BB, LiLA, edema, kondisi klinis, dan sisa bungkus MTG. Kenaikan BB, persentase MTG dimakan, tindak lanjut, dosis baru, dan kriteria sembuh dihitung otomatis.</li>
         <li>Cetak kartu status (PDF) atau kartu MTG untuk orang tua (JPG); unduh rekap Excel untuk laporan.</li></ol>
-        <p>Data tersimpan di perangkat ini saja. Gunakan <b>Konseling baru</b> atau <b>Balita baru</b> untuk mengosongkan isian.</p>
+        <h3>Riwayat, rekap, dan cadangan</h3>
+        <ul><li>Setiap klien Klinik, balita Posyandu, dan kegiatan Pameran tersimpan otomatis di perangkat ini. Buka kembali lewat tombol <b>Riwayat</b> (Pameran: <b>Arsip</b>). Di Posyandu, <b>Timbang lagi</b> membuka penimbangan baru dengan BB terakhir sebagai BB bulan lalu.</li>
+        <li><b>Rekap</b> tersedia di setiap mode: pilih periode, lihat ringkasan, lalu unduh Excel.</li>
+        <li><b>Data &amp; cadangan</b> di Beranda: <b>Cadangkan data</b> membuat satu file .json berisi semua data; <b>Pulihkan data</b> membuka file itu di HP/laptop lain (<b>Gabungkan</b> atau <b>Ganti semua</b>). Buat cadangan secara rutin.</li>
+        <li>Agar data tidak terhapus otomatis, pasang aplikasi di HP/laptop (Instal aplikasi / Tambahkan ke layar utama).</li></ul>
       </div></details>
       <details><summary>Referensi</summary><div class="db">
         <h3>Komposisi pangan &amp; kebutuhan gizi</h3>
@@ -501,7 +523,7 @@ body[data-mode="home"] .modetag{display:none}
         <div class="field" style="max-width:280px"><label for="set-ctg">Berat 1 centong nasi</label><div class="unit"><input id="set-ctg" type="number" inputmode="numeric" min="20" max="300" step="5"><span>gram</span></div><small id="ctgNote">Dipakai di anjuran makan klien dan pilihan URT recall. Bawaan 50 g.</small></div>
       </div></details>
       <details><summary>Tentang &amp; cara pasang</summary><div class="db">
-        <p><b>Konsultasi Gizi</b> versi 1.6 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
+        <p><b>Konsultasi Gizi</b> versi 1.7 · dikembangkan oleh Manjilala, Poltekkes Kemenkes Makassar.</p>
         <p>Aplikasi ini alat bantu; keputusan klinis tetap pada tenaga gizi/tenaga kesehatan.</p>
         <h3>Cara pasang</h3>
         <ul><li><b>Google Sites</b>: Sisipkan → Sematkan → Kode sematan → tempel isi index.html.</li>
@@ -928,7 +950,7 @@ for(const [sk] of SLOTS){const r=S.recall[sk]||(S.recall[sk]={menus:[]});
   if(!Array.isArray(r.menus)){const its=r.items||[];r.menus=its.length?[{name:(r.note||'').trim()||'Menu 1',items:its}]:[];delete r.items;delete r.note}}
 if(!S.lab)S.lab={};if(!S.diet)S.diet={sel:{dm:false,rg:false},touched:false,E:'',pen:false};
 const itemsOf=sk=>S.recall[sk].menus.flatMap(m=>m.items);
-let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('kg-v1',JSON.stringify(S))}catch(e){}},250)}
+let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{histK();try{localStorage.setItem('kg-v1',JSON.stringify(S))}catch(e){}},250)}
 
 /* ===== Perhitungan ===== */
 const fmt=(v,d=0)=>v==null||isNaN(v)?'–':Number(v).toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -1990,26 +2012,32 @@ function renderHome(){
   const k=document.getElementById('actKlinik');
   if(hasKlinik()){k.innerHTML=`<button class="btn primary" type="button" id="kLanjut">Lanjutkan: ${esc(S.klien.nama||'klien tanpa nama')}</button><small>Terakhir di langkah ${esc(TABNAME[S.tab]||'Data Klien')}</small><button class="btn" type="button" id="kBaru">Konseling baru</button>`;
     document.getElementById('kLanjut').onclick=()=>{setMode('klinik');show(TABNAME[S.tab]?S.tab:'klien')};
-    armBtn(document.getElementById('kBaru'),'Konseling baru','Hapus data klien lama? Klik lagi',()=>{S=blank();ACT='pagi';OPEN.clear();loadForm();setMode('klinik');show('klien')});
+    armBtn(document.getElementById('kBaru'),'Konseling baru','Mulai klien baru? Klik lagi',()=>{histK();S=blank();ACT='pagi';OPEN.clear();loadForm();setMode('klinik');show('klien')});
   }else{k.innerHTML=`<button class="btn primary" type="button" id="kMulai">Mulai konseling</button>`;document.getElementById('kMulai').onclick=()=>{setMode('klinik');show('klien')}}
   const p=document.getElementById('actPosy');
   if(hasPosy()){p.innerHTML=`<button class="btn primary" type="button" id="pLanjut">Lanjutkan: ${esc(PY.nama||'balita tanpa nama')}</button><button class="btn" type="button" id="pBaru">Balita baru</button>`;
     document.getElementById('pLanjut').onclick=()=>setMode('posy');
-    armBtn(document.getElementById('pBaru'),'Balita baru','Hapus data balita? Klik lagi',()=>{PY=pblank(PY);savePosy();setMode('posy')});
+    armBtn(document.getElementById('pBaru'),'Balita baru','Mulai balita baru? Klik lagi',()=>{histP();PY=pblank(PY);savePosy();setMode('posy')});
   }else{p.innerHTML=`<button class="btn primary" type="button" id="pMulai">Mulai pemantauan balita</button>`;document.getElementById('pMulai').onclick=()=>setMode('posy')}
   const q=document.getElementById('actPam');
   q.innerHTML=PM.list.length||PM.cur.nama||PM.cur.bb?`<button class="btn primary" type="button" id="mLanjut">Lanjutkan${PM.ev.nama?': '+esc(PM.ev.nama):''}</button><small>${PM.list.length} pengunjung tersimpan</small>`:`<button class="btn primary" type="button" id="mMulai">Mulai layanan pameran</button>`;
   q.querySelector('button').onclick=()=>setMode('pam');
+  const mini=(id,h)=>{const el=document.getElementById(id);if(el)el.insertAdjacentHTML('beforeend',`<div class="minirow">${h}</div>`)};
+  mini('actKlinik','<button class="btn sm" type="button" data-riw="k">Riwayat</button><button class="btn sm" type="button" data-rek="k">Rekap</button>');
+  mini('actPosy','<button class="btn sm" type="button" data-riw="p">Riwayat</button><button class="btn sm" type="button" data-rek="p">Rekap</button>');
+  mini('actPam','<button class="btn sm" type="button" data-riw="m">Arsip</button><button class="btn sm" type="button" data-rek="m">Rekap</button>');
   const t=document.getElementById('actTl');const na=TL.list.filter(x=>x.status==='aktif').length;
   t.innerHTML=TL.list.length?`<button class="btn primary" type="button" id="tLanjut">Buka daftar balita</button><small>${na} sedang dirawat · ${TL.list.length} tercatat</small>`:`<button class="btn primary" type="button" id="tMulai">Mulai tata laksana</button>`;
   t.querySelector('button').onclick=()=>setMode('tl');
+  mini('actTl','<button class="btn sm" type="button" data-rek="t">Rekap</button>');
+  renderDataBox();
 }
 
 /* ===== Posyandu: status gizi balita (Permenkes No. 2/2020) ===== */
 const pblank=(keep)=>({nama:'',ibu:'',jk:'L',dob:{d:'',m:'',y:''},tglu:today(),bb:'',tb:'',cara:'',lila:'',bbl:'',sakit:false,kel:[],bhy:[],pos:keep?keep.pos||'':'',ptg:keep?keep.ptg||'':''});
 let PY;try{PY=JSON.parse(localStorage.getItem('kg-posy-v1'))}catch(e){PY=null}
 if(!PY||typeof PY!=='object')PY=pblank();PY=Object.assign(pblank(),PY);if(!Array.isArray(PY.kel))PY.kel=[];if(!Array.isArray(PY.bhy))PY.bhy=[];
-let psT;function savePosy(){clearTimeout(psT);psT=setTimeout(()=>{try{localStorage.setItem('kg-posy-v1',JSON.stringify(PY))}catch(e){}},250)}
+let psT;function savePosy(){clearTimeout(psT);psT=setTimeout(()=>{histP();try{localStorage.setItem('kg-posy-v1',JSON.stringify(PY))}catch(e){}},250)}
 
 // umur dalam bulan penuh
 function bulanPenuh(lahir,ukur){if(!lahir||!ukur)return null;const a=new Date(lahir+'T00:00'),b=new Date(ukur+'T00:00');if(isNaN(a)||isNaN(b)||b<a)return null;
@@ -2104,6 +2132,7 @@ function renderPosy(){const o=calcPosy();const el=document.getElementById('posyO
     if(o.idx.some(x=>x.z!=null)||o.lila||o.nt){const wz=zget(o,'bbpb');const toTl=(wz!=null&&wz<-2)||(o.lila&&o.lila[0]!=='Gizi baik');
       h+=`<div class="panel"><div class="panel-h"><h2>Tindak lanjut</h2></div><div class="panel-b msgs">${tindakLanjut(o).map(([c,t])=>`<p class="msg ${c}">${t}</p>`).join('')}${toTl&&m>=6?`<div><button class="btn primary" type="button" data-totl>Lanjut ke Tata Laksana (konfirmasi &amp; triase nakes)</button></div>`:''}</div></div>`}
     if(PY.sakit)h+=sakitHTML(o);
+    h+=posyHistHTML();
     const k=pesanKIA(m);h+=`<div class="panel"><div class="panel-h"><h2>Pesan konseling</h2><span class="hint">Buku KIA · umur ${k.t}</span></div><div class="panel-b"><ul class="lst dot">${k.l.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`;
     h+=`<p class="note">Z-skor dihitung dari tabel SD Permenkes No. 2 Tahun 2020 (median dan ±1 SD; panjang/tinggi diinterpolasi). Hasil dapat berbeda di desimal kedua dibanding WHO Anthro.</p>`}
   el.innerHTML=h}
@@ -2122,7 +2151,7 @@ PDOB[0].addEventListener('input',()=>{if(PDOB[0].value.length>=2||+PDOB[0].value
 PDOB[1].addEventListener('change',()=>PDOB[2].focus());
 document.querySelectorAll('#p-jk button').forEach(b=>b.addEventListener('click',()=>{PY.jk=b.dataset.v;loadPosy();posyUpd()}));
 document.querySelectorAll('#p-cara button').forEach(b=>b.addEventListener('click',()=>{PY.cara=b.dataset.v;posyUpd()}));
-armBtn(document.getElementById('btnPosyNew'),'Balita baru','Hapus? Klik lagi',()=>{PY=pblank(PY);savePosy();loadPosy();renderPosy();document.getElementById('p-nama').focus()});
+armBtn(document.getElementById('btnPosyNew'),'Balita baru','Mulai balita baru? Klik lagi',()=>{histP();PY=pblank(PY);savePosy();loadPosy();renderPosy();document.getElementById('p-nama').focus()});
 
 
 /* ===== Balita sakit (Buku KIA 2024 hal. 51, 87–88); tanpa dosis obat ===== */
@@ -2166,7 +2195,7 @@ const cblank=()=>({nama:'',jk:'L',umur:'',fis:'',tm:'2',mp:'1',lila:'',hb:'',lau
 const mblank=(ev)=>({ev:ev||{nama:'',tgl:today(),ptg:''},cur:cblank(),list:[],edit:null});
 let PM;try{PM=JSON.parse(localStorage.getItem('kg-pam-v1'))}catch(e){PM=null}
 if(!PM||typeof PM!=='object'||!PM.cur)PM=mblank();PM.cur=Object.assign(cblank(),PM.cur);if(!Array.isArray(PM.list))PM.list=[];
-let pmT;function savePam(){clearTimeout(pmT);pmT=setTimeout(()=>{try{localStorage.setItem('kg-pam-v1',JSON.stringify(PM))}catch(e){}},250)}
+let pmT;function savePam(){clearTimeout(pmT);pmT=setTimeout(()=>{histM();try{localStorage.setItem('kg-pam-v1',JSON.stringify(PM))}catch(e){}},250)}
 const hasPam=()=>!!(PM.list.length||PM.cur.nama||PM.cur.bb);
 
 function calcPam(c){const o={};const u=num(c.umur),tl=inR(num(c.tl),'tl'),lp=inR(num(c.lp),'lp');let bb=inR(num(c.bb),'bb'),tb=inR(num(c.tb),'tb');o.bbRaw=bb;
@@ -2263,7 +2292,7 @@ document.getElementById('pamSave').addEventListener('click',()=>{const c=PM.cur;
   PM.edit=null;PM.cur=cblank();PM.cur.akt=c.akt;loadPam();pamUpd();document.getElementById('m-nama').focus();
   const n=document.getElementById('pamToast');n.textContent=`Tersimpan. Total ${PM.list.length} pengunjung.`;n.hidden=false;clearTimeout(n._t);n._t=setTimeout(()=>n.hidden=true,2500)});
 armBtn(document.getElementById('pamClear'),'Kosongkan isian','Kosongkan? Klik lagi',()=>{PM.cur=cblank();PM.edit=null;loadPam();pamUpd()});
-armBtn(document.getElementById('pamNewEv'),'Kegiatan baru','Hapus semua daftar pengunjung? Klik lagi',()=>{PM=mblank({nama:'',tgl:today(),ptg:PM.ev.ptg});loadPam();pamUpd()});
+armBtn(document.getElementById('pamNewEv'),'Kegiatan baru','Mulai kegiatan baru? Klik lagi',()=>{histM();PM=mblank({nama:'',tgl:today(),ptg:PM.ev.ptg});loadPam();pamUpd()});
 
 function pamRekap(){const r={n:PM.list.length,L:0,P:0,kat:{},anak:0,lp:0,lpN:0,ht:0,nt:0,tdN:0,gd:0,gdN:0,ko:0,koN:0,kek:0,kekN:0,an:0,anN:0,hamil:0};
   for(const c of PM.list){const o=calcPam(c);r[c.jk==='P'?'P':'L']++;if(o.kat)r.kat[o.kat[0]]=(r.kat[o.kat[0]]||0)+1;else if(!o.dewasa&&o.u!=null)r.anak++;
@@ -2599,7 +2628,7 @@ const pblankTL=()=>({id:Date.now().toString(36)+Math.random().toString(36).slice
 const vblank=tgl=>({tgl,bb:'',tb:'',cara:'',lila:'',hb:'',edema:'0',komp:[],nafsu:'',klinis:'baik',sisa:'',kkal:'150',cat:''});
 let TL;try{TL=JSON.parse(localStorage.getItem('kg-tl-v1'))}catch(e){TL=null}
 if(!TL||typeof TL!=='object'||!Array.isArray(TL.list))TL=tlblank();TL=Object.assign(tlblank(),TL);
-let tlT;function saveTl(){clearTimeout(tlT);tlT=setTimeout(()=>{try{localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}},250)}
+let tlT;function saveTl(){clearTimeout(tlT);tlT=setTimeout(()=>{histTL();try{localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}},250)}
 const tlP=()=>TL.cur!=null?TL.list[TL.cur]||null:null;
 const dobStr=d=>{d=d||{};const dd=parseInt(d.d),mm=parseInt(d.m),yy=parseInt(d.y);return (dd&&mm&&yy&&String(yy).length===4&&dd<=new Date(yy,mm,0).getDate())?`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`:''};
 const dDays=(a,b)=>{const x=new Date(a+'T00:00'),y=new Date(b+'T00:00');return isNaN(x)||isNaN(y)?null:Math.round((y-x)/864e5)};
@@ -2812,6 +2841,274 @@ function tlXlsx(){const n=v=>v==null||isNaN(v)?'':+(+v).toFixed(1);
   return makeXlsx([{name:'Pasien',rows:[h1,...r1],bold:[0],widths:[5,22,20,5,14,20,14,10,9,9,9,12,10,14,9,9,10,11,22]},{name:'Kunjungan',rows:[h2,...r2],bold:[0],widths:[22,8,14,8,8,9,8,7,8,10,12,12,10,10,12,30,10,10,20,30]}])}
 document.getElementById('tlXls').addEventListener('click',()=>{if(!TL.list.length){msg('Belum ada balita tersimpan.');return}deliverDownload(tlXlsx(),`Rekap-Gizi-Buruk-Rawat-Jalan_${slug(TL.pkm||'puskesmas')}_${today()}.xlsx`)});
 
+/* ===== Penyimpanan perangkat: IndexedDB (riwayat & cermin data kerja) + localStorage (data kerja) ===== */
+var IDB=null,HIST={k:[],p:[],m:[],ok:false},STORE_PERSIST=null;
+var LS0={};try{['kg-v1','kg-posy-v1','kg-pam-v1','kg-tl-v1'].forEach(k=>LS0[k]=!!localStorage.getItem(k))}catch(e){}
+var uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+var idbReady=new Promise(res=>{try{const r=indexedDB.open('konsultasi-gizi',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{IDB=r.result;res()};r.onerror=()=>res();r.onblocked=()=>res()}catch(e){res()}});
+function kvGet(k){return idbReady.then(()=>new Promise(res=>{
+  if(!IDB){try{res(JSON.parse(localStorage.getItem('kgx-'+k)))}catch(e){res(null)}return}
+  try{const r=IDB.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>res(r.result??null);r.onerror=()=>res(null)}catch(e){res(null)}}))}
+var kvT={};
+function kvPut(k,v){return idbReady.then(()=>new Promise(res=>{const val=JSON.parse(JSON.stringify(v??null));
+  if(!IDB){try{localStorage.setItem('kgx-'+k,JSON.stringify(val))}catch(e){}res();return}
+  try{const tx=IDB.transaction('kv','readwrite');tx.objectStore('kv').put(val,k);tx.oncomplete=()=>res();tx.onerror=()=>res()}catch(e){res()}}))}
+function kvSet(k,v){clearTimeout(kvT[k]);kvT[k]=setTimeout(()=>kvPut(k,v),400)}
+function kvFlush(){const ks=Object.keys(kvT);ks.forEach(k=>clearTimeout(kvT[k]));kvT={};
+  return Promise.all([kvPut('hk',HIST.k),kvPut('hp',HIST.p),kvPut('hm',HIST.m),kvPut('w-S',S),kvPut('w-PY',PY),kvPut('w-PM',PM),kvPut('w-TL',TL)])}
+const clone=o=>JSON.parse(JSON.stringify(o));
+function upsert(arr,rec){const i=arr.findIndex(x=>x.id===rec.id);if(i>=0)arr[i]=rec;else arr.push(rec)}
+// Klinik: satu rekaman per klien (id disimpan di S)
+function histK(){if(!HIST.ok)return;const k=S.klien||{};if(!(k.nama||k.bb))return;if(!S.id)S.id=uid();
+  upsert(HIST.k,{id:S.id,t:Date.now(),data:clone(S)});kvSet('hk',HIST.k);kvSet('w-S',S)}
+// Posyandu: profil balita + daftar penimbangan (kunci = tanggal penimbangan)
+function histP(){if(!HIST.ok)return;if(!(PY.nama||PY.bb))return;if(!PY.id)PY.id=uid();
+  let p=HIST.p.find(x=>x.id===PY.id);if(!p){p={id:PY.id,visits:[]};HIST.p.push(p)}
+  Object.assign(p,{nama:PY.nama,ibu:PY.ibu,jk:PY.jk,dob:{...(PY.dob||{})},pos:PY.pos,ptg:PY.ptg,t:Date.now()});
+  if(PY._vt&&PY._vt!==PY.tglu)p.visits=p.visits.filter(v=>v.tglu!==PY._vt);PY._vt=PY.tglu;
+  const v={tglu:PY.tglu,bb:PY.bb,tb:PY.tb,cara:PY.cara,lila:PY.lila,bbl:PY.bbl,sakit:!!PY.sakit,kel:[...(PY.kel||[])],bhy:[...(PY.bhy||[])]};
+  const i=p.visits.findIndex(x=>x.tglu===v.tglu);if(i>=0)p.visits[i]=v;else p.visits.push(v);p.visits.sort((a,b)=>a.tglu<b.tglu?-1:a.tglu>b.tglu?1:0);
+  kvSet('hp',HIST.p);kvSet('w-PY',PY)}
+// Pameran: satu rekaman per kegiatan
+function histM(){if(!HIST.ok)return;if(!(PM.list.length||PM.ev.nama))return;if(!PM.id)PM.id=uid();
+  upsert(HIST.m,{id:PM.id,t:Date.now(),ev:{...PM.ev},list:clone(PM.list)});kvSet('hm',HIST.m);kvSet('w-PM',PM)}
+function histTL(){kvSet('w-TL',TL)}
+function bootStore(){
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>p||navigator.storage.persist()).then(p=>{STORE_PERSIST=!!p;renderWebBanner();if(MODE==='home')renderDataBox()}).catch(()=>{})}catch(e){}
+  return Promise.all(['hk','hp','hm','w-S','w-PY','w-PM','w-TL'].map(kvGet)).then(([hk,hp,hm,ws,wp,wm,wt])=>{
+    HIST.k=Array.isArray(hk)?hk:[];HIST.p=Array.isArray(hp)?hp:[];HIST.m=Array.isArray(hm)?hm:[];HIST.ok=true;
+    // pulihkan data kerja bila localStorage terhapus tetapi cermin IndexedDB masih ada
+    let rec=false;const fix=(lk,v)=>{try{if(v&&!LS0[lk]){localStorage.setItem(lk,JSON.stringify(v));rec=true}}catch(e){}};
+    fix('kg-v1',ws);fix('kg-posy-v1',wp);fix('kg-pam-v1',wm);fix('kg-tl-v1',wt);
+    let once=false;try{once=!!sessionStorage.getItem('kg-rec')}catch(e){}
+    if(rec&&!once){try{sessionStorage.setItem('kg-rec','1')}catch(e){}window.KG_NOFLUSH=true;location.reload();return}
+    histK();histP();histM();histTL();renderWebBanner();
+    if(MODE==='home')renderHome();if(MODE==='posy')renderPosy()})}
+
+/* ===== Cadangkan & pulihkan ===== */
+function setGet(){try{return JSON.parse(localStorage.getItem('kg-set')||'{}')}catch(e){return {}}}
+function setPut(o){try{localStorage.setItem('kg-set',JSON.stringify({...setGet(),...o}))}catch(e){}}
+function dataStats(){const pv=HIST.m.reduce((a,e)=>a+(e.list||[]).length,0);return {k:HIST.k.length,p:HIST.p.length,pk:HIST.p.reduce((a,x)=>a+x.visits.length,0),m:HIST.m.length,mv:pv,t:TL.list.length}}
+function backupObj(){histK();histP();histM();return {app:'konsultasi-gizi',v:1,dibuat:new Date().toISOString(),S,PY,PM,TL,set:setGet(),hk:HIST.k,hp:HIST.p,hm:HIST.m}}
+async function doBackup(btn,share){setPut({lastBackup:new Date().toISOString()});const o=backupObj();await kvFlush();const bl=new Blob([JSON.stringify(o)],{type:'application/json'});const nm=`Cadangan-KonsultasiGizi_${today()}.json`;
+  if(share&&await shareFile(bl,nm,'Cadangan data Konsultasi Gizi'))return renderDataBox();
+  deliverDownload(bl,nm);renderDataBox()}
+function mergeBackup(o){const n={k:0,p:0,pv:0,m:0,mv:0,t:0};
+  for(const r of o.hk||[]){const i=HIST.k.findIndex(x=>x.id===r.id);if(i<0){HIST.k.push(r);n.k++}else if((r.t||0)>(HIST.k[i].t||0))HIST.k[i]=r}
+  for(const r of o.hp||[]){const p=HIST.p.find(x=>x.id===r.id);if(!p){HIST.p.push(r);n.p++;n.pv+=r.visits.length;continue}
+    for(const v of r.visits||[])if(!p.visits.some(x=>x.tglu===v.tglu)){p.visits.push(v);n.pv++}p.visits.sort((a,b)=>a.tglu<b.tglu?-1:1)}
+  for(const r of o.hm||[]){const e=HIST.m.find(x=>x.id===r.id);if(!e){HIST.m.push(r);n.m++;n.mv+=(r.list||[]).length;continue}
+    for(const c of r.list||[])if(!e.list.some(x=>x.t===c.t&&x.nama===c.nama)){e.list.push(c);n.mv++}}
+  for(const p of (o.TL&&o.TL.list)||[]){const i=TL.list.findIndex(x=>x.id===p.id);if(i<0){TL.list.push(p);n.t++}else if((p.visits||[]).length>TL.list[i].visits.length)TL.list[i]=p}
+  if(PM.id){const e=HIST.m.find(x=>x.id===PM.id);if(e)PM.list=clone(e.list)}
+  saveTl();savePam();return n}
+async function restoreBackup(o,mode){
+  if(mode==='ganti'){HIST.k=o.hk||[];HIST.p=o.hp||[];HIST.m=o.hm||[];
+    try{if(o.S)localStorage.setItem('kg-v1',JSON.stringify(o.S));if(o.PY)localStorage.setItem('kg-posy-v1',JSON.stringify(o.PY));if(o.PM)localStorage.setItem('kg-pam-v1',JSON.stringify(o.PM));if(o.TL)localStorage.setItem('kg-tl-v1',JSON.stringify(o.TL));if(o.set)localStorage.setItem('kg-set',JSON.stringify(o.set))}catch(e){}
+    S=o.S||S;PY=o.PY||PY;PM=o.PM||PM;TL=o.TL||TL;await kvFlush();window.KG_NOFLUSH=true;location.reload();return null}
+  const n=mergeBackup(o);await kvFlush();return n}
+function renderDataBox(){const el=document.getElementById('dataBox');if(!el)return;const st=dataStats();const lb=setGet().lastBackup;const days=lb?Math.floor((Date.now()-new Date(lb))/864e5):null;
+  const any=st.k+st.p+st.m+st.t>0;const warn=any&&(days==null||days>=14);
+  const web=notPermanent()?`<div class="db-web"><b>⚠️ Anda memakai versi web.</b><p>Data tersimpan sementara di peramban ini dan bisa hilang bila riwayat peramban dibersihkan atau halaman lama tidak dibuka (terutama di iPhone).</p><p><b>Buat cadangan secara rutin</b>, misalnya setiap selesai kegiatan atau akhir bulan, lalu simpan file di Drive/WhatsApp.</p>${installTxt()?`<p>${installTxt()} Untuk penggunaan rutin, pasang aplikasi agar data lebih aman.</p>`:''}</div>`:'';
+  el.innerHTML=web+`<div class="db-stats"><div><b>${st.k}</b><span>klien Klinik</span></div><div><b>${st.p}</b><span>balita Posyandu</span><small>${st.pk} penimbangan</small></div><div><b>${st.m}</b><span>kegiatan Pameran</span><small>${st.mv} pengunjung</small></div><div><b>${st.t}</b><span>balita Tata Laksana</span></div></div>
+   <p class="note" style="margin:10px 0 0;${warn?'color:var(--warn);font-weight:600':''}">${lb?`Cadangan terakhir: ${tglID(lb.slice(0,10))} (${days===0?'hari ini':days+' hari lalu'}).`:'Belum pernah membuat cadangan.'}${warn?' Buat cadangan sekarang agar data aman.':''}
+   ${notPermanent()?'':STORE_PERSIST?' Penyimpanan permanen aktif.':''}</p>
+   <div class="exp-row" style="margin-top:12px"><button class="btn primary" type="button" data-bk>Cadangkan data</button><button class="btn share-only" type="button" data-bkshare hidden>Bagikan cadangan</button><button class="btn" type="button" data-rs>Pulihkan data</button></div>
+   <input type="file" id="rsFile" accept=".json,application/json" hidden>`;
+  if(navigator.canShare)el.querySelectorAll('.share-only').forEach(b=>b.hidden=false)}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-bk],[data-bkshare],[data-rs]');if(!b)return;
+  if(b.matches('[data-bk]'))return withBusy(b,()=>doBackup(b,false));
+  if(b.matches('[data-bkshare]'))return withBusy(b,()=>doBackup(b,true));
+  if(b.matches('[data-rs]'))document.getElementById('rsFile').click()});
+document.addEventListener('change',async e=>{if(e.target.id!=='rsFile')return;const f=e.target.files[0];e.target.value='';if(!f)return;
+  let o;try{o=JSON.parse(await f.text())}catch(err){o=null}
+  if(!o||o.app!=='konsultasi-gizi'){openData('Pulihkan data','<p class="msg bad">File ini bukan file cadangan Aplikasi Konsultasi Gizi.</p>');return}
+  const c=(a)=>(a||[]).length;
+  openData('Pulihkan data',`<p style="margin:0 0 8px">File cadangan dibuat <b>${tglID((o.dibuat||'').slice(0,10))}</b>, berisi ${c(o.hk)} klien Klinik, ${c(o.hp)} balita Posyandu, ${c(o.hm)} kegiatan Pameran, dan ${c(o.TL&&o.TL.list)} balita Tata Laksana.</p>
+   <div class="msgs"><p class="msg ok"><b>Gabungkan</b>: data di file ditambahkan ke data di perangkat ini. Tidak ada yang terhapus. Cocok untuk menyatukan data beberapa petugas.</p>
+   <p class="msg warn"><b>Ganti semua</b>: semua data di perangkat ini diganti isi file. Gunakan saat pindah HP/laptop.</p></div>
+   <div class="exp-row" style="margin-top:12px"><button class="btn primary" type="button" data-rsgo="gabung">Gabungkan</button><button class="btn" type="button" data-rsgo="ganti">Ganti semua</button></div><p class="note" id="rsMsg" style="margin:8px 0 0"></p>`);
+  RS_OBJ=o});
+var RS_OBJ=null;
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-rsgo]');if(!b||!RS_OBJ)return;
+  if(b.dataset.rsgo==='ganti'&&!b.classList.contains('danger')){b.classList.add('danger');b.textContent='Yakin ganti semua? Klik lagi';return}
+  const n=await restoreBackup(RS_OBJ,b.dataset.rsgo);if(!n)return;RS_OBJ=null;
+  document.getElementById('dmBody').innerHTML=`<p class="msg ok">Data digabungkan: +${n.k} klien Klinik, +${n.p} balita Posyandu (${n.pv} penimbangan), +${n.m} kegiatan Pameran (${n.mv} pengunjung), +${n.t} balita Tata Laksana.</p>`;
+  if(MODE==='home')renderHome()});
+
+/* ===== Peringatan versi web (data belum permanen) ===== */
+// Sakelar: aktifkan bila versi aplikasi terpasang (PWA) sudah dirilis untuk umum.
+var SHOW_INSTALL=false,INSTALL_URL='';
+var IN_FRAME=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+var STANDALONE=(()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}})();
+const notPermanent=()=>!STANDALONE&&(IN_FRAME||STORE_PERSIST===false);
+const dataTotal=()=>{const s=dataStats();return s.k+s.pk+s.mv+s.t};
+const installTxt=()=>SHOW_INSTALL&&INSTALL_URL?`<a class="btn sm" href="${INSTALL_URL}" target="_blank" rel="noopener">Pasang aplikasi</a>`:'';
+function renderWebBanner(){let b=document.getElementById('webBanner');
+  if(!notPermanent()){if(b)b.remove();return}
+  const st=setGet();const hid=st.bnHide&&st.bnHide.d===today()&&dataTotal()<=st.bnHide.n;
+  if(!b){const h=document.querySelector('header.bar');if(!h)return;h.insertAdjacentHTML('beforeend','<div id="webBanner" class="webban" role="status"></div>');b=document.getElementById('webBanner')}
+  b.hidden=!!hid;b.innerHTML=`<div class="wrap webban-in"><span class="wb-ic" aria-hidden="true">⚠️</span><p><b>Data belum tersimpan permanen.</b> Data di versi web bisa hilang bila riwayat peramban dibersihkan.</p>
+    <div class="wb-act"><button class="btn sm primary" type="button" data-bk>Cadangkan sekarang</button>${installTxt()}<button class="wb-x" type="button" data-bnx aria-label="Sembunyikan peringatan">×</button></div></div>`}
+document.addEventListener('click',e=>{if(e.target.closest('[data-bnx]')){setPut({bnHide:{d:today(),n:dataTotal()}});renderWebBanner()}});
+// toast pengingat (dibatasi agar tidak mengganggu)
+function webToast(key,txt){if(!notPermanent())return;const st=setGet();const last=(st.toast||{})[key]||0;if(Date.now()-last<20*60*1000)return;
+  setPut({toast:{...(st.toast||{}),[key]:Date.now()}});let t=document.getElementById('webToast');
+  if(!t){document.body.insertAdjacentHTML('beforeend','<div id="webToast" class="webtoast" role="status" aria-live="polite"></div>');t=document.getElementById('webToast')}
+  t.innerHTML=`<span>⚠️ ${txt}</span><button class="btn sm" type="button" data-bk>Cadangkan</button>`;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),6000)}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#pamSave'))setTimeout(()=>{const n=PM.list.length;if(n&&n%10===0)webToast('pam'+n,`${n} pengunjung tersimpan di versi web. Cadangkan agar tidak hilang.`)},300);
+  if(MODE==='klinik'&&e.target.closest('#expModal [data-pdf],#expModal [data-card],#expModal [data-printnow],#expModal [data-pdfshare]'))setTimeout(()=>webToast('klinik','Data di versi web bisa terhapus. Buat cadangan secara rutin.'),1500);
+  if(e.target.closest('#tlAddVis,#tlNew'))setTimeout(()=>webToast('tl','Data perawatan balita di versi web bisa terhapus. Buat cadangan secara rutin.'),500);
+  if(e.target.closest('#btnPosyNew,[data-pn]'))setTimeout(()=>webToast('posy','Data penimbangan di versi web bisa terhapus. Buat cadangan secara rutin.'),500)},true);
+
+/* ===== Riwayat & Rekap per modul ===== */
+document.body.insertAdjacentHTML('beforeend',`<div class="modal dmodal" id="dataModal" role="dialog" aria-modal="true" aria-labelledby="dmTitle" hidden><div class="modal-c"><div class="modal-h"><b id="dmTitle"></b><button class="btn" type="button" data-dmclose>Tutup</button></div><div class="dm-b" id="dmBody"></div></div></div>`);
+const DM=document.getElementById('dataModal');
+function openData(t,h){document.getElementById('dmTitle').textContent=t;document.getElementById('dmBody').innerHTML=h;DM.hidden=false;const s=DM.querySelector('input[type=search]');if(s)s.focus()}
+const closeData=()=>{DM.hidden=true};
+DM.addEventListener('click',e=>{if(e.target===DM||e.target.closest('[data-dmclose]'))closeData()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DM.hidden)closeData()});
+const normS=x=>{const b=blank();x.klien={...b.klien,...(x.klien||{})};x.recall=x.recall||{};for(const [sk] of SLOTS){if(!x.recall[sk]||!Array.isArray(x.recall[sk].menus))x.recall[sk]={menus:[]}}x.lab=x.lab||{};x.diet=x.diet||b.diet;return x};
+function withS(rec,fn){const keep=S;try{S=normS(clone(rec));return fn()}finally{S=keep}}
+function withPY(obj,fn){const keep=PY;try{PY=Object.assign(pblank(),obj);return fn()}finally{PY=keep}}
+function withPM(obj,fn){const keep=PM;try{PM=obj;return fn()}finally{PM=keep}}
+const dobS=d=>dobStr(d||{});
+const ago=t=>{if(!t)return '';const d=Math.floor((Date.now()-t)/864e5);return d<=0?'hari ini':d===1?'kemarin':d+' hari lalu'};
+const srch=(id,ph)=>`<input type="search" id="${id}" placeholder="${ph}" autocomplete="off" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:10px">`;
+const histReadyMsg='<p class="note">Memuat data…</p>';
+
+/* --- Riwayat Klinik --- */
+function riwKHTML(q){q=norm(q||'');const rows=HIST.k.slice().sort((a,b)=>(b.data.klien.tglk||'').localeCompare(a.data.klien.tglk||'')||b.t-a.t).filter(r=>!q||norm(r.data.klien.nama||'').includes(q));
+  if(!rows.length)return `<p class="empty-r">${HIST.k.length?'Tidak ada nama yang cocok.':'Belum ada klien tersimpan. Klien otomatis masuk riwayat setelah nama atau BB diisi.'}</p>`;
+  return `<div class="tbl-wrap"><table class="ptab" style="min-width:560px"><thead><tr><th class="l">Tanggal</th><th class="l">Nama</th><th>JK</th><th>Umur</th><th>IMT</th><th class="l">Diet</th><th></th></tr></thead><tbody>${rows.map(r=>{const k=r.data.klien;const u=umur(k.tgll,k.tglk);const bb=num(k.bb),tb=num(k.tb);const imt=bb&&tb?bb/((tb/100)**2):null;
+    const sel=Object.entries((r.data.diet||{}).sel||{}).filter(([,v])=>v).map(([x])=>DNAME[x]?DNAME[x].replace(/^(Makanan Sehat|Diet|Pencegahan) /,''):'').filter(Boolean).join(', ');
+    return `<tr${S.id===r.id?' class="on"':''}><td class="l">${tglID(k.tglk)}</td><td class="l">${esc(k.nama||'–')}</td><td>${k.jk}</td><td>${u?u.y:'–'}</td><td>${imt&&IMT_OK(imt)?fmt(imt,1):'–'}</td><td class="l" style="white-space:normal;max-width:180px">${esc(sel||'–')}</td>
+    <td style="white-space:nowrap"><button class="btn sm" type="button" data-ko="${r.id}">Buka</button> <button class="btn sm" type="button" data-kd="${r.id}">Hapus</button></td></tr>`}).join('')}</tbody></table></div>`}
+function openRiwK(){openData('Riwayat klien Klinik',HIST.ok?srch('qK','Cari nama klien')+`<div id="riwK">${riwKHTML('')}</div>`:histReadyMsg)}
+/* --- Riwayat Posyandu --- */
+function lastV(p){return p.visits[p.visits.length-1]||{}}
+function riwPHTML(q){q=norm(q||'');const rows=HIST.p.slice().sort((a,b)=>(lastV(b).tglu||'').localeCompare(lastV(a).tglu||'')).filter(r=>!q||norm((r.nama||'')+' '+(r.ibu||'')+' '+(r.pos||'')).includes(q));
+  if(!rows.length)return `<p class="empty-r">${HIST.p.length?'Tidak ada nama yang cocok.':'Belum ada balita tersimpan.'}</p>`;
+  return `<div class="tbl-wrap"><table class="ptab" style="min-width:600px"><thead><tr><th class="l">Nama</th><th class="l">Ibu</th><th class="l">Posyandu</th><th>Umur (bln)</th><th class="l">Terakhir</th><th>Kali</th><th></th></tr></thead><tbody>${rows.map(r=>{const v=lastV(r);const u=bulanPenuh(dobS(r.dob),today());
+    return `<tr${PY.id===r.id?' class="on"':''}><td class="l">${esc(r.nama||'–')}</td><td class="l">${esc(r.ibu||'–')}</td><td class="l">${esc(r.pos||'–')}</td><td>${u?u.m:'–'}</td><td class="l">${tglID(v.tglu)}</td><td>${r.visits.length}</td>
+    <td style="white-space:nowrap"><button class="btn sm primary" type="button" data-pn="${r.id}">Timbang lagi</button> <button class="btn sm" type="button" data-po="${r.id}">Buka</button> <button class="btn sm" type="button" data-pd="${r.id}">Hapus</button></td></tr>`}).join('')}</tbody></table></div>
+    <p class="note" style="margin:8px 0 0"><b>Timbang lagi</b> membuka penimbangan baru hari ini dengan BB terakhir sebagai "BB bulan lalu".</p>`}
+function openRiwP(){openData('Riwayat balita Posyandu',HIST.ok?srch('qP','Cari nama anak, ibu, atau posyandu')+`<div id="riwP">${riwPHTML('')}</div>`:histReadyMsg)}
+function posyHistHTML(){if(!HIST.ok||!PY.id)return '';const p=HIST.p.find(x=>x.id===PY.id);if(!p)return '';
+  const cur={tglu:PY.tglu,bb:PY.bb,tb:PY.tb,cara:PY.cara,lila:PY.lila,bbl:PY.bbl};const vs=p.visits.filter(v=>v.tglu!==PY.tglu&&v.tglu!==PY._vt).concat([cur]).sort((a,b)=>a.tglu<b.tglu?-1:1);if(vs.length<2)return '';
+  const rows=vs.map(v=>{const o=withPY({...p,...v,dob:p.dob,jk:p.jk},()=>calcPosy());const z=k=>{const x=(o.idx||[]).find(i=>i.k===k);return x&&x.z!=null?x:null};
+    const a=z('bbu'),b=z('bbpb'),c=z('pbu');return `<tr${v.tglu===PY.tglu?' class="on"':''}><td class="l">${tglID(v.tglu)}</td><td>${o.u?o.u.m:'–'}</td><td>${fmt(num(v.bb),1)}</td><td>${num(v.tb)?fmt(num(v.tb),1):'–'}</td><td>${a?pmI(a.z):'–'}</td><td>${c?pmI(c.z):'–'}</td><td>${b?pmI(b.z):'–'}</td><td>${o.nt&&o.nt.s?o.nt.s:'–'}</td></tr>`}).join('');
+  return `<div class="panel"><div class="panel-h"><h2>Riwayat penimbangan</h2><span class="hint">${vs.length} kali</span></div><div class="panel-b"><div class="tbl-wrap"><table class="ptab" style="min-width:480px"><thead><tr><th class="l">Tanggal</th><th>Umur</th><th>BB</th><th>PB/TB</th><th>BB/U</th><th>PB/U</th><th>BB/PB</th><th>N/T</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`}
+/* --- Arsip Pameran --- */
+function riwMHTML(q){q=norm(q||'');const rows=HIST.m.slice().sort((a,b)=>(b.ev.tgl||'').localeCompare(a.ev.tgl||'')).filter(r=>!q||norm((r.ev.nama||'')+' '+(r.ev.ptg||'')).includes(q));
+  if(!rows.length)return `<p class="empty-r">${HIST.m.length?'Tidak ada kegiatan yang cocok.':'Belum ada kegiatan tersimpan.'}</p>`;
+  return `<div class="tbl-wrap"><table class="ptab" style="min-width:560px"><thead><tr><th class="l">Tanggal</th><th class="l">Kegiatan</th><th class="l">Petugas</th><th>Pengunjung</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr${PM.id===r.id?' class="on"':''}><td class="l">${tglID(r.ev.tgl)}</td><td class="l" style="white-space:normal">${esc(r.ev.nama||'(tanpa nama)')}</td><td class="l">${esc(r.ev.ptg||'–')}</td><td>${r.list.length}</td>
+    <td style="white-space:nowrap"><button class="btn sm" type="button" data-mo="${r.id}">Buka</button> <button class="btn sm" type="button" data-mx="${r.id}">Excel</button> <button class="btn sm" type="button" data-md="${r.id}">Hapus</button></td></tr>`).join('')}</tbody></table></div>`}
+function openRiwM(){openData('Arsip kegiatan Pameran',HIST.ok?srch('qM','Cari nama kegiatan atau petugas')+`<div id="riwM">${riwMHTML('')}</div>`:histReadyMsg)}
+
+document.addEventListener('input',e=>{if(e.target.id==='qK')document.getElementById('riwK').innerHTML=riwKHTML(e.target.value);if(e.target.id==='qP')document.getElementById('riwP').innerHTML=riwPHTML(e.target.value);if(e.target.id==='qM')document.getElementById('riwM').innerHTML=riwMHTML(e.target.value)});
+const arm2=(b,fn)=>{if(!b.classList.contains('danger')){b.classList.add('danger');b.textContent='Yakin?';setTimeout(()=>{if(b.isConnected){b.classList.remove('danger');b.textContent='Hapus'}},3000);return}fn()};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ko],[data-kd],[data-pn],[data-po],[data-pd],[data-mo],[data-mx],[data-md],[data-riw],[data-rek]');if(!b)return;const d=b.dataset;
+  if(d.riw)return d.riw==='k'?openRiwK():d.riw==='p'?openRiwP():openRiwM();
+  if(d.rek)return openRekap(d.rek);
+  if(d.ko){histK();const r=HIST.k.find(x=>x.id===d.ko);if(!r)return;S=normS(clone(r.data));ACT='pagi';OPEN.clear();save();loadForm();closeData();setMode('klinik');show('klien');return}
+  if(d.kd)return arm2(b,()=>{HIST.k=HIST.k.filter(x=>x.id!==d.kd);kvSet('hk',HIST.k);if(S.id===d.kd){S=blank();loadForm();save()}document.getElementById('riwK').innerHTML=riwKHTML(document.getElementById('qK').value);if(MODE==='home')renderHome()});
+  if(d.pn||d.po){histP();const p=HIST.p.find(x=>x.id===(d.pn||d.po));if(!p)return;const v=lastV(p);
+    PY=Object.assign(pblank(PY),{id:p.id,nama:p.nama,ibu:p.ibu,jk:p.jk,dob:{...p.dob},pos:p.pos||PY.pos,ptg:p.ptg||PY.ptg});
+    if(d.pn){PY.tglu=today();PY.bbl=v.bb||'';PY._vt=null}else{Object.assign(PY,{...v,kel:[...(v.kel||[])],bhy:[...(v.bhy||[])]});PY._vt=v.tglu}
+    savePosy();closeData();setMode('posy');return}
+  if(d.pd)return arm2(b,()=>{HIST.p=HIST.p.filter(x=>x.id!==d.pd);kvSet('hp',HIST.p);if(PY.id===d.pd){PY=pblank(PY);savePosy();if(MODE==='posy'){loadPosy();renderPosy()}}document.getElementById('riwP').innerHTML=riwPHTML(document.getElementById('qP').value);if(MODE==='home')renderHome()});
+  if(d.mo){histM();const r=HIST.m.find(x=>x.id===d.mo);if(!r)return;PM=Object.assign(mblank({...r.ev}),{id:r.id,list:clone(r.list)});savePam();closeData();setMode('pam');return}
+  if(d.mx){const r=HIST.m.find(x=>x.id===d.mx);if(!r)return;const bl=withPM(Object.assign(mblank({...r.ev}),{list:r.list}),()=>pamXlsx());deliverDownload(bl,`Rekap-Pameran_${slug(r.ev.nama||'kegiatan')}_${r.ev.tgl||today()}.xlsx`);return}
+  if(d.md)return arm2(b,()=>{HIST.m=HIST.m.filter(x=>x.id!==d.md);kvSet('hm',HIST.m);if(PM.id===d.md){PM=mblank({nama:'',tgl:today(),ptg:PM.ev.ptg});savePam();if(MODE==='pam'){loadPam();renderPam()}}document.getElementById('riwM').innerHTML=riwMHTML(document.getElementById('qM').value);if(MODE==='home')renderHome()});
+});
+
+/* --- Rekap --- */
+const REKN={k:'Klinik',p:'Posyandu',m:'Pameran',t:'Tata Laksana Balita'};
+let RK={mode:'k',dari:'',sampai:'',pos:''};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function preset(p){const n=new Date();if(p==='bulan')return [ymd(new Date(n.getFullYear(),n.getMonth(),1)),ymd(new Date(n.getFullYear(),n.getMonth()+1,0))];
+  if(p==='lalu')return [ymd(new Date(n.getFullYear(),n.getMonth()-1,1)),ymd(new Date(n.getFullYear(),n.getMonth(),0))];
+  if(p==='tahun')return [`${n.getFullYear()}-01-01`,`${n.getFullYear()}-12-31`];return ['',''] }
+const inP=t=>!!t&&(!RK.dari||t>=RK.dari)&&(!RK.sampai||t<=RK.sampai);
+const pc=(a,b)=>b?` (${fmt(a/b*100)}%)`:'';
+const perTxt=()=>RK.dari||RK.sampai?`${RK.dari?tglID(RK.dari):'awal'} s.d. ${RK.sampai?tglID(RK.sampai):'sekarang'}`:'Semua data';
+function rkKlinik(){const rows=[],c={n:0,L:0,P:0,rem:0,dew:0,lan:0,ham:0,men:0,kat:{},kek:0,kekN:0,an:0,anN:0,ht:0,htN:0,gd:0,gdN:0,diet:{},rc:0,pe:0,pp:0,def:0};
+  for(const r of HIST.k){const k=r.data.klien;if(!inP(k.tglk))continue;
+    withS(r.data,()=>{const R=calc();const t=totals();const sel=dietSel();const L=S.lab;const uY=R.u?R.u.y:null;c.n++;c[k.jk==='P'?'P':'L']++;
+      if(uY!=null){if(uY<18)c.rem++;else if(uY<60)c.dew++;else c.lan++}if(R.fis==='hamil')c.ham++;if(R.fis==='menyusui')c.men++;
+      if(R.kat)c.kat[R.kat[0]]=(c.kat[R.kat[0]]||0)+1;if(R.lila!=null&&k.jk==='P'){c.kekN++;if(R.kek)c.kek++}
+      const hb=inR(num(L.hb),'hb');const g=hbGrade(hb,k.jk,uY,R.fis==='hamil');if(g){c.anN++;if(g.lvl)c.an++}
+      const s=num(L.sis),dd=num(L.dia);if(s||dd){c.htN++;if(s>=140||dd>=90)c.ht++}
+      const gdv=[num(L.gdp)>=126,num(L.gd2)>=200,num(L.gds)>=200,num(L.a1c)>=6.5];if([L.gdp,L.gd2,L.gds,L.a1c].some(x=>num(x)!=null)){c.gdN++;if(gdv.some(Boolean))c.gd++}
+      const ds=DLIST.filter(x=>sel[x]);ds.forEach(x=>c.diet[x]=(c.diet[x]||0)+1);
+      const pE=t.n&&R.T.energi?t.t.energi/R.T.energi*100:null,pP=t.n&&R.T.protein?t.t.protein/R.T.protein*100:null;if(pE!=null){c.rc++;c.pe+=pE;c.pp+=pP||0;if(pE<70)c.def++}
+      rows.push([tglID(k.tglk),k.nama,k.jk,uY??'',R.bb?+R.bb.toFixed(1):num(k.bb)??'',R.tb?+R.tb.toFixed(1):'',R.imt?+R.imt.toFixed(1):'',R.kat?R.kat[0]:'',R.fis||'',R.lila??'',hb??'',g?g.lab:'',s||dd?`${s||'–'}/${dd||'–'}`:'',R.T.energi?Math.round(R.T.energi):'',t.n?Math.round(t.t.energi):'',pE!=null?Math.round(pE):'',pP!=null?Math.round(pP):'',ds.map(x=>DNAME[x]).join('; '),k.kons||''])})}
+  const KT=['Kurus berat','Kurus ringan','Normal','Gemuk (berat badan lebih)','Obesitas'];
+  const tiles=[['Jumlah klien',c.n,`L ${c.L} · P ${c.P}`],['Remaja <18 th',c.rem,''],['Dewasa 18–59 th',c.dew,''],['Lansia ≥60 th',c.lan,''],['Ibu hamil',c.ham,''],['Ibu menyusui',c.men,''],
+    ...KT.map(x=>[x.replace(' (berat badan lebih)',''),c.kat[x]||0,'IMT dewasa']),['Risiko KEK',c.kek,`dari ${c.kekN} diukur`],['Anemia',c.an,`dari ${c.anN} diperiksa`],['Hipertensi',c.ht,`dari ${c.htN} diukur`],['Gula darah tinggi',c.gd,`dari ${c.gdN} diperiksa`],
+    ...DLIST.filter(x=>c.diet[x]).map(x=>[DNAME[x],c.diet[x],'diet diberikan']),['Rata-rata asupan energi',c.rc?fmt(c.pe/c.rc)+'%':'–',`${c.rc} klien dengan recall`],['Rata-rata asupan protein',c.rc?fmt(c.pp/c.rc)+'%':'–','dari kebutuhan'],['Defisit energi berat',c.def,'asupan <70%']];
+  const head=['Tanggal','Nama','JK','Umur (th)','BB','TB','IMT','Status IMT','Kondisi','LiLA','Hb','Status Hb','TD','Kebutuhan energi','Asupan energi','% energi','% protein','Diet','Konselor'];
+  return {tiles,sheets:[{name:'Klien',rows:[head,...rows],bold:[0],widths:[13,22,5,8,7,7,7,16,10,7,7,14,10,10,10,8,8,40,18]}]}}
+function rkPosy(){const pos=RK.pos;const rows=[],c={n:0,L:0,P:0,ag:[0,0,0,0],bbk:0,bbsk:0,pdk:0,spdk:0,gb:0,gk:0,gl:0,N:0,T:0,nt:0,sakit:0,bhy:0,lila:0,lilaN:0};
+  for(const p of HIST.p){if(pos&&(p.pos||'')!==pos)continue;const vs=p.visits.filter(v=>inP(v.tglu));if(!vs.length)continue;
+    vs.forEach((v,i)=>{const o=withPY({...p,...v,dob:p.dob,jk:p.jk},()=>calcPosy());const z=k=>{const x=(o.idx||[]).find(q=>q.k===k);return x&&x.z!=null?x.z:null};const last=i===vs.length-1;
+      const wa=z('bbu'),ha=z('pbu'),wh=z('bbpb');const lila=num(v.lila);
+      rows.push([p.nama,p.ibu||'',p.jk,tglID(dobS(p.dob)),p.pos||'',tglID(v.tglu),o.u?o.u.m:'',num(v.bb)??'',num(v.tb)??'',lila??'',wa!=null?+wa.toFixed(2):'',ha!=null?+ha.toFixed(2):'',wh!=null?+wh.toFixed(2):'',wh!=null?KAT.bbpb(wh)[0]:'',o.nt&&o.nt.s||'',v.sakit?(v.kel||[]).map(k=>SKELN[k]).join(', ')||'sakit':'',(v.bhy||[]).map(k=>BHYN[k]).join(', ')]);
+      if(!last)return;c.n++;c[p.jk==='P'?'P':'L']++;const m=o.u?o.u.m:null;if(m!=null)c.ag[m<6?0:m<12?1:m<24?2:3]++;
+      if(wa!=null){if(wa<-3)c.bbsk++;else if(wa<-2)c.bbk++}if(ha!=null){if(ha<-3)c.spdk++;else if(ha<-2)c.pdk++}
+      if(wh!=null){if(wh<-3)c.gb++;else if(wh<-2)c.gk++;else if(wh>2)c.gl++}if(lila!=null&&m>=6){c.lilaN++;if(lila<12.5)c.lila++}
+      if(o.nt&&o.nt.s){c.nt++;c[o.nt.s]++}if(v.sakit)c.sakit++;if((v.bhy||[]).length)c.bhy++})}
+  const tiles=[['Balita ditimbang',c.n,`L ${c.L} · P ${c.P}`],['0–5 bulan',c.ag[0],''],['6–11 bulan',c.ag[1],''],['12–23 bulan',c.ag[2],''],['24–59 bulan',c.ag[3],''],
+    ['BB kurang',c.bbk,'BB/U −3 s.d. <−2 SD'+pc(c.bbk,c.n)],['BB sangat kurang',c.bbsk,'BB/U <−3 SD'+pc(c.bbsk,c.n)],['Pendek',c.pdk,'PB/U −3 s.d. <−2'+pc(c.pdk,c.n)],['Sangat pendek',c.spdk,'PB/U <−3'+pc(c.spdk,c.n)],
+    ['Gizi buruk',c.gb,'BB/PB <−3 SD'+pc(c.gb,c.n)],['Gizi kurang',c.gk,'BB/PB −3 s.d. <−2'+pc(c.gk,c.n)],['Gizi lebih/obesitas',c.gl,'BB/PB >+2 SD'],['LiLA <12,5 cm',c.lila,`dari ${c.lilaN} diukur`],
+    ['Naik (N)',c.N,`dari ${c.nt} dinilai`],['Tidak naik (T)',c.T,`dari ${c.nt} dinilai`],['Balita sakit',c.sakit,''],['Ada tanda bahaya',c.bhy,'']];
+  const head=['Nama','Ibu','JK','Tgl lahir','Posyandu','Tgl timbang','Umur (bln)','BB','PB/TB','LiLA','z BB/U','z PB/U','z BB/PB','Status BB/PB','N/T','Keluhan sakit','Tanda bahaya'];
+  return {tiles,note:'Angka ringkasan memakai penimbangan terakhir tiap balita dalam periode; lembar data memuat semua penimbangan.',sheets:[{name:'Penimbangan',rows:[head,...rows],bold:[0],widths:[20,18,5,14,18,14,9,7,8,7,8,8,8,16,5,22,26]}]}}
+function rkPam(){const ev=HIST.m.filter(e=>inP(e.ev.tgl));const tot={n:0,L:0,P:0,kat:{},anak:0,lp:0,lpN:0,ht:0,nt:0,tdN:0,gd:0,gdN:0,ko:0,koN:0,kek:0,kekN:0,an:0,anN:0,hamil:0};const per=[],all=[];
+  for(const e of ev){const r=withPM(Object.assign(mblank({...e.ev}),{list:e.list}),()=>pamRekap());for(const k in tot){if(k==='kat')for(const x in r.kat)tot.kat[x]=(tot.kat[x]||0)+r.kat[x];else tot[k]+=r[k]||0}
+    per.push([tglID(e.ev.tgl),e.ev.nama||'',e.ev.ptg||'',r.n,r.L,r.P,...KATS.map(x=>r.kat[x]||0),r.lp,r.ht,r.gd,r.ko,r.kek,r.an,r.hamil]);
+    for(const c of e.list){const o=calcPam(c);all.push([e.ev.nama||'',tglID(e.ev.tgl),c.nama,c.jk,o.u??'',o.bb?+o.bb.toFixed(1):'',o.tb?+o.tb.toFixed(1):'',o.imt?+o.imt.toFixed(1):'',o.kat?o.kat[0]:'',o.lp?o.lp[0]:'',o.td?o.td[0]:'',o.gds?o.gds[0]:'',o.kol?o.kol[0]:'',o.lilaS?o.lilaS[0]:'',o.hbS?o.hbS[0]:''])}}
+  const tiles=[['Kegiatan',ev.length,''],['Pengunjung',tot.n,`L ${tot.L} · P ${tot.P}`],...KATS.map(x=>[x.replace(' (berat badan lebih)',''),tot.kat[x]||0,pc(tot.kat[x]||0,tot.n).trim()]),['Obesitas sentral',tot.lp,`dari ${tot.lpN} diukur`],['Tekanan darah tinggi',tot.ht,`dari ${tot.tdN} diukur`],['Gula darah tinggi',tot.gd,`dari ${tot.gdN} diperiksa`],['Kolesterol ≥200',tot.ko,`dari ${tot.koN} diperiksa`],['Risiko KEK',tot.kek,`dari ${tot.kekN} diukur`],['Anemia',tot.an,`dari ${tot.anN} diperiksa`],['Ibu hamil',tot.hamil,'']];
+  return {tiles,sheets:[{name:'Per kegiatan',rows:[['Tanggal','Kegiatan','Petugas','Pengunjung','L','P',...KATS,'Obesitas sentral','TD tinggi','GDS tinggi','Kolesterol ≥200','KEK','Anemia','Ibu hamil'],...per],bold:[0],widths:[13,28,16,10,5,5,10,10,8,10,9,10,9,9,10,6,7,8]},{name:'Pengunjung',rows:[['Kegiatan','Tanggal','Nama','JK','Umur','BB','TB','IMT','Status IMT','LP','TD','GDS','Kolesterol','LiLA','Hb'],...all],bold:[0],widths:[26,13,20,5,6,6,6,6,18,14,16,12,14,10,14]}]}}
+function rkTl(){const c={baru:0,aktif:0,kel:{},lama:[],g:[],mtg:0,kun:0};const rows=[];
+  for(const p of TL.list){const all=tlAll(p);const f=all[0],l=all[all.length-1];if(inP(f.v.tgl))c.baru++;if(p.status==='aktif')c.aktif++;
+    if(p.status!=='aktif'&&inP(l.v.tgl)){c.kel[p.status]=(c.kel[p.status]||0)+1;if(p.status==='sembuh'&&l.day!=null)c.lama.push(l.day/7)}
+    all.forEach((o,i)=>{if(!inP(o.v.tgl))return;c.kun++;if(o.gWk!=null)c.g.push(o.gWk);const A=tlAdvice(p,i,all);if(A.keputusan==='sembuh')c.mtg+=7;else if(A.keputusan==='jalan'&&o.dose)c.mtg+=o.dose.w});
+    if(inP(f.v.tgl)||all.some(o=>inP(o.v.tgl)))rows.push([p.nama,p.ibu||'',p.jk,tglID(f.v.tgl),f.m??'',f.bb??'',f.lila??'',f.ed?'+'+f.ed:'',f.z!=null?+f.z.toFixed(2):'',all.length,tglID(l.v.tgl),l.bb??'',l.lila??'',l.z!=null?+l.z.toFixed(2):'',l.day!=null?+(l.day/7).toFixed(1):'',STATN[p.status]||p.status])}
+  const kel=Object.values(c.kel).reduce((a,b)=>a+b,0);const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+  const tiles=[['Kasus baru',c.baru,'masuk dalam periode'],['Sedang dirawat',c.aktif,'saat ini'],['Keluar perawatan',kel,'dalam periode'],
+    ...Object.keys(STATN).filter(k=>k!=='aktif').map(k=>[STATN[k],c.kel[k]||0,k==='sembuh'||k==='dropout'?pc(c.kel[k]||0,kel).trim()+' dari yang keluar':'']),
+    ['Rata-rata lama rawat (sembuh)',c.lama.length?fmt(avg(c.lama),1)+' mgg':'–',''],['Rata-rata kenaikan BB',c.g.length?fmt(avg(c.g),1):'–','g/kgBB/minggu'],['Kunjungan',c.kun,'dalam periode'],['MTG diberikan',c.mtg,'bungkus (perkiraan dari dosis)']];
+  const head=['Nama','Ibu','JK','Tgl masuk','Umur masuk (bln)','BB masuk','LiLA masuk','Edema masuk','z masuk','Kunjungan','Terakhir','BB terakhir','LiLA terakhir','z terakhir','Lama rawat (mgg)','Status'];
+  return {tiles,sheets:[{name:'Balita',rows:[head,...rows],bold:[0],widths:[20,18,5,14,10,8,8,8,8,9,14,9,9,9,10,18]}]}}
+function rkData(){return RK.mode==='k'?rkKlinik():RK.mode==='p'?rkPosy():RK.mode==='m'?rkPam():rkTl()}
+function rekapBodyHTML(){const d=rkData();const posList=[...new Set(HIST.p.map(p=>p.pos).filter(Boolean))].sort();
+  return `<div class="rk-ctl"><div class="seg seg-wrap" id="rkPre">${[['bulan','Bulan ini'],['lalu','Bulan lalu'],['tahun','Tahun ini'],['semua','Semua']].map(([k,l])=>`<button type="button" data-rkp="${k}" aria-pressed="${JSON.stringify(preset(k))===JSON.stringify([RK.dari,RK.sampai])}">${l}</button>`).join('')}</div>
+    <div class="rk-dates"><label>Dari <input type="date" id="rkDari" value="${RK.dari}"></label><label>Sampai <input type="date" id="rkSampai" value="${RK.sampai}"></label>
+    ${RK.mode==='p'&&posList.length?`<label>Posyandu <select id="rkPos"><option value="">Semua</option>${posList.map(x=>`<option${x===RK.pos?' selected':''}>${esc(x)}</option>`).join('')}</select></label>`:''}</div></div>
+    <p class="eyebrow" style="margin:12px 0 8px">${REKN[RK.mode]} · ${perTxt()}</p>
+    <div class="rekap">${d.tiles.map(([a,b,s])=>`<div><b>${b}</b><span>${a}</span>${s?`<small>${s}</small>`:''}</div>`).join('')}</div>
+    ${d.note?`<p class="note" style="margin:0 0 10px">${d.note}</p>`:''}
+    <div class="exp-row"><button class="btn primary" type="button" data-rkx>Unduh Excel</button></div>
+    <p class="note" style="margin:10px 0 0">Rekap memakai data yang tersimpan di perangkat ini. Untuk rekap gabungan beberapa petugas, pulihkan file cadangan mereka dengan pilihan <b>Gabungkan</b>.</p>`}
+function openRekap(m){histK();histP();histM();RK.mode=m;if(!RK.dari&&!RK.sampai)[RK.dari,RK.sampai]=preset('bulan');if(m!=='p')RK.pos='';
+  openData('Rekap '+REKN[m],HIST.ok?`<div id="rkBody">${rekapBodyHTML()}</div>`:histReadyMsg)}
+const rkUpd=()=>{const el=document.getElementById('rkBody');if(el)el.innerHTML=rekapBodyHTML()};
+document.addEventListener('click',e=>{const p=e.target.closest('[data-rkp]');if(p){[RK.dari,RK.sampai]=preset(p.dataset.rkp);rkUpd();return}
+  const x=e.target.closest('[data-rkx]');if(x){const d=rkData();const head=[['Rekap '+REKN[RK.mode]],['Periode',perTxt()],...(RK.pos?[['Posyandu',RK.pos]]:[]),['Dibuat',nowID()],[],['Indikator','Jumlah','Keterangan'],...d.tiles.map(([a,b,s])=>[a,typeof b==='number'?b:String(b),s||''])];
+    const bl=makeXlsx([{name:'Rekap',rows:head,bold:[0,RK.pos?5:4],widths:[34,14,40]},...d.sheets]);deliverDownload(bl,`Rekap-${REKN[RK.mode].replace(/ /g,'-')}_${RK.dari||'awal'}_${RK.sampai||today()}.xlsx`)}});
+document.addEventListener('change',e=>{if(e.target.id==='rkDari'){RK.dari=e.target.value;rkUpd()}if(e.target.id==='rkSampai'){RK.sampai=e.target.value;rkUpd()}if(e.target.id==='rkPos'){RK.pos=e.target.value;rkUpd()}});
+
+/* --- tombol di dalam mode --- */
+(()=>{const add=(sel,html)=>{const el=document.querySelector(sel);if(el)el.insertAdjacentHTML('afterbegin',html)};
+  const kh=document.querySelector('#klinikView .panel-h');if(kh)kh.insertAdjacentHTML('beforeend','<div class="exp-row"><button class="btn sm" type="button" data-riw="k">Riwayat</button><button class="btn sm" type="button" data-rek="k">Rekap</button></div>');
+  const pn=document.getElementById('btnPosyNew');if(pn){const w=document.createElement('div');w.className='exp-row';pn.replaceWith(w);w.innerHTML='<button class="btn sm" type="button" data-riw="p">Riwayat</button><button class="btn sm" type="button" data-rek="p">Rekap</button>';w.append(pn)}
+  const mx=document.getElementById('pamXls');if(mx)mx.insertAdjacentHTML('beforebegin','<button class="btn" type="button" data-riw="m">Arsip kegiatan</button><button class="btn" type="button" data-rek="m">Rekap</button>');
+  const tx=document.getElementById('tlXls');if(tx)tx.insertAdjacentHTML('beforebegin','<button class="btn" type="button" data-rek="t">Rekap</button>')})();
+
 function buildReport(){if(MODE==='posy'||MODE==='pam'||MODE==='tl'){document.getElementById('report').innerHTML=specHTML(xSpec());return}buildReportKlinik()}
 const cardName=()=>MODE!=='klinik'&&CARDNAME?CARDNAME:fileBase('Ringkasan-Gizi')+'.jpg';
 loadForm();show(['klien','recall','lab','hasil','diet'].includes(S.tab)?S.tab:'klien');
@@ -2820,8 +3117,8 @@ const startM=(location.hash||'').slice(1);
 try{history.replaceState({m:'home'},'',location.pathname+location.search)}catch(e){}
 setMode('home',false);
 if(startM==='klinik'||startM==='posy'||startM==='pam'||startM==='tl')setMode(startM);
-const flushAll=()=>{try{localStorage.setItem('kg-v1',JSON.stringify(S));localStorage.setItem('kg-posy-v1',JSON.stringify(PY));localStorage.setItem('kg-pam-v1',JSON.stringify(PM));localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}};
-addEventListener('pagehide',flushAll);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushAll()});
+const flushAll=()=>{if(window.KG_NOFLUSH)return;try{histK();histP();histM();kvFlush()}catch(e){}try{localStorage.setItem('kg-v1',JSON.stringify(S));localStorage.setItem('kg-posy-v1',JSON.stringify(PY));localStorage.setItem('kg-pam-v1',JSON.stringify(PM));localStorage.setItem('kg-tl-v1',JSON.stringify(TL))}catch(e){}};
+addEventListener('pagehide',flushAll);bootStore();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushAll()});
 
 </script>
 
